@@ -91,9 +91,9 @@ class _PaymentsuccessfulState extends State<Paymentsuccessful> {
               );
             }),
           ),
-
-          SizedBox(height: 20.h,),
-
+          SizedBox(
+            height: 20.h,
+          ),
           Container(
             width: 353.w,
             height: 105.h,
@@ -101,25 +101,26 @@ class _PaymentsuccessfulState extends State<Paymentsuccessful> {
               color: Color(0xffF7F7F7),
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(color: Color(0xFF3A7DFF)),
-
             ),
-
             child: Padding(
               padding: const EdgeInsets.only(left: 10),
               child: TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: "Write your feedback" ,
-                  hintStyle: TextStyle(color: Color(0xff1F2937), fontSize: 14.sp, fontWeight: FontWeight.w400),
+                  hintText: "Write your feedback",
+                  hintStyle: TextStyle(
+                      color: Color(0xff1F2937),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400),
                   counterText: "",
                   border: InputBorder.none,
                 ),
               ),
             ),
           ),
-
-          SizedBox(height: 20.h,),
-
+          SizedBox(
+            height: 20.h,
+          ),
           CustomButton(
               height: 56.h,
               width: 353.w,
@@ -129,17 +130,15 @@ class _PaymentsuccessfulState extends State<Paymentsuccessful> {
               ),
               child: Center(
                   child: Text(
-                    "Submit",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Color(0xffFFFFFF)),
-                  )),
+                "Submit",
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Color(0xffFFFFFF)),
+              )),
               onTap: () {
                 Get.toNamed(AppRoute.homepage);
               }),
-
-
         ],
       ),
     );

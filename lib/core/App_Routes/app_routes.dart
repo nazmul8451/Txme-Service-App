@@ -1,6 +1,13 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:txme_app/View/Screen/Service%20Provider%20Role/MyBooking/MyBookingPage/ProviderBookingsPage.dart';
 import '../../View/Screen/Choose_Language/LanguagePage.dart';
 import '../../View/Screen/Service Provider Role/HomePage/ProviderHomeScreen.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/CancelBooking/CancelBooking.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/ConfirmPayment/ConfirmPayment.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/NewBookingRequest/NewBookingRequest.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/ProviderJobProgressPage/ProviderJobProgressPage.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/ProviderProfile.dart';
 import '../../View/Screen/Sign _up/Create_Account/CreateAccount.dart';
 import '../../View/Screen/Sign _up/FaceIDSetupScreen/FaceIDSetupScreen.dart';
@@ -20,14 +27,15 @@ import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/Verifyfac
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/verifyFaceID.dart';
 import '../../View/Screen/Sign-in/Verify_OTP_Page/verifyOTPPage.dart';
 import '../../View/Screen/Sign_As_Screen/sign_as_screen.dart';
-import '../../View/Screen/User Role/BookingsViewClient/Bookings/Bookingspage/Bookingspage.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Bookings/Request Sent/RequestSent.dart';
 import '../../View/Screen/User Role/BookingsViewClient/BookingsPage.dart';
 import '../../View/Screen/User Role/BookingsViewClient/JobStartedPage/JobProgressPage/JobProgressPage.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Onlinepayment/Onlinepayment.dart';
+import '../../View/Screen/User Role/BookingsViewClient/Payment/PayWithCash/PayWithCash.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentPage.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentSuccessful/PaymentSuccessful.dart';
+import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWallet.dart';
 import '../../View/Screen/User Role/BookingsViewClient/TotalDuration/TotalDuration.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
 import '../../View/Screen/User Role/Home_Page/ElectricianProviders/ElectricianProviders.dart';
@@ -78,6 +86,15 @@ class AppRoute {
   static const String onlinepayment = "/onlinepayment";
   static const String paymentsuccessful = "/paymentsuccessful";
   static const String invoicePListPage = "/invoicePListPage";
+  static const String paywithcash = "/paywithcash";
+  static const String paywithwallet = "/paywithwallet";
+  static const String providerMyBookingsPage = "/providerMyBookingsPage";
+  static const String newbookingrequest = "/newbookingrequest";
+  static const String cancelbooking = "/cancelbooking";
+  static const String providerjobprogresspage = "/providerjobprogresspage";
+  static const String providertotalduration = "/providertotalduration";
+  static const String confirmPaymentpage = "/confirmPaymentpage";
+  static const String providerpaymentsuccessful = "/providerpaymentsuccessful";
 
 
 
@@ -112,7 +129,6 @@ class AppRoute {
     GetPage(name: appointmentsPage, page: () =>  AppointmentsPage()),
     GetPage(name: profilePage, page: () =>  ProfilePage()),
     GetPage(name: messagepage, page: () =>  Messagepage()),
-    GetPage(name: bookingspage, page: () =>  Bookingspage()),
     GetPage(name: requestSent, page: () =>  RequestSent()), ///Request Page
     GetPage(name: providerProfilePage, page: () =>  ProviderProfilePage()),
     GetPage(name: providerHomeScreen, page: () =>  ProviderHomeScreen()),
@@ -123,6 +139,15 @@ class AppRoute {
     GetPage(name: onlinepayment, page: () =>  Onlinepayment()),
     GetPage(name: paymentsuccessful, page: () =>  Paymentsuccessful()),
     GetPage(name: invoicePListPage, page: () =>  InvoicePListPage()),
+    GetPage(name: paywithcash, page: () =>  Paywithcash()),
+    GetPage(name: paywithwallet, page: () =>  Paywithwallet()),
+    GetPage(name: providerMyBookingsPage, page: () =>  ProviderMyBookingsPageUI()),
+    GetPage(name: newbookingrequest, page: () =>  Newbookingrequest()),
+    GetPage(name: cancelbooking, page: () =>  Cancelbooking()),
+    GetPage(name: providerjobprogresspage, page: () =>  Providerjobprogresspage()),
+    GetPage(name: providertotalduration, page: () =>  Providertotalduration()),
+    GetPage(name: confirmPaymentpage, page: () =>  ConfirmPaymentpage()),
+    GetPage(name: providerpaymentsuccessful, page: () =>  Providerpaymentsuccessful()),
 
 
 

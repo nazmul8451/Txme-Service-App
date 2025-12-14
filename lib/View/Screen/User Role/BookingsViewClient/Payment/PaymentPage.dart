@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
@@ -273,7 +272,7 @@ class _PaymentpageState extends State<Paymentpage> {
                         color: Color(0xffFFFFFF)),
                   )),
                   onTap: () {
-                    Get.toNamed(AppRoute.paymentpage);
+                    Get.toNamed(AppRoute.paywithcash);
                   }),
               SizedBox(
                 height: 22.h,
@@ -315,7 +314,7 @@ class _PaymentpageState extends State<Paymentpage> {
                         color: Color(0xffFFFFFF)),
                   )),
                   onTap: () {
-                    //Get.toNamed(AppRoute.paymentpage);
+                    Get.toNamed(AppRoute.paywithwallet);
                   }),
               SizedBox(
                 height: 22.h,

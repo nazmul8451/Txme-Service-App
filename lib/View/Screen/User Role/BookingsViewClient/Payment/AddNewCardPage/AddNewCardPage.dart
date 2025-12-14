@@ -255,34 +255,4 @@ class AddNewCardPage extends StatelessWidget {
     }
   }
 
-
-  // void _showCardTypeBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-  //     ),
-  //     builder: (_) {
-  //       return Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: [
-  //           ListTile(
-  //             title: Text("Credit card"),
-  //             onTap: () {
-  //               cardType.text = "Credit card";
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //           ListTile(
-  //             title: Text("Debit card"),
-  //             onTap: () {
-  //               cardType.text = "Debit card";
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

@@ -19,6 +19,7 @@ class AppIcons {
   static const String masterCardLogo = "$basePath/mastercard_logo.svg";
   static const String plusIcons = "$basePath/plus-sm.svg";
   static const String download = "$basePath/folder-download.svg";
+  static const String group = "$basePath/Group 34311.svg";
 
 
 

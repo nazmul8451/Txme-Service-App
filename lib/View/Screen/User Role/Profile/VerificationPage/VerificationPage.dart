@@ -42,7 +42,7 @@ class VerificationPage extends StatelessWidget {
               ),
               SizedBox(height: 15.h),
 
-              // 🔹 Email
+              //  Email
               _verificationItem(
                 icon: Icons.email_outlined,
                 title: "Email",
@@ -54,7 +54,7 @@ class VerificationPage extends StatelessWidget {
               ),
               SizedBox(height: 15.h),
 
-              // 🔹 Mobile Number
+              //  Mobile Number
               _verificationItem(
                 icon: Icons.phone_iphone,
                 title: "Mobile Number",
@@ -122,7 +122,7 @@ class VerificationPage extends StatelessWidget {
     );
   }
 
-  // 🔹 Verification Item with onTap
+  //  Verification Item with onTap
   Widget _verificationItem({
     required IconData icon,
     required String title,

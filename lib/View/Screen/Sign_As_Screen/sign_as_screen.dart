@@ -278,7 +278,11 @@ class _SignAsScreenState extends State<SignAsScreen> {
                 color: AppColors.red601,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Center(child: Text(AppString.next.tr)),
+              child: Center(child: Text(AppString.next.tr, style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                color: Color(0xffFFFFFF)
+              ),)),
               onTap: () {
                 print("==== NEXT PRESSED ====");
 
