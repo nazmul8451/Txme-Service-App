@@ -20,6 +20,17 @@ class AppIcons {
   static const String plusIcons = "$basePath/plus-sm.svg";
   static const String download = "$basePath/folder-download.svg";
   static const String group = "$basePath/Group 34311.svg";
+  static const String transactions = "$basePath/Transactions.svg";
+  static const String PaymentDone = "$basePath/PaymentDone.svg";
+  static const String xIcons = "$basePath/xIcons.svg";
+  static const String SuccessfulIcons = "$basePath/SuccessfulIcons.svg";
+  static const String TransactionFailed = "$basePath/Transaction Failed.svg";
+  static const String search = "$basePath/Search.svg";
+  static const String backIcons = "$basePath/Icon.svg";
+  static const String dots3 = "$basePath/dots-vertical.svg";
+  static const String rightarrow = "$basePath/arrow-sm-right.svg";
+
+
 
 
 

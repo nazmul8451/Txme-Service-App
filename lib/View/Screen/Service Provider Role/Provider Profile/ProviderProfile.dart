@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Screen/User%20Role/Home_Page/homePage.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
@@ -182,7 +183,11 @@ class ProviderProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             GestureDetector(
-              // onTap: () => Get.to(() => const WalletPage()),
+             onTap: () {
+
+               Get.toNamed(AppRoute.walletpage);
+             },
+
               child: menuItem(
                   img: AppImg.wallet,
                   title: "Wallet"),

@@ -26,7 +26,10 @@ class AddNewCardPage extends StatelessWidget {
       appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           backgroundColor: AppColors.FFFFFF,
-          title: Text("Add New Card")),
+          title: Padding(
+            padding:  EdgeInsets.only(left: 50.w),
+            child: Text("Add New Card"),
+          )),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(

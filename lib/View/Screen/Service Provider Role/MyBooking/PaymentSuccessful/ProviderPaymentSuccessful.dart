@@ -11,10 +11,12 @@ import '../../../../../../Utils/AppColors/app_colors.dart';
 class Providerpaymentsuccessful extends StatefulWidget {
   final int rating;
 
-  const Providerpaymentsuccessful({Key? key, this.rating = 0}) : super(key: key);
+  const Providerpaymentsuccessful({Key? key, this.rating = 0})
+      : super(key: key);
 
   @override
-  State<Providerpaymentsuccessful> createState() => _ProviderpaymentsuccessfulState();
+  State<Providerpaymentsuccessful> createState() =>
+      _ProviderpaymentsuccessfulState();
 }
 
 class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
@@ -130,14 +132,14 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
               ),
               child: Center(
                   child: Text(
-                    "Submit",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Color(0xffFFFFFF)),
-                  )),
+                "Submit",
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Color(0xffFFFFFF)),
+              )),
               onTap: () {
-                Get.toNamed(AppRoute.homepage);
+                Get.toNamed(AppRoute.providerHomeScreen);
               }),
         ],
       ),

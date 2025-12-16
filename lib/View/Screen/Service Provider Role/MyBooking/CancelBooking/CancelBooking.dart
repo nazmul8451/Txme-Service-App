@@ -177,7 +177,7 @@ class Cancelbooking extends StatelessWidget {
                 ),
                 onTap: () {
                   controller.confirmCancellation();
-                  Get.toNamed(AppRoute.homepage);
+                  Get.toNamed(AppRoute.providerHomeScreen);
                 },
               ),
             ],

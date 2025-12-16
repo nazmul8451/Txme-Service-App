@@ -340,11 +340,16 @@ class ConfirmPaymentpage extends StatelessWidget {
                 height: 8.h,
               ),
               
-              Text("Need help? Contact support", style: TextStyle(
-                fontSize: 16.sp, 
-                fontWeight: FontWeight.w400,
-                color: Color(0xff3A7DFF)
-              ),),
+              GestureDetector(
+                onTap: (){
+                  Get.toNamed(AppRoute.contactsupport);
+                },
+                child: Text("Need help? Contact support", style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff3A7DFF)
+                ),),
+              ),
 
               SizedBox(
                 height: 118.h,

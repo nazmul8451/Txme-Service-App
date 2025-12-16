@@ -6,6 +6,7 @@ import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/profile_controller.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
 import '../../Sign _up/FaceIDSetupScreen/FaceIDSetupScreen.dart';
@@ -111,6 +112,9 @@ class ProfilePage extends StatelessWidget {
               title: "Setup FaceID",
             ),
             profileMenu(
+              onTap: (){
+                Get.toNamed(AppRoute.walletpage);
+              },
               img: AppImg.wallet,
               title: "Wallet",
             ),

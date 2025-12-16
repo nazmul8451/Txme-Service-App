@@ -1,17 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceValue {
-  // static const String searchHistory = "searchHistory";
-  // static const String token = "token";
-  // static const String email = "email";
-  // static const String isRemember = "isRemember";
-  // static const String isOnboarding = "isOnboarding";
-  // static const String fcmToken = "fcmToken";
+
   static const String language = "language";
-  // static const String role="role";
-  // static const String teacherType="teacherType";
-  // static const String studentId="studentId";
-  // static const String creatorId="studentId";
+
 }
 
 class SharePrefsHelper {

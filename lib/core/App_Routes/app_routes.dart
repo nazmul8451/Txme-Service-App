@@ -1,6 +1,9 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:txme_app/View/Screen/Service%20Provider%20Role/MyBooking/MyBookingPage/ProviderBookingsPage.dart';
+import '../../View/Screen/Chats/ChatsPage.dart';
+import '../../View/Screen/Chats/view/chat_home_page.dart';
 import '../../View/Screen/Choose_Language/LanguagePage.dart';
+import '../../View/Screen/Service Provider Role/Contactsupport/Contactsupport.dart';
 import '../../View/Screen/Service Provider Role/HomePage/ProviderHomeScreen.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/CancelBooking/CancelBooking.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ConfirmPayment/ConfirmPayment.dart';
@@ -43,8 +46,15 @@ import '../../View/Screen/User Role/Home_Page/NotificationPage/NotificationPage.
 import '../../View/Screen/User Role/Home_Page/Popularservices/Popularservices.dart';
 import '../../View/Screen/User Role/Home_Page/SearchFilter/SearchFilter.dart';
 import '../../View/Screen/User Role/Home_Page/homePage.dart';
-import '../../View/Screen/User Role/Message/messagePage.dart';
 import '../../View/Screen/User Role/Profile/MyProfile.dart';
+import '../../View/Screen/Wallet/PaymentDone/PaymentDone.dart';
+import '../../View/Screen/Wallet/Request/RequestPage.dart';
+import '../../View/Screen/Wallet/Send/SendPage.dart';
+import '../../View/Screen/Wallet/Top_up/TopUpPage.dart';
+import '../../View/Screen/Wallet/TransactionFailed/TransactionFailed.dart';
+import '../../View/Screen/Wallet/WalletPage.dart';
+import '../../View/Screen/Wallet/WalletPayPalSelectPaymentMethod/WalletPayPalSelectPaymentMethod.dart';
+import '../../View/Screen/Wallet/Withdraw/WithdrawPage.dart';
 
 class AppRoute {
   ///==================== Initial Routes ====================///
@@ -95,6 +105,16 @@ class AppRoute {
   static const String providertotalduration = "/providertotalduration";
   static const String confirmPaymentpage = "/confirmPaymentpage";
   static const String providerpaymentsuccessful = "/providerpaymentsuccessful";
+  static const String contactsupport = "/contactsupport";
+  static const String chatspage = "/chatspage";
+  static const String walletpage = "/walletpage";
+  static const String topuppage = "/topuppage";
+  static const String paymentdone = "/paymentdone";
+  static const String walletpaypalselectpaymentmethod = "/walletpaypalselectpaymentmethod";
+  static const String transactionfailed = "/transactionfailed";
+  static const String sendpage = "/sendpage";
+  static const String requestpage = "/requestpage";
+  static const String withdrawpage = "/withdrawpage";
 
 
 
@@ -128,7 +148,7 @@ class AppRoute {
     GetPage(name: notificationPage, page: () =>  NotificationPage()),
     GetPage(name: appointmentsPage, page: () =>  AppointmentsPage()),
     GetPage(name: profilePage, page: () =>  ProfilePage()),
-    GetPage(name: messagepage, page: () =>  Messagepage()),
+    //GetPage(name: messagepage, page: () =>  Messagepage()),
     GetPage(name: requestSent, page: () =>  RequestSent()), ///Request Page
     GetPage(name: providerProfilePage, page: () =>  ProviderProfilePage()),
     GetPage(name: providerHomeScreen, page: () =>  ProviderHomeScreen()),
@@ -148,6 +168,16 @@ class AppRoute {
     GetPage(name: providertotalduration, page: () =>  Providertotalduration()),
     GetPage(name: confirmPaymentpage, page: () =>  ConfirmPaymentpage()),
     GetPage(name: providerpaymentsuccessful, page: () =>  Providerpaymentsuccessful()),
+    GetPage(name: contactsupport, page: () =>  ContactSupport()),
+    GetPage(name: chatspage, page: () =>  ChatHomePage()),
+    GetPage(name: walletpage, page: () =>  Walletpage()),
+    GetPage(name: topuppage, page: () =>  Topuppage()),
+    GetPage(name: walletpaypalselectpaymentmethod, page: () =>  Walletpaypalselectpaymentmethod()),
+    GetPage(name: paymentdone, page: () =>  Paymentdone()),
+    GetPage(name: transactionfailed, page: () =>  Transactionfailed()),
+    GetPage(name: sendpage, page: () =>  Sendpage()),
+    GetPage(name: requestpage, page: () =>  Requestpage()),
+    GetPage(name: withdrawpage, page: () =>  Withdrawpage()),
 
 
 
