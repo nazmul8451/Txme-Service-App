@@ -38,6 +38,7 @@ class SigninWithBiometrics extends StatelessWidget {
                   Text(
                     AppString.signIn.tr,
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.black900,
@@ -62,6 +63,7 @@ class SigninWithBiometrics extends StatelessWidget {
                       AppString.readytosignin.tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.gray,
@@ -91,6 +93,7 @@ class SigninWithBiometrics extends StatelessWidget {
                               Text(
                                 "Fingerprint",
                                 style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   color: Colors.white,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
@@ -123,6 +126,7 @@ class SigninWithBiometrics extends StatelessWidget {
                               Text(
                                 "Face ID",
                                 style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   color: Colors.white,
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
@@ -145,6 +149,7 @@ class SigninWithBiometrics extends StatelessWidget {
                   Text(
                     "Or",
                     style: TextStyle(
+                      fontFamily: 'Poppins',
                       color: AppColors.gray,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -171,6 +176,7 @@ class SigninWithBiometrics extends StatelessWidget {
                         Text(
                           AppString.GetSignincodeviaEmail.tr,
                           style: TextStyle(
+                            fontFamily: 'Poppins',
                             color: AppColors.black900,
                             fontWeight: FontWeight.w500,
                             fontSize: 14.sp,
@@ -193,6 +199,7 @@ class SigninWithBiometrics extends StatelessWidget {
                       Text(
                         AppString.Donthaveanaccount.tr,
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 14.sp,
                           color: AppColors.gray,
                         ),
@@ -206,6 +213,7 @@ class SigninWithBiometrics extends StatelessWidget {
                         child: Text(
                           AppString.signUn.tr,
                           style: TextStyle(
+                            fontFamily: 'Poppins',
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.A7DFF,

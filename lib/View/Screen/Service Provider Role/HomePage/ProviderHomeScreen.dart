@@ -27,12 +27,12 @@ class ProviderHomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding:  EdgeInsets.all(20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            const SizedBox(height: 30,),
+             SizedBox(height: 30.h,),
 
             /// ------------------ HEADER ------------------
             Row(
@@ -40,12 +40,12 @@ class ProviderHomeScreen extends StatelessWidget {
               children: [
                 Obx(() => RichText(
                   text: TextSpan(
-                    style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700),
+                    style:  TextStyle(color: Colors.black, fontSize: 24.sp, fontWeight: FontWeight.w700),
                     children: [
                       const TextSpan(text: 'Welcome, '),
                       TextSpan(
                         text: controller.name.value,
-                        style: const TextStyle( fontSize: 24,  fontWeight: FontWeight.w400),
+                        style:  TextStyle( fontSize: 24.sp,  fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),
@@ -57,14 +57,14 @@ class ProviderHomeScreen extends StatelessWidget {
                   child: Obx(() => Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      const Icon(Icons.notifications_none, size: 30),
+                       Icon(Icons.notifications_none, size: 30.w),
                       if(controller.notificationCount.value > 0)
                         Positioned(
-                          right: -1,
-                          top: -1,
+                          right: -1.w,
+                          top: -1.h,
                           child: Container(
-                            height: 16,
-                            width: 16,
+                            height: 16.h,
+                            width: 16.w,
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
@@ -72,9 +72,9 @@ class ProviderHomeScreen extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 controller.notificationCount.value.toString(),
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   color: Colors.white,
-                                  fontSize: 10,
+                                  fontSize: 10.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -86,7 +86,7 @@ class ProviderHomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 30,),
+             SizedBox(height: 30.h,),
 
             /// 1. Offer a Service Button
             GestureDetector(
@@ -95,33 +95,33 @@ class ProviderHomeScreen extends StatelessWidget {
               },
               child: Container(
                 width: double.infinity,
-                height: 50.0,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: const Color(0xFFFF5A36),
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10.0.r),
                 ),
                 alignment: Alignment.center,
-                child: const Text(
+                child:  Text(
                   "Offer a Service",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.0,
+                    fontSize: 16.0.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 21),
+             SizedBox(height: 21.h),
 
             /// 2. Balance Card
             Container(
               width: 353.w,
               height: 148.h,
-              padding: const EdgeInsets.all(20.0),
+              padding:  EdgeInsets.all(20.0.w),
               decoration: BoxDecoration(
                 color: Color(0xffF7F7F7),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
 
               ),
               child: Column(
@@ -130,12 +130,12 @@ class ProviderHomeScreen extends StatelessWidget {
                   Text(
                     "Earning This Week",
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 20.0.sp,
                       color: Color(0xff1F2937),
                       fontWeight: FontWeight.w500
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: 16.0.h),
                   Text(
                     "€1,250.00",
                     style: TextStyle(
@@ -148,46 +148,46 @@ class ProviderHomeScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+             SizedBox(height: 20.h),
 
             /// 3. Promotion Card
             Align(
               child: Container(
-                width: 353,
-                height: 189,
-                padding: const EdgeInsets.all(14.0),
+                width: 353.w,
+                height: 189.h,
+                padding:  EdgeInsets.all(14.0.w),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(15.0.r),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: const Text(
+                      child:  Text(
                         "Boost your visibility with Txme!",
                         style: TextStyle(
-                          fontSize: 21.0,
+                          fontSize: 21.0.sp,
                           fontWeight: FontWeight.w600,
                           color: Color(0xff4C545F)
                         ),
                       ),
                     ),
-                    const SizedBox(height: 5.0),
+                     SizedBox(height: 5.0.h),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding:  EdgeInsets.all(16.0.w),
                       child:  Text(
                         "Get your service listed at the top of search"
                             " results for just € 1 per day!",
               
                         style: TextStyle(
-                          fontSize: 12.0,
+                          fontSize: 12.0.sp,
                           fontWeight: FontWeight.w400,
                           color: Color(0xff333333)
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12.0),
+                     SizedBox(height: 12.0.h),
                     Center(
                       child: SizedBox(
                         width: 253,
@@ -195,9 +195,9 @@ class ProviderHomeScreen extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.red601,
-                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            padding:  EdgeInsets.symmetric(vertical: 14.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(8.0.r),
                             ),
                           ),
                           onPressed: () {},
@@ -218,7 +218,7 @@ class ProviderHomeScreen extends StatelessWidget {
             ),
 
 
-            const SizedBox(height: 20),
+             SizedBox(height: 20.h),
 
 
             Row(
@@ -246,7 +246,7 @@ class ProviderHomeScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 20),
+             SizedBox(height: 20.h),
 
             /// ------------------ UPCOMING APPOINTMENTS ------------------
             Container(
@@ -317,7 +317,7 @@ class ProviderHomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+             SizedBox(height: 12.h),
             Container(
               width: 353.w,
               height: 144.h,

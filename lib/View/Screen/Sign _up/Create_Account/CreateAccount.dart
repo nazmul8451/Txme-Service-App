@@ -186,31 +186,51 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             ),
              SizedBox(height: 20.h),
 
-            Obx(() {
-              // Observing selectedGender and updating the hintText reactively
-              return CustomTextFieldC(
-                controller: c.residenceController,
-                color: Colors.grey.shade50,
+            CustomTextFieldC(
+              controller: c.residenceController,
+              color: Colors.grey.shade50,
 
-                border:
-                OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppColors.red601),
-                ),
-                readOnly: true, // Make the Gender field read-only
-                onTap: () => c.selectResidence(
-                  context,
-                ), // Trigger gender selection dialog
-                hintText:
-                    c.selectedResidence.value ??
-                    AppString.selectResidence.tr, // Default hint text
-                label: AppString.countryResidence.tr,
-                suffixIcon: Icon(
-                  Icons.arrow_drop_down,
-                  color:AppColors.red601,
-                ), // Optional down-arrow icon
-              );
-            }),
+              border:
+              OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide(color: AppColors.red601),
+              ),
+              readOnly: false,
+              hintText: AppString.selectResidence.tr,
+              onTap: () {
+              },
+              label:  AppString.countryResidence.tr,
+            ),
+
+
+
+            // Obx(() {
+            //   // Observing selectedGender and updating the hintText reactively
+            //   return CustomTextFieldC(
+            //     controller: c.residenceController,
+            //     color: Colors.grey.shade50,
+            //
+            //     border:
+            //     OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(12.r),
+            //       borderSide: BorderSide(color: AppColors.red601),
+            //     ),
+            //     readOnly: true, // Make the Gender field read-only
+            //     onTap: () => c.selectResidence(
+            //       context,
+            //     ), // Trigger gender selection dialog
+            //     hintText:
+            //         c.selectedResidence.value ??
+            //         AppString.selectResidence.tr, // Default hint text
+            //     label: AppString.countryResidence.tr,
+            //     suffixIcon: Icon(
+            //       Icons.arrow_drop_down,
+            //       color:AppColors.red601,
+            //     ), // Optional down-arrow icon
+            //   );
+            // }),
+
+
              SizedBox(height: 20.h),
 
             CustomTextFieldC(

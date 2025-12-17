@@ -10,66 +10,90 @@ import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../../Utils/StaticString/static_string.dart';
+import 'FingerprintController.dart';
 
-class Verifyfingerprint extends StatefulWidget {
-  const Verifyfingerprint({super.key});
+class Verifyfingerprint extends StatelessWidget {
+  Verifyfingerprint({super.key});
 
-  @override
-  State<Verifyfingerprint> createState() => _VerifyfingerprintState();
-}
+  final controller = Get.put(FingerprintController());
 
-class _VerifyfingerprintState extends State<Verifyfingerprint> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.gray,
       appBar: AppBar(
-        // backgroundColor: AppColors.gray,
-      ),
+        backgroundColor: AppColors.gray,
 
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10.h),
-            child: Center(
-              child: Text(
-                AppString.signIn.tr,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.black900,
+        title:   Center(
+          child: Text(
+            AppString.signIn.tr,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black900,
+            ),
+          ),
+        ),
+        elevation: 0,
+      ),
+      body:  Obx(
+        () => Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 10.h),
+
+
+            ///  Fingerprint (animated)
+            GestureDetector(
+              onTap: controller.onFingerprintPressed,
+              child: AnimatedScale(
+                scale: controller.isScanning.value ? 1.2 : 1.0,
+                duration: const Duration(milliseconds: 600),
+                child: SvgPicture.asset(
+                  AppIcons.fingerPrint,
+                  height: 52.h,
+                  width: 52.w,
+                  color: controller.isScanning.value
+                      ? AppColors.red601
+                      : AppColors.black900,
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 259.h),
-          SvgPicture.asset(AppIcons.fingerPrint, height: 52.h, width: 52.w),
 
-          SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
-          CustomButton(
-            height: 44.h,
-            width: 226.w,
-            BoxDecoration: BoxDecoration(
-              color: AppColors.red601,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                AppString.verifyFingerprint.tr,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.FFFFFF,
+            CustomButton(
+              height: 44.h,
+              width: 226.w,
+              BoxDecoration: BoxDecoration(
+                color: AppColors.red601,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  controller.isScanning.value
+                      ? "scanning"
+                      : AppString.verifyFingerprint.tr,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.FFFFFF,
+                  ),
                 ),
               ),
+              onTap: controller.onFingerprintPressed,
             ),
-            onTap: () {
-              Get.toNamed(AppRoute.homepage);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
+    ),
+    ),
+
     );
   }
 }
+

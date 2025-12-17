@@ -76,7 +76,7 @@ class AppString{
 
   static const String signIn = "Sign in" ;
 
-  static const String signUn = "Sign Un" ;
+  static const String signUn = "Sign Up" ;
   static const String verifyFingerprint = "Verify Fingerprint" ;
   static const String readytosignin = "Ready to sign in? Authenticate with your   biometrics or use email" ;
   static const String signInWithBiometrics = "Sign in with Biometrics" ;
@@ -107,6 +107,7 @@ class AppString{
   static const String painting = "Painting" ;
   static const String plumbing = "Plumbing" ;
   static const String solar = "Solar" ;
+  static const String customer = "Customer" ;
   static const String airCondition = "Air Condition" ;
   static const String roofRepair = "Roof Repair" ;
   static const String electric = "Electric work" ;
@@ -122,18 +123,6 @@ class AppString{
   static const String serviceTiming = "Service Timing" ;
   static const String clearAll = "Clear All" ;
   static const String applyFilters = "Apply Filters" ;
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   static const String requestSent = "Request Sent" ;

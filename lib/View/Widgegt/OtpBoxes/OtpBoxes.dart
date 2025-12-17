@@ -4,12 +4,14 @@ class CustomOtpFields extends StatefulWidget {
   final int length;       // OTP length
   final double size;      // box size
   final double spacing;   // gap between boxes
+  final Function(String)? onChanged; //  NEW
 
   const CustomOtpFields({
     super.key,
     this.length = 6,
     this.size = 50,
     this.spacing = 12,
+    this.onChanged,
   });
 
   @override
@@ -34,6 +36,11 @@ class _CustomOtpFieldsState extends State<CustomOtpFields> {
     super.dispose();
   }
 
+  void _notifyOtpChanged() {
+    final otp = controllers.map((e) => e.text).join();
+    widget.onChanged?.call(otp);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -47,10 +54,10 @@ class _CustomOtpFieldsState extends State<CustomOtpFields> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.blue,      // 🔵 ঠিক ছবির মতো নীল বর্ডার
+                color: Colors.blue,
                 width: 1.5,
               ),
-              borderRadius: BorderRadius.circular(10), // 🔵 ছবির মতো গোল কোণ
+              borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
               controller: controllers[index],
@@ -72,6 +79,9 @@ class _CustomOtpFieldsState extends State<CustomOtpFields> {
                 } else if (value.isEmpty && index > 0) {
                   focusNodes[index - 1].requestFocus();
                 }
+
+                ///  FULL OTP SEND TO CONTROLLER
+                _notifyOtpChanged();
               },
             ),
           ),

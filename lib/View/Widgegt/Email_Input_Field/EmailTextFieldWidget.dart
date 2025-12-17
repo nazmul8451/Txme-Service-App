@@ -4,10 +4,12 @@ class CustomTextFieldE extends StatelessWidget {
   final String hint;
   final IconData icon;
   final bool obscure;
+  final TextEditingController? controller;
 
   const CustomTextFieldE({
     super.key,
     required this.hint,
+    this.controller,
     required this.icon,
     this.obscure = false,
   });
@@ -26,6 +28,7 @@ class CustomTextFieldE extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
+              controller: controller,
               obscureText: obscure,
               decoration: InputDecoration(
                 hintText: hint,

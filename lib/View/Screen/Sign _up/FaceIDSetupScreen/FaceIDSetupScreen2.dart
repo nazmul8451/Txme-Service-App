@@ -176,7 +176,7 @@ class _FaceIDSetupScreen2State extends State<FaceIDSetupScreen2> {
                 ],
               ),
               onTap: () {
-                Get.toNamed(AppRoute.signupdone);
+                Get.toNamed(AppRoute.signUPdone);
               },
             ),
           ),

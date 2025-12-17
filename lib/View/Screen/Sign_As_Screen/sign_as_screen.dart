@@ -1,148 +1,3 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:get/get.dart';
-// import 'package:txme_app/Utils/AppColors/app_colors.dart';
-// import 'package:txme_app/Utils/AppImg/app_img.dart';
-// import 'package:txme_app/Utils/StaticString/static_string.dart';
-// import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
-// import 'package:txme_app/core/App_Routes/app_routes.dart';
-//
-// class SignAsScreen extends StatefulWidget {
-//   const SignAsScreen({super.key});
-//
-//   @override
-//   State<SignAsScreen> createState() => _SignAsScreenState();
-// }
-//
-// class _SignAsScreenState extends State<SignAsScreen> {
-//   bool isUserSelected = true;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SingleChildScrollView(
-//         child: Column(
-//           children: [
-//             Padding(
-//               padding: EdgeInsets.only(top: 44.h),
-//               child: Container(
-//                 width: double.infinity,
-//                 height: 414.h,
-//                 child: Image.asset(AppImg.splashscreen, fit: BoxFit.cover),
-//               ),
-//             ),
-//             SizedBox(height: 20.h),
-//             Center(
-//               child: Image.asset(AppImg.image15, height: 110.h, width: 110.w),
-//             ),
-//             Center(
-//               child: Text(
-//                 AppString.txmeRecaim.tr,
-//                 style: TextStyle(
-//                   fontSize: 16.sp,
-//                   fontWeight: FontWeight.w400,
-//                   color: AppColors.gray,
-//                 ),
-//               ),
-//             ),
-//             Center(
-//               child: Text(
-//                 AppString.joinasa.tr,
-//                 style: TextStyle(
-//                   fontSize: 16.sp,
-//                   fontWeight: FontWeight.w400,
-//                   color: AppColors.gray,
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 20.h),
-//             Padding(
-//               padding: EdgeInsets.only(left: 20.w, right: 20.w),
-//               child: Row(
-//                 children: [
-//                   CustomButton(
-//                     height: 40.h,
-//                     width: 167.w,
-//                     BoxDecoration: BoxDecoration(
-//                       color: isUserSelected
-//                           ? AppColors.red601
-//                           : Colors.transparent,
-//                       border: Border.all(color: AppColors.red601, width: 1),
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                     child: Center(
-//                       child: Text(
-//                         AppString.user.tr,
-//                         style: TextStyle(
-//                           color: isUserSelected
-//                               ? AppColors.FFFFFF
-//                               : AppColors.black900,
-//                         ),
-//                       ),
-//                     ),
-//                     onTap: () {
-//                       setState(() {
-//                         isUserSelected = true;
-//                       });
-//                     },
-//                   ),
-//                   SizedBox(width: 19.w),
-//                   CustomButton(
-//                     height: 40.h,
-//                     width: 167.w,
-//                     BoxDecoration: BoxDecoration(
-//                       color: !isUserSelected
-//                           ? AppColors.red601
-//                           : Colors.transparent,
-//                       border: Border.all(color: AppColors.red601, width: 1),
-//                       //color: AppColors.red601,
-//                       borderRadius: BorderRadius.circular(12),
-//                     ),
-//                     child: Center(
-//                       child: Text(
-//                         AppString.provider.tr,
-//                         style: TextStyle(
-//                           color: isUserSelected
-//                               ? AppColors.black900
-//                               : AppColors.FFFFFF,
-//                         ),
-//                       ),
-//                     ),
-//                     onTap: () {
-//                       Get.toNamed(AppRoute.providerHomeScreen);
-//                       setState(() {
-//                         isUserSelected = false;
-//                       });
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             SizedBox(height: 20.h),
-//             CustomButton(
-//               height: 56.h,
-//               width: 353.w,
-//               BoxDecoration: BoxDecoration(
-//                 color: AppColors.red601,
-//                 borderRadius: BorderRadius.circular(12.r),
-//               ),
-//               child: Center(child: Text(AppString.next.tr)),
-//               onTap: () {
-//                 print("=======================>>>>>>>>>>>>>>>>>>>=====================");
-//                 Get.toNamed(AppRoute.signinwithbiometrics);
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -152,6 +7,8 @@ import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 
+import '../../../helper/Shared_prefe/shared_prefe.dart' show SharePrefsHelper;
+
 class SignAsScreen extends StatefulWidget {
   const SignAsScreen({super.key});
 
@@ -160,7 +17,25 @@ class SignAsScreen extends StatefulWidget {
 }
 
 class _SignAsScreenState extends State<SignAsScreen> {
-  bool isUserSelected = true; // Default user selected
+  bool isUserSelected = true;
+
+  Future<void> _onNext() async {
+    if (isUserSelected) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.userRole,
+        SharePrefsHelper.user,
+      );
+    } else {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.userRole,
+        SharePrefsHelper.provider,
+      );
+    }
+
+    /// BOTH → SAME SIGN IN PAGE
+    Get.toNamed(AppRoute.signinwithbiometrics);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -170,37 +45,35 @@ class _SignAsScreenState extends State<SignAsScreen> {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 44.h),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 height: 414.h,
-                child: Image.asset(AppImg.splashscreen, fit: BoxFit.cover),
+                child: Image.asset(
+                  AppImg.splashscreen,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+
             SizedBox(height: 20.h),
 
-            Center(
-              child: Image.asset(AppImg.image15, height: 110.h, width: 110.w),
-            ),
+            Image.asset(AppImg.image15, height: 110.h, width: 110.w),
 
-            Center(
-              child: Text(
-                AppString.txmeRecaim.tr,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.gray,
-                ),
+            Text(
+              AppString.txmeRecaim.tr,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.gray,
               ),
             ),
 
-            Center(
-              child: Text(
-                AppString.joinasa.tr,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.gray,
-                ),
+            Text(
+              AppString.joinasa.tr,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.gray,
               ),
             ),
 
@@ -211,58 +84,62 @@ class _SignAsScreenState extends State<SignAsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
                 children: [
-                  /// USER BUTTON
+                  /// USER
                   CustomButton(
                     height: 40.h,
                     width: 167.w,
                     BoxDecoration: BoxDecoration(
-                      color: isUserSelected ? AppColors.red601 : Colors.transparent,
-                      border: Border.all(color: AppColors.red601, width: 1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: isUserSelected
+                          ? AppColors.red601
+                          : Colors.transparent,
+                      border: Border.all(color: AppColors.red601),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
+                    onTap: () {
+                      setState(() => isUserSelected = true);
+                    },
                     child: Center(
                       child: Text(
-                        AppString.user.tr,
+                        AppString.customer.tr,
                         style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
                           color: isUserSelected
                               ? AppColors.FFFFFF
                               : AppColors.black900,
                         ),
                       ),
                     ),
-                    onTap: () {
-                      setState(() {
-                        isUserSelected = true;
-                      });
-                    },
                   ),
 
                   SizedBox(width: 19.w),
 
-                  /// PROVIDER BUTTON
+                  /// PROVIDER
                   CustomButton(
                     height: 40.h,
                     width: 167.w,
                     BoxDecoration: BoxDecoration(
-                      color: !isUserSelected ? AppColors.red601 : Colors.transparent,
-                      border: Border.all(color: AppColors.red601, width: 1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: !isUserSelected
+                          ? AppColors.red601
+                          : Colors.transparent,
+                      border: Border.all(color: AppColors.red601),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
+                    onTap: () {
+                      setState(() => isUserSelected = false);
+                    },
                     child: Center(
                       child: Text(
                         AppString.provider.tr,
                         style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
                           color: isUserSelected
                               ? AppColors.black900
                               : AppColors.FFFFFF,
                         ),
                       ),
                     ),
-                    onTap: () {
-                      setState(() {
-                        isUserSelected = false;
-                      });
-                    },
                   ),
                 ],
               ),
@@ -278,22 +155,17 @@ class _SignAsScreenState extends State<SignAsScreen> {
                 color: AppColors.red601,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Center(child: Text(AppString.next.tr, style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 18,
-                color: Color(0xffFFFFFF)
-              ),)),
-              onTap: () {
-                print("==== NEXT PRESSED ====");
-
-                if (isUserSelected) {
-                  /// USER SELECTED → GO USER HOME
-                  Get.toNamed(AppRoute.signinwithbiometrics);
-                } else {
-                  /// PROVIDER SELECTED → GO PROVIDER HOME
-                  Get.toNamed(AppRoute.providerHomeScreen);
-                }
-              },
+              onTap: _onNext,
+              child: Center(
+                child: Text(
+                  AppString.next.tr,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.FFFFFF,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -301,4 +173,3 @@ class _SignAsScreenState extends State<SignAsScreen> {
     );
   }
 }
-

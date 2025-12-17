@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:txme_app/service/api_client.dart';
 
 import 'Language/translator.dart';
 import 'View/Screen/splashScreen/splash_screen_view.dart';
@@ -12,6 +15,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Get.put<ApiClient>(ApiClient(), permanent: true);
 
 
   /// GetX dependencies initialized here
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
         translations: Language(),
         defaultTransition: Transition.fadeIn,
         getPages: AppRoute.routes,
-        home: const SplashScreenView(),
+        home:  SplashScreenView(),
       ),
     );
   }

@@ -6,17 +6,20 @@ import '../../../Utils/AppImg/app_img.dart';
 import '../../../Utils/StaticString/static_string.dart';
 import '../../../core/App_Routes/app_routes.dart';
 import '../../Widgegt/Custom_Button/custom_button.dart';
+import 'LanguageController.dart';
 import 'choose_language.dart';
 
 class Languagepage extends StatelessWidget {
-  const Languagepage({super.key});
+   Languagepage({super.key});
+
+  final controller = Get.put(LanguageController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.FFFFFF,
       body: SafeArea(
-        child: SingleChildScrollView(   // 👈 Scroll added
+        child: SingleChildScrollView(   //  Scroll added
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -40,8 +43,9 @@ class Languagepage extends StatelessWidget {
 
                 CustomButton(
                   onTap: () {
-                    Get.toNamed(AppRoute.signAsScreen);
+                    Get.offAllNamed(AppRoute.signAsScreen);
                   },
+
                   height: 45.h,
                   width: 180.w,
                   BoxDecoration: BoxDecoration(

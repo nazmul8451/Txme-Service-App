@@ -22,12 +22,12 @@ import '../../View/Screen/Sign _up/VerifyYourIdentity/UploadDocuments1.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/UploadDocuments2.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/VerifyYourIdentity.dart';
 import '../../View/Screen/Sign _up/Verifyotppage/Verifyotppage.dart';
+import '../../View/Screen/Sign-in/Done/SignInDone.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/Enter_email/enter_email.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/SignInWithBiometrics.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/Verify-Fingerprint/verifyFingerprint.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/Face_Verification_Done/faceVerificationDone.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/VerifyfaceidID.dart';
-import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/verifyFaceID.dart';
 import '../../View/Screen/Sign-in/Verify_OTP_Page/verifyOTPPage.dart';
 import '../../View/Screen/Sign_As_Screen/sign_as_screen.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Bookings/Request Sent/RequestSent.dart';
@@ -73,7 +73,8 @@ class AppRoute {
   static const String createaccount = "/createaccount";
   static const String faceIDSetupScreen = "/faceIDSetupScreen";
   static const String faceIDSetupScreen2 = "/faceIDSetupScreen2";
-  static const String signupdone = "/signupdone";
+  static const String signUPdone = "/signupdone";
+  static const String signindone = "/signindone";
   static const String verifyyouridentity = "/verifyyouridentity";
   static const String uploaddocuments1 = "/uploaddocuments1";
   static const String uploaddocuments2 = "/uploaddocuments2";
@@ -123,12 +124,12 @@ class AppRoute {
 
     GetPage(name: signAsScreen, page: () => const SignAsScreen()),
     GetPage(name: signinwithbiometrics, page: () => const SigninWithBiometrics()),
-    GetPage(name: verifyfingerprint, page: () => const Verifyfingerprint()),
-    GetPage(name: enterEmail, page: () => const EnterEmail()),
-    GetPage(name: verifyfaceid, page: () => const Verifyfaceid()),
-    GetPage(name: verifyFaceId, page: () => const VerifyFaceId()),
+    GetPage(name: verifyfingerprint, page: () =>  Verifyfingerprint()),
+    GetPage(name: enterEmail, page: () =>  EnterEmail()),
+   // GetPage(name: verifyfaceid, page: () => const Verifyfaceid()),
+    GetPage(name: verifyFaceId, page: () =>  VerifyFaceId()),
     GetPage(name: faceverificationdone, page: () => const Faceverificationdone()),
-    GetPage(name: verifyotppage, page: () => const Verifyotppage()),
+    //GetPage(name: verifyotppage, page: () =>  Verifyotppage()),
     GetPage(name: homepage, page: () => const Homepage()),
     GetPage(name: signUpEmail, page: () => const SignUpEmail()),
     GetPage(name: verifyotppageS, page: () => const VerifyotppageS()),
@@ -136,7 +137,8 @@ class AppRoute {
     GetPage(name: createaccount, page: () =>  CreateAccountScreen()),
     GetPage(name: faceIDSetupScreen, page: () =>  FaceIDSetupScreen()),
     GetPage(name: faceIDSetupScreen2, page: () =>  FaceIDSetupScreen2()),
-    GetPage(name: signupdone, page: () =>  Signupdone()),
+    GetPage(name: signUPdone, page: () =>  Signupdone()),
+    GetPage(name: signindone, page: () =>  Signindone()),
     GetPage(name: verifyyouridentity, page: () =>  Verifyyouridentity()),
     GetPage(name: uploaddocuments1, page: () =>  Uploaddocuments1()),
     GetPage(name: uploaddocuments2, page: () =>  Uploaddocuments2()),

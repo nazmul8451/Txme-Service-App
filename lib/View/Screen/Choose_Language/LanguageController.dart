@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../helper/Shared_prefe/shared_prefe.dart';
+
+import '../../../helper/Shared_prefe/shared_prefe.dart' show SharePrefsHelper;
+
 
 class LanguageController extends GetxController {
-  // Reactive variable for selected language
-  var selectedLocale = const Locale('en', 'US').obs;
 
-  // Language mapping for language name to locale
+  final Rx<Locale> selectedLocale = const Locale('en', 'US').obs;
+
   final Map<String, Locale> languagesMap = {
     "English": const Locale('en', 'US'),
     "German": const Locale('de', 'DE'),
@@ -20,25 +21,36 @@ class LanguageController extends GetxController {
     _loadSavedLanguage();
   }
 
-  /// Change language and save selection
-  void changeLanguage(String lang) async {
-    Locale locale = languagesMap[lang] ?? const Locale('en', 'US');
+  Future<void> changeLanguage(String lang) async {
+    final locale = languagesMap[lang]!;
+
     selectedLocale.value = locale;
     Get.updateLocale(locale);
 
-    // Save selected language using SharePrefsHelper
-    await SharePrefsHelper.setString(SharedPreferenceValue.language, lang);
+    await SharePrefsHelper.setString(
+      SharePrefsHelper.language,
+      lang,
+    );
+
+    await SharePrefsHelper.setBool(
+      SharePrefsHelper.languageSelected,
+      true,
+    );
   }
 
-  /// Load saved language from SharedPreferences
-  void _loadSavedLanguage() async {
-    String savedLang =
-    await SharePrefsHelper.getString(SharedPreferenceValue.language);
+
+  /// Load saved language
+  Future<void> _loadSavedLanguage() async {
+    final savedLang =
+    await SharePrefsHelper.getString(SharePrefsHelper.language);
 
     if (savedLang.isNotEmpty && languagesMap.containsKey(savedLang)) {
-      Locale locale = languagesMap[savedLang]!;
+      final locale = languagesMap[savedLang]!;
       selectedLocale.value = locale;
       Get.updateLocale(locale);
+
+      debugPrint("🔁 LANGUAGE LOADED => $savedLang");
     }
   }
 }
+

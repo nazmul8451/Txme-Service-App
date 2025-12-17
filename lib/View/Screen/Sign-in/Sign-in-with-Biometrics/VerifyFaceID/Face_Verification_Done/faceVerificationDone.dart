@@ -20,6 +20,7 @@ class _FaceverificationdoneState extends State<Faceverificationdone> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.FFFFFF,
       body: Column(
         children: [
           Padding(
@@ -38,6 +39,7 @@ class _FaceverificationdoneState extends State<Faceverificationdone> {
           Text(
             AppString.verificationDone,
             style: TextStyle(
+              fontFamily: 'Poppins',
               fontWeight: FontWeight.w700,
               fontSize: 16.sp,
               color: AppColors.black900,
@@ -56,6 +58,7 @@ class _FaceverificationdoneState extends State<Faceverificationdone> {
               child: Text(
                 AppString.Continue,
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.FFFFFF,

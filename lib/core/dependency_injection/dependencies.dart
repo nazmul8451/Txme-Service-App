@@ -8,6 +8,7 @@ import '../../View/Screen/User Role/Profile/VerificationPage/VerificationControl
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PayWithCash/PayWithCashController.dart';
 import '../../View/Screen/Wallet/Top_up/TopUpController.dart';
 import '../../View/Screen/Wallet/WalletController.dart';
+import '../../View/Screen/splashScreen/splash_screen_controller.dart';
 
 class dependencies {
   static void init() {
@@ -21,5 +22,6 @@ class dependencies {
     Get.put(ContactSupportController(), permanent: true);
     Get.put(WalletController(), permanent: true);
     Get.put(Topupcontroller(), permanent: true);
+    Get.put(SplashController(), permanent: true);
   }
 }

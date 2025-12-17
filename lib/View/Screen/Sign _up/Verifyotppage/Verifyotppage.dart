@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
+import 'package:txme_app/View/Screen/Sign%20_up/Verifyotppage/verify_otp_controller.dart';
 import 'package:txme_app/View/Widgegt/OtpBoxes/OtpBoxes.dart';
 
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import '../../Sign-in/Verify_OTP_Page/VerifyOtpController.dart';
 
 class VerifyotppageS extends StatefulWidget {
   const VerifyotppageS({super.key});
@@ -19,6 +22,8 @@ class VerifyotppageS extends StatefulWidget {
 }
 
 class _VerifyotppageSState extends State<VerifyotppageS> {
+  final controller = Get.put(VerifyOtpController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,80 +39,89 @@ class _VerifyotppageSState extends State<VerifyotppageS> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 36.h),
-            child: Center(
-                child: Image.asset(
-                    AppImg.Data_security_27
-                )
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 36.h),
+              child: Center(child: Image.asset(AppImg.Data_security_27)),
             ),
-          ),
-          SizedBox(height: 40.h,),
-          Padding(
-            padding:  EdgeInsets.only(right: 50.w, left: 50.w),
-            child: Text(AppString.otpText.tr, style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black700
-            ),),
-          ),
-
-          SizedBox(height: 15.h,),
-
-          CustomOtpFields(
-            length: 6,   // Number of boxes
-            size: 50,    // Box size
-            spacing: 10, // Gap between boxes
-          ),
-
-
-
-          SizedBox(height: 46.h),
-          Padding(
-            padding:  EdgeInsets.only(left: 20.w, right: 20.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppString.receiveCode.tr, style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
-                    color: AppColors.black700
-                ),),
-                Text(AppString.Resend.tr, style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
-                    color: AppColors.A7DFF
-                ),),
-              ],
+            SizedBox(
+              height: 40.h,
             ),
-          ),
-          SizedBox(height: 46.h),
-          CustomButton(
-            height: 56.h,
-            width: 353.w,
-            BoxDecoration: BoxDecoration(
-              color: AppColors.red601,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Center(
+            Padding(
+              padding: EdgeInsets.only(right: 50.w, left: 50.w),
               child: Text(
-                AppString.Verify,
+                AppString.otpText.tr,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.FFFFFF,
-                ),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black700),
               ),
             ),
-            onTap: () {
-              Get.toNamed(AppRoute.createaccount);
-            },
-          ),
-        ],
+            SizedBox(
+              height: 15.h,
+            ),
+            CustomOtpFields(
+              length: 6, // Number of boxes
+              size: 50, // Box size
+              spacing: 10,
+              onChanged: controller.onOtpChanged,
+            ),
+            SizedBox(height: 46.h),
+            Padding(
+              padding: EdgeInsets.only(left: 20.w, right: 20.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppString.receiveCode.tr,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp,
+                        color: AppColors.black700),
+                  ),
+
+                  GestureDetector(
+                    onTap: controller.resendOtp,
+                    child: Text(
+                      AppString.Resend.tr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        color: AppColors.A7DFF,
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+            SizedBox(height: 46.h),
+            CustomButton(
+              height: 56.h,
+              width: 353.w,
+              BoxDecoration: BoxDecoration(
+                color: AppColors.red601,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Center(
+                child: controller.isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        AppString.Verify,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.FFFFFF,
+                        ),
+                      ),
+              ),
+              onTap: controller.verifyOtp,
+            ),
+          ],
+        ),
       ),
     );
-
   }
 }
