@@ -123,7 +123,7 @@ class AppRoute {
     ///==================== Authentication  Routes ====================///
 
     GetPage(name: signAsScreen, page: () => const SignAsScreen()),
-    GetPage(name: signinwithbiometrics, page: () => const SigninWithBiometrics()),
+    GetPage(name: signinwithbiometrics, page: () =>  SigninWithBiometrics()),
     GetPage(name: verifyfingerprint, page: () =>  Verifyfingerprint()),
     GetPage(name: enterEmail, page: () =>  EnterEmail()),
    // GetPage(name: verifyfaceid, page: () => const Verifyfaceid()),

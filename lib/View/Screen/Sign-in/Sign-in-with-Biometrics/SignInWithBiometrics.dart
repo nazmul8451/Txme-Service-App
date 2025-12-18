@@ -11,8 +11,13 @@ import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 
+import 'SignInWithBiometricsController.dart';
+
 class SigninWithBiometrics extends StatelessWidget {
-  const SigninWithBiometrics({super.key});
+   SigninWithBiometrics({super.key});
+
+  final biometricsController = Get.put(BiometricsController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +107,10 @@ class SigninWithBiometrics extends StatelessWidget {
                             ],
                           ),
                           onTap: () async {
-                            // small delay to prevent pointer conflicts on web
-                            await Future.delayed(Duration(milliseconds: 50));
-                            Get.toNamed(AppRoute.verifyfingerprint);
+                            await Future.delayed(
+                                const Duration(milliseconds: 50));
+
+                            biometricsController.enableBiometric();
                           },
                         ),
                       ),
@@ -190,7 +196,7 @@ class SigninWithBiometrics extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: 250.h),
+                  SizedBox(height: 230.h),
 
                   /// Sign Up Text
                   Row(

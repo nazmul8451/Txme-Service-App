@@ -139,7 +139,7 @@ class ProviderHomeScreen extends StatelessWidget {
                   Text(
                     "€1,250.00",
                     style: TextStyle(
-                      fontSize: 48.0,
+                      fontSize: 40.0.sp.clamp(40, 45),
                       color: Color(0xff1F2937),
                       fontWeight: FontWeight.w500,
                     ),

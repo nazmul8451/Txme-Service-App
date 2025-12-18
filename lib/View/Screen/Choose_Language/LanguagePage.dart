@@ -19,7 +19,7 @@ class Languagepage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.FFFFFF,
       body: SafeArea(
-        child: SingleChildScrollView(   //  Scroll added
+        child: SingleChildScrollView(   // 👈 Scroll added
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -43,9 +43,8 @@ class Languagepage extends StatelessWidget {
 
                 CustomButton(
                   onTap: () {
-                    Get.offAllNamed(AppRoute.signAsScreen);
+                    Get.toNamed(AppRoute.signAsScreen);
                   },
-
                   height: 45.h,
                   width: 180.w,
                   BoxDecoration: BoxDecoration(
@@ -56,7 +55,7 @@ class Languagepage extends StatelessWidget {
                     child: Text(
                       AppString.next,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: AppColors.FFFFFF,
                       ),

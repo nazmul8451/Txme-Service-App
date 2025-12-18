@@ -15,6 +15,8 @@ class ApiConstant {
   ///===================== Sing In =========================///
 
   static const String login = "$apiVersion/auth/login";
+  static const String enableBiometric = "$apiVersion/auth/enable-biometric";
+  static const String biometricLogin = "$apiVersion/auth/biometric-login";
 
 
 

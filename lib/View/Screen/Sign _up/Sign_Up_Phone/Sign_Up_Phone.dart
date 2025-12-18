@@ -67,7 +67,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
               ),
             ),
             onTap: () {
-              Get.toNamed(AppRoute.verifyotppageS);
+              Get.toNamed(AppRoute.createaccount);
             },
           ),
         ],

@@ -338,7 +338,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               children: [
                 CustomButton(
                   height: 56.h,
-                  width: 165.w,
+                  width: 160.w,
                   BoxDecoration: BoxDecoration(
                     color: isUserSelected
                         ? AppColors.red601
@@ -365,7 +365,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 SizedBox(width: 15.w),
                 CustomButton(
                   height: 56.h,
-                  width: 165.w,
+                  width: 160.w,
                   BoxDecoration: BoxDecoration(
                     color: !isUserSelected
                         ? AppColors.red601

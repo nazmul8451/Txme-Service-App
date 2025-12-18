@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
+
+import '../../../helper/Shared_prefe/shared_prefe.dart';
 
 class CustomLogoutPopup extends StatelessWidget {
   const CustomLogoutPopup({super.key});
@@ -69,10 +74,11 @@ class CustomLogoutPopup extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // TODO: Add logout function
+                onPressed: () async {
+                  await SharePrefsHelper.clearSessionData();
+                  Get.offAllNamed(AppRoute.signinwithbiometrics);
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF5A36),
                   shape: RoundedRectangleBorder(

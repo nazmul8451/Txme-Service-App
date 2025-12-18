@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/App_Routes/app_routes.dart';
+import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_client.dart';
 import '../../../../service/api_url.dart';
-import '../../../../helper/shared_prefe/shared_prefe.dart';
+import '../otp_purpose.dart';
 
 class VerifyOtpController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
@@ -130,20 +131,26 @@ class VerifyOtpController extends GetxController {
 
     debugPrint("💾 SAVING USER DATA...");
 
-    /// 🔐 TOKENS
+    ///  TOKENS
     await SharePrefsHelper.setString(
       SharePrefsHelper.bearerToken,
       tokens['accessToken'],
     );
 
     await SharePrefsHelper.setString(
-      refreshTokenKey,
+      SharePrefsHelper.refreshToken,
       tokens['refreshToken'],
     );
 
-    /// 👤 USER INFO
-    await SharePrefsHelper.setString(userIdKey, userInfo['userId']);
-    await SharePrefsHelper.setString(userEmailKey, userInfo['email']);
+    await SharePrefsHelper.setString(
+      SharePrefsHelper.userId,
+      userInfo['userId'],
+    );
+
+    await SharePrefsHelper.setString(
+      SharePrefsHelper.userEmail,
+      userInfo['email'],
+    );
 
     /// 🎭 ROLE (save once)
     await SharePrefsHelper.setString(
@@ -151,7 +158,7 @@ class VerifyOtpController extends GetxController {
       userInfo['role'],
     );
 
-    /// ✅ CONFIRM PRINT
+    ///  CONFIRM PRINT
     debugPrint("✅ USER ID => ${userInfo['userId']}");
     debugPrint("✅ EMAIL => ${userInfo['email']}");
     debugPrint("✅ ROLE => ${userInfo['role']}");
@@ -163,19 +170,24 @@ class VerifyOtpController extends GetxController {
   void _handleNavigation() {
     debugPrint("➡ NAVIGATING BASED ON PURPOSE => $purpose");
 
-    if (purpose == "login_otp") {
-      debugPrint("🏠 LOGIN OTP VERIFIED → SIGN DONE PAGE");
+    if (purpose == OtpPurpose.loginOtp.value) {
+      debugPrint("🏠 LOGIN OTP VERIFIED → SIGN IN DONE PAGE");
       Get.offAllNamed(AppRoute.signindone);
-    }
-    else if (purpose == "email_verify") {
-      debugPrint("📱 EMAIL VERIFIED → PHONE NUMBER PAGE");
+
+    } else if (purpose == OtpPurpose.emailVerify.value) {
+      debugPrint("📧 EMAIL VERIFIED → PHONE NUMBER PAGE");
       Get.offAllNamed(AppRoute.signUpPhone);
-    }
-    else {
+
+    } else if (purpose == OtpPurpose.phoneVerify.value) {
+      debugPrint("📱 PHONE VERIFIED → CREATE ACCOUNT");
+      Get.offAllNamed(AppRoute.createaccount);
+
+    } else {
       debugPrint("⚠ UNKNOWN PURPOSE → GO BACK");
       Get.back();
     }
   }
+
 
   /// ================= ERROR =================
   void _error(String msg) {

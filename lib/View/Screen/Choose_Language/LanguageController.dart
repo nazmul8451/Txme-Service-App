@@ -6,8 +6,10 @@ import '../../../helper/Shared_prefe/shared_prefe.dart' show SharePrefsHelper;
 
 class LanguageController extends GetxController {
 
+  /// Selected locale
   final Rx<Locale> selectedLocale = const Locale('en', 'US').obs;
 
+  /// Language map
   final Map<String, Locale> languagesMap = {
     "English": const Locale('en', 'US'),
     "German": const Locale('de', 'DE'),
@@ -21,8 +23,9 @@ class LanguageController extends GetxController {
     _loadSavedLanguage();
   }
 
+  /// Change language
   Future<void> changeLanguage(String lang) async {
-    final locale = languagesMap[lang]!;
+    final locale = languagesMap[lang] ?? const Locale('en', 'US');
 
     selectedLocale.value = locale;
     Get.updateLocale(locale);
@@ -31,13 +34,7 @@ class LanguageController extends GetxController {
       SharePrefsHelper.language,
       lang,
     );
-
-    await SharePrefsHelper.setBool(
-      SharePrefsHelper.languageSelected,
-      true,
-    );
   }
-
 
   /// Load saved language
   Future<void> _loadSavedLanguage() async {
@@ -48,9 +45,6 @@ class LanguageController extends GetxController {
       final locale = languagesMap[savedLang]!;
       selectedLocale.value = locale;
       Get.updateLocale(locale);
-
-      debugPrint("🔁 LANGUAGE LOADED => $savedLang");
     }
   }
 }
-

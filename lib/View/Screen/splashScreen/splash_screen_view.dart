@@ -7,7 +7,6 @@ import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Screen/splashScreen/splash_screen_controller.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
-import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 class SplashScreenView extends StatelessWidget {
    SplashScreenView({super.key});
@@ -39,7 +38,7 @@ class SplashScreenView extends StatelessWidget {
                         AppString.txmeRecaim.tr, //  localization only
                         style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 16.sp, //  responsive
+                          fontSize: 16, //  responsive
                           fontWeight: FontWeight.w400,
                           color: AppColors.black800,
                         ),
@@ -66,7 +65,7 @@ class SplashScreenView extends StatelessWidget {
                     AppString.getStarted.tr, //  localization
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14.sp, //  responsive
+                      fontSize: 14.sp.clamp(14, 16), //  responsive
                       fontWeight: FontWeight.w700,
                       color: AppColors.FFFFFF,
                     ),

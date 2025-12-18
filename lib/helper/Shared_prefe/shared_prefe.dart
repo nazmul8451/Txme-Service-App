@@ -10,6 +10,11 @@ class SharePrefsHelper {
   static const String provider = "PROVIDER";
   static const String languageSelected = "language_selected";
   static const String splashSeen = "splash_seen";
+  static const String refreshToken = "refresh_token";
+  static const String userId = "user_id";
+  static const String userEmail = "user_email";
+
+
 
   /// ================= GET =================
   static Future<String> getString(String key) async {
@@ -38,5 +43,19 @@ class SharePrefsHelper {
     final pref = await SharedPreferences.getInstance();
     return pref.getBool(key) ?? false;
   }
+
+
+  static Future<void> clearSessionData() async {
+    final pref = await SharedPreferences.getInstance();
+
+    //  Remove session-based data
+    await pref.remove("user_id");
+    await pref.remove(refreshToken);
+    await pref.remove("user_email");
+    await pref.remove(userRole);
+
+    //  DO NOT REMOVE refresh_token
+  }
+
 
 }
