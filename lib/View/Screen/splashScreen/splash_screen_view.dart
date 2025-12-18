@@ -51,9 +51,7 @@ class SplashScreenView extends StatelessWidget {
               SizedBox(height: 42.h),
 
               CustomButton(
-                onTap: () {
-                  controller.onGetStarted();
-                },
+                onTap: controller.onGetStarted,
                 height: 40.h,
                 width: 167.w,
                 BoxDecoration: BoxDecoration(
@@ -62,16 +60,17 @@ class SplashScreenView extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    AppString.getStarted.tr, //  localization
+                    AppString.getStarted.tr,
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 14.sp.clamp(14, 16), //  responsive
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.FFFFFF,
                     ),
                   ),
                 ),
               ),
+
             ],
           ),
         ),

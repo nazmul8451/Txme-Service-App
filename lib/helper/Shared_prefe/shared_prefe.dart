@@ -13,6 +13,7 @@ class SharePrefsHelper {
   static const String refreshToken = "refresh_token";
   static const String userId = "user_id";
   static const String userEmail = "user_email";
+  static const String biometricToken = "biometricToken";
 
 
 
@@ -49,13 +50,16 @@ class SharePrefsHelper {
     final pref = await SharedPreferences.getInstance();
 
     //  Remove session-based data
-    await pref.remove("user_id");
+
     await pref.remove(refreshToken);
-    await pref.remove("user_email");
-    await pref.remove(userRole);
+
+    await pref.remove(bearerToken);
 
     //  DO NOT REMOVE refresh_token
   }
+
+
+
 
 
 }

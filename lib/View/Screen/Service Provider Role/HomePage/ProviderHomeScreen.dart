@@ -190,12 +190,12 @@ class ProviderHomeScreen extends StatelessWidget {
                      SizedBox(height: 12.0.h),
                     Center(
                       child: SizedBox(
-                        width: 253,
-                        height: 47,
+                        width: 253.w,
+                        height: 45.h.clamp(45, 46),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.red601,
-                            padding:  EdgeInsets.symmetric(vertical: 14.0),
+                            padding:  EdgeInsets.symmetric(vertical: 12.0.h.clamp(12, 14)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0.r),
                             ),

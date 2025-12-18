@@ -14,10 +14,9 @@ class FingerprintController extends GetxController {
   RxBool isScanning = false.obs;
 
   @override
-  void onInit() {
-    super.onInit();
-    debugPrint("🟢 FingerprintController onInit");
-    _startFingerprint();
+  void onReady() {
+    super.onReady();
+    _startFingerprint(); // ✅ SAFE HERE
   }
 
   /// ================= START BIOMETRIC =================
@@ -29,14 +28,14 @@ class FingerprintController extends GetxController {
       final canCheck = await auth.canCheckBiometrics;
 
       if (!supported || !canCheck) {
-        _error("Biometric not available");
+        _error("Biometric not available on this device");
         return;
       }
 
       isScanning.value = true;
 
       final authenticated = await auth.authenticate(
-        localizedReason: 'Verify using biometrics',
+        localizedReason: 'Verify using fingerprint',
         options: const AuthenticationOptions(
           biometricOnly: true,
           stickyAuth: true,
@@ -47,65 +46,67 @@ class FingerprintController extends GetxController {
 
       if (authenticated) {
         await _biometricLoginApi();
+      } else {
+        _error("Fingerprint not matched");
       }
     } catch (e) {
       isScanning.value = false;
-      _error(e.toString());
+      debugPrint("❌ BIOMETRIC ERROR => $e");
+      _error("Biometric authentication failed");
     }
   }
 
   /// ================= BIOMETRIC LOGIN API =================
   Future<void> _biometricLoginApi() async {
-    final refreshToken =
-    await SharePrefsHelper.getString("refresh_token");
+    final biometricToken =
+    await SharePrefsHelper.getString(SharePrefsHelper.biometricToken);
 
-    if (refreshToken.isEmpty) {
-      _error("Refresh token not found");
+    if (biometricToken.isEmpty) {
+      _error("Biometric not enabled. Please login first.");
+      Get.offAllNamed(AppRoute.signinwithbiometrics);
       return;
     }
 
-    debugPrint("🔐 BIOMETRIC LOGIN REQUEST");
-
     final response = await apiClient.postData(
-      ApiConstant.biometricLogin, // /auth/biometric-login
+      ApiConstant.biometricLogin,
       {
-        "refreshToken": refreshToken,
+        "biometricToken": biometricToken,
       },
       needToken: false,
     );
 
-    debugPrint("📡 STATUS => ${response.statusCode}");
-    debugPrint("📦 BODY => ${response.body}");
-
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = response.body['data'];
 
-      /// 🔐 UPDATE ACCESS TOKEN
+      /// ✅ SAVE ACCESS TOKEN (correct path)
       await SharePrefsHelper.setString(
         SharePrefsHelper.bearerToken,
         data['accessToken'],
       );
 
-      /// 👤 UPDATE USER INFO
+      /// 👤 USER INFO
+      final user = data['userInfo'];
+
       await SharePrefsHelper.setString(
         SharePrefsHelper.userId,
-        data['userInfo']['userId'],
+        user['userId'],
       );
 
       await SharePrefsHelper.setString(
         SharePrefsHelper.userEmail,
-        data['userInfo']['email'],
+        user['email'],
       );
 
       await SharePrefsHelper.setString(
         SharePrefsHelper.userRole,
-        data['userInfo']['role'],
+        user['role'],
       );
 
       debugPrint("✅ BIOMETRIC LOGIN SUCCESS");
-      debugPrint("🔁 TOKENS & USER INFO UPDATED");
 
+      /// 🚀 GO TO HOME
       Get.offAllNamed(AppRoute.signindone);
+
     } else {
       _error(response.body?['message'] ?? "Biometric login failed");
     }
@@ -123,3 +124,4 @@ class FingerprintController extends GetxController {
     );
   }
 }
+

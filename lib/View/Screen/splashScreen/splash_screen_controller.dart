@@ -1,43 +1,46 @@
 import 'package:get/get.dart';
-import '../../../helper/shared_prefe/shared_prefe.dart';
+import '../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../core/App_Routes/app_routes.dart';
 
 class SplashController extends GetxController {
-  static const String _getStartedKey = "isGetStartedClicked";
-  static const String _refreshTokenKey = "refresh_token";
+  static const String splashSeen = "splash_seen";
 
   @override
   void onInit() {
     super.onInit();
-    _handleSplashLogic();
+    _checkSplash();
   }
 
-  /// ================= SPLASH LOGIC =================
-  Future<void> _handleSplashLogic() async {
-    final isGetStarted =
-    await SharePrefsHelper.getString(_getStartedKey);
-
-    final refreshToken =
-    await SharePrefsHelper.getString(_refreshTokenKey);
-
-    // small delay for splash UX
+  /// 🔍 CHECK SPLASH (only once)
+  Future<void> _checkSplash() async {
     await Future.delayed(const Duration(milliseconds: 800));
 
-    ///  USER ALREADY LOGGED IN
-    if (refreshToken.isNotEmpty) {
-      Get.offAllNamed(AppRoute.homepage);
-      return;
+    final isSplashSeen =
+    await SharePrefsHelper.getBool(splashSeen);
+
+    final refreshToken =
+    await SharePrefsHelper.getString(SharePrefsHelper.refreshToken);
+
+    /// ✅ SPLASH ALREADY SEEN
+    if (isSplashSeen) {
+
+      /// 🔐 USER LOGGED IN (refresh token exists)
+      if (refreshToken.isNotEmpty) {
+        Get.offAllNamed(AppRoute.homepage);
+      }
+      /// 🚪 NOT LOGGED IN
+      else {
+        Get.offAllNamed(AppRoute.signinwithbiometrics);
+      }
     }
 
-    ///  FIRST TIME / NOT LOGGED IN USER
-    if (isGetStarted == "true") {
-      Get.offAllNamed(AppRoute.languagepage);
-    }
+    ///  splashSeen == false হলে
+    /// UI তেই থাকবে → Get Started দেখাবে
   }
 
-  /// ================= GET STARTED =================
+  /// 👉 GET STARTED BUTTON
   Future<void> onGetStarted() async {
-    await SharePrefsHelper.setString(_getStartedKey, "true");
-    Get.offAllNamed(AppRoute.languagepage);
+    await SharePrefsHelper.setBool(splashSeen, true);
+    Get.offAllNamed(AppRoute.signinwithbiometrics);
   }
 }

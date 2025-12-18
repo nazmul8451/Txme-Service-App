@@ -107,11 +107,10 @@ class SigninWithBiometrics extends StatelessWidget {
                             ],
                           ),
                           onTap: () async {
-                            await Future.delayed(
-                                const Duration(milliseconds: 50));
-
-                            biometricsController.enableBiometric();
+                            await biometricsController.onFingerprintClick();
                           },
+
+
                         ),
                       ),
                       SizedBox(width: 12.w),
@@ -214,7 +213,7 @@ class SigninWithBiometrics extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           await Future.delayed(Duration(milliseconds: 50));
-                          Get.toNamed(AppRoute.signUpEmail);
+                          Get.toNamed(AppRoute.languagepage);
                         },
                         child: Text(
                           AppString.signUn.tr,

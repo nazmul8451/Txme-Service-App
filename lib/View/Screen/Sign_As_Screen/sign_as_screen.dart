@@ -33,7 +33,7 @@ class _SignAsScreenState extends State<SignAsScreen> {
     }
 
     /// BOTH → SAME SIGN IN PAGE
-    Get.toNamed(AppRoute.signinwithbiometrics);
+    Get.toNamed(AppRoute.signUpEmail);
   }
 
 

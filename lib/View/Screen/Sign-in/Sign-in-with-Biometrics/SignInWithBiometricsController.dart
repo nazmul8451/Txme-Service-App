@@ -10,34 +10,57 @@ class BiometricsController extends GetxController {
 
   RxBool isLoading = false.obs;
 
-  /// 🔐 ENABLE BIOMETRIC API
-  Future<void> enableBiometric() async {
-    final accessToken =
-    await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+  /// 🔐 Fingerprint button main handler
+  Future<void> onFingerprintClick() async {
+    final biometricToken =
+    await SharePrefsHelper.getString(SharePrefsHelper.biometricToken);
 
-    if (accessToken.isEmpty) {
-      Get.snackbar("Error", "Access token not found");
+    if (biometricToken.isNotEmpty) {
+      /// biometric token আছে → local fingerprint page
+      Get.toNamed(AppRoute.verifyfingerprint);
+    } else {
+      /// biometric token নাই → enable biometric (OTP flow)
+      await _sendBiometricOtp();
+    }
+  }
+
+  /// 🔐 SEND OTP TO EMAIL (enable-biometric)
+  Future<void> _sendBiometricOtp() async {
+    final email =
+    await SharePrefsHelper.getString(SharePrefsHelper.userEmail);
+
+    if (email.isEmpty) {
+      Get.snackbar("Error", "Email not found, please login with Gmail first");
       return;
     }
 
     isLoading.value = true;
 
     final response = await apiClient.postData(
-      ApiConstant.enableBiometric, // /auth/enable-biometric
-      {},
-      needToken: true, // Authorization header যাবে
+      ApiConstant.enableBiometric,
+      {
+        "email": email,
+      },
+      needToken: false, //  access token লাগবে না
     );
 
     isLoading.value = false;
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      ///  biometric enabled → go to scan page
-      Get.toNamed(AppRoute.verifyfingerprint);
+      /// OTP page
+      Get.toNamed(
+        AppRoute.verifyotppageS,
+        arguments: {
+          "purpose": "enable_biometric",
+          "email": email,
+        },
+      );
     } else {
       Get.snackbar(
         "Error",
-        response.body?['message'] ?? "Failed to enable biometric",
+        response.body?['message'] ?? "Failed to send OTP",
       );
     }
   }
 }
+

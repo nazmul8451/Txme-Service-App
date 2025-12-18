@@ -18,10 +18,6 @@ class VerifyOtpController extends GetxController {
 
   bool isLoading = false;
 
-  /// ================= STORAGE KEYS =================
-  static const String userIdKey = "user_id";
-  static const String userEmailKey = "user_email";
-  static const String refreshTokenKey = "refresh_token";
 
   /// ================= INIT =================
   @override
@@ -126,67 +122,108 @@ class VerifyOtpController extends GetxController {
 
   /// ================= SAVE USER DATA =================
   Future<void> _saveUserData(dynamic data) async {
-    final userInfo = data['userInfo'];
-    final tokens = data['tokens'];
+    debugPrint("💾 SAVING USER DATA => $data");
 
-    debugPrint("💾 SAVING USER DATA...");
+    /// ================= EMAIL (SAFE) =================
+    String? finalEmail =
+        data['email'] ??
+            data['userInfo']?['email'];
 
-    ///  TOKENS
-    await SharePrefsHelper.setString(
-      SharePrefsHelper.bearerToken,
-      tokens['accessToken'],
-    );
+    if (finalEmail != null && finalEmail.isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.userEmail,
+        finalEmail,
+      );
+      debugPrint("📧 EMAIL SAVED => $finalEmail");
+    }
 
-    await SharePrefsHelper.setString(
-      SharePrefsHelper.refreshToken,
-      tokens['refreshToken'],
-    );
+    /// ================= USER ID =================
+    String? finalUserId =
+        data['userId'] ??
+            data['userInfo']?['userId'];
 
-    await SharePrefsHelper.setString(
-      SharePrefsHelper.userId,
-      userInfo['userId'],
-    );
+    if (finalUserId != null && finalUserId.isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.userId,
+        finalUserId,
+      );
+      debugPrint("👤 USER ID SAVED => $finalUserId");
+    }
 
-    await SharePrefsHelper.setString(
-      SharePrefsHelper.userEmail,
-      userInfo['email'],
-    );
+    /// ================= ROLE =================
+    String? finalRole =
+        data['role'] ??
+            data['userInfo']?['role'];
 
-    /// 🎭 ROLE (save once)
-    await SharePrefsHelper.setString(
-      SharePrefsHelper.userRole,
-      userInfo['role'],
-    );
+    if (finalRole != null && finalRole.isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.userRole,
+        finalRole,
+      );
+      debugPrint("🎭 ROLE SAVED => $finalRole");
+    }
 
-    ///  CONFIRM PRINT
-    debugPrint("✅ USER ID => ${userInfo['userId']}");
-    debugPrint("✅ EMAIL => ${userInfo['email']}");
-    debugPrint("✅ ROLE => ${userInfo['role']}");
-    debugPrint("✅ ACCESS TOKEN SAVED");
-    debugPrint("✅ REFRESH TOKEN SAVED");
+    /// ================= BIOMETRIC TOKEN =================
+    if (data['biometricToken'] != null &&
+        data['biometricToken'].toString().isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.biometricToken,
+        data['biometricToken'],
+      );
+      debugPrint("🧬 BIOMETRIC TOKEN SAVED");
+    }
+
+    /// ================= NORMAL LOGIN TOKENS =================
+    if (data['tokens'] != null) {
+      final tokens = data['tokens'];
+
+      if (tokens['accessToken'] != null) {
+        await SharePrefsHelper.setString(
+          SharePrefsHelper.bearerToken,
+          tokens['accessToken'],
+        );
+        debugPrint("🔐 ACCESS TOKEN SAVED");
+      }
+
+      if (tokens['refreshToken'] != null) {
+        await SharePrefsHelper.setString(
+          SharePrefsHelper.refreshToken,
+          tokens['refreshToken'],
+        );
+        debugPrint("🔁 REFRESH TOKEN SAVED");
+      }
+    }
   }
+
+
+
+
+
 
   /// ================= PURPOSE BASED NAVIGATION =================
   void _handleNavigation() {
     debugPrint("➡ NAVIGATING BASED ON PURPOSE => $purpose");
 
     if (purpose == OtpPurpose.loginOtp.value) {
-      debugPrint("🏠 LOGIN OTP VERIFIED → SIGN IN DONE PAGE");
       Get.offAllNamed(AppRoute.signindone);
 
     } else if (purpose == OtpPurpose.emailVerify.value) {
-      debugPrint("📧 EMAIL VERIFIED → PHONE NUMBER PAGE");
       Get.offAllNamed(AppRoute.signUpPhone);
 
     } else if (purpose == OtpPurpose.phoneVerify.value) {
-      debugPrint("📱 PHONE VERIFIED → CREATE ACCOUNT");
       Get.offAllNamed(AppRoute.createaccount);
 
-    } else {
-      debugPrint("⚠ UNKNOWN PURPOSE → GO BACK");
+    }
+    /// 🧬 BIOMETRIC ENABLE SUCCESS
+    else if (purpose == OtpPurpose.biometricEnable.value) {
+      debugPrint("🧬 BIOMETRIC ENABLED → FINGERPRINT PAGE");
+      Get.offAllNamed(AppRoute.verifyfingerprint);
+    }
+    else {
       Get.back();
     }
   }
+
 
 
   /// ================= ERROR =================

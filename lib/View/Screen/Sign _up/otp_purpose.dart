@@ -4,6 +4,7 @@ enum OtpPurpose {
   loginOtp,
   passwordReset,
   numberChange,
+  biometricEnable,
 }
 
 extension OtpPurposeX on OtpPurpose {
@@ -19,6 +20,8 @@ extension OtpPurposeX on OtpPurpose {
         return "password_reset";
       case OtpPurpose.numberChange:
         return "number_change";
+      case OtpPurpose.biometricEnable:
+        return "biometric_enable";
     }
   }
 }
