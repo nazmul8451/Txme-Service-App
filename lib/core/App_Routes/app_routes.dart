@@ -28,7 +28,6 @@ import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/SignInWithBiometrics.d
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/Verify-Fingerprint/verifyFingerprint.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/Face_Verification_Done/faceVerificationDone.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/VerifyFaceID/VerifyfaceidID.dart';
-import '../../View/Screen/Sign-in/Verify_OTP_Page/verifyOTPPage.dart';
 import '../../View/Screen/Sign_As_Screen/sign_as_screen.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Bookings/Request Sent/RequestSent.dart';
 import '../../View/Screen/User Role/BookingsViewClient/BookingsPage.dart';

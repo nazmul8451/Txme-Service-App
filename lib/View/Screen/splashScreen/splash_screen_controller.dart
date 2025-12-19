@@ -11,24 +11,24 @@ class SplashController extends GetxController {
     _checkSplash();
   }
 
-  /// 🔍 CHECK SPLASH (only once)
+  ///  CHECK SPLASH (only once)
   Future<void> _checkSplash() async {
     await Future.delayed(const Duration(milliseconds: 800));
 
     final isSplashSeen =
     await SharePrefsHelper.getBool(splashSeen);
 
-    final refreshToken =
-    await SharePrefsHelper.getString(SharePrefsHelper.refreshToken);
+    final bearerToken =
+    await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-    /// ✅ SPLASH ALREADY SEEN
+    ///  SPLASH ALREADY SEEN
     if (isSplashSeen) {
 
-      /// 🔐 USER LOGGED IN (refresh token exists)
-      if (refreshToken.isNotEmpty) {
+      ///  USER LOGGED IN (refresh token exists)
+      if (bearerToken.isNotEmpty) {
         Get.offAllNamed(AppRoute.homepage);
       }
-      /// 🚪 NOT LOGGED IN
+      ///  NOT LOGGED IN
       else {
         Get.offAllNamed(AppRoute.signinwithbiometrics);
       }
@@ -38,7 +38,7 @@ class SplashController extends GetxController {
     /// UI তেই থাকবে → Get Started দেখাবে
   }
 
-  /// 👉 GET STARTED BUTTON
+  ///  GET STARTED BUTTON
   Future<void> onGetStarted() async {
     await SharePrefsHelper.setBool(splashSeen, true);
     Get.offAllNamed(AppRoute.signinwithbiometrics);

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -81,70 +82,65 @@ class SigninWithBiometrics extends StatelessWidget {
                   /// Fingerprint & Face ID Row
                   Row(
                     children: [
-                      Expanded(
-                        child: CustomButton(
-                          height: 52.h,
-                          width: double.infinity,
-                          BoxDecoration: BoxDecoration(
-                            color: AppColors.red601,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(AppIcons.fingerPrint,
-                                  color: Colors.white),
-                              SizedBox(width: 6.w),
-                              Text(
-                                "Fingerprint",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
+                      if (Platform.isAndroid) ...[
+                        Expanded(
+                          child: CustomButton(
+                            height: 52.h,
+                            width: double.infinity,
+                            BoxDecoration: BoxDecoration(
+                              color: AppColors.red601,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(AppIcons.fingerPrint, color: Colors.white),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  "Fingerprint",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            onTap: biometricsController.onFingerprintClick,
                           ),
-                          onTap: () async {
-                            await biometricsController.onFingerprintClick();
-                          },
-
-
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: CustomButton(
-                          height: 52.h,
-                          width: double.infinity,
-                          BoxDecoration: BoxDecoration(
-                            color: AppColors.red601,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(AppIcons.faceId,
-                                  color: Colors.white),
-                              SizedBox(width: 6.w),
-                              Text(
-                                "Face ID",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
+                      ],
+
+                      if (Platform.isIOS) ...[
+                        Expanded(
+                          child: CustomButton(
+                            height: 52.h,
+                            width: double.infinity,
+                            BoxDecoration: BoxDecoration(
+                              color: AppColors.red601,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(AppIcons.faceId, color: Colors.white),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  "Face ID",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            onTap: biometricsController.onFaceIdClick,
                           ),
-                          onTap: () async {
-                            await Future.delayed(Duration(milliseconds: 50));
-                            Get.toNamed(AppRoute.verifyFaceId);
-                          },
                         ),
-                      ),
+                      ],
                     ],
                   ),
 

@@ -8,59 +8,63 @@ import '../../../../service/api_url.dart';
 class BiometricsController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
 
-  RxBool isLoading = false.obs;
-
-  /// 🔐 Fingerprint button main handler
+  /// ================= FINGER =================
   Future<void> onFingerprintClick() async {
-    final biometricToken =
+    final token =
     await SharePrefsHelper.getString(SharePrefsHelper.biometricToken);
 
-    if (biometricToken.isNotEmpty) {
-      /// biometric token আছে → local fingerprint page
+    if (token.isNotEmpty) {
       Get.toNamed(AppRoute.verifyfingerprint);
     } else {
-      /// biometric token নাই → enable biometric (OTP flow)
-      await _sendBiometricOtp();
+      await _sendBiometricOtp(purpose: "biometric_enable");
     }
   }
 
-  /// 🔐 SEND OTP TO EMAIL (enable-biometric)
-  Future<void> _sendBiometricOtp() async {
+  /// ================= FACE =================
+  Future<void> onFaceIdClick() async {
+    final token =
+    await SharePrefsHelper.getString(SharePrefsHelper.biometricToken);
+
+    if (token.isNotEmpty) {
+      Get.toNamed(AppRoute.verifyFaceId);
+    } else {
+      await _sendBiometricOtp(purpose: "biometric_enable");
+    }
+  }
+
+  /// ================= SEND OTP =================
+  Future<void> _sendBiometricOtp({required String purpose}) async {
     final email =
     await SharePrefsHelper.getString(SharePrefsHelper.userEmail);
 
     if (email.isEmpty) {
-      Get.snackbar("Error", "Email not found, please login with Gmail first");
+      Get.snackbar("Error", "Email not found");
       return;
     }
-
-    isLoading.value = true;
 
     final response = await apiClient.postData(
       ApiConstant.enableBiometric,
       {
         "email": email,
+        "purpose": purpose,
       },
-      needToken: false, //  access token লাগবে না
+      needToken: false,
     );
 
-    isLoading.value = false;
-
     if (response.statusCode == 200 || response.statusCode == 201) {
-      /// OTP page
       Get.toNamed(
         AppRoute.verifyotppageS,
         arguments: {
-          "purpose": "enable_biometric",
+          "purpose": purpose,
           "email": email,
         },
       );
     } else {
-      Get.snackbar(
-        "Error",
-        response.body?['message'] ?? "Failed to send OTP",
-      );
+      Get.snackbar("Error", "Failed to send OTP");
     }
   }
 }
+
+
+
 

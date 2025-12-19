@@ -12,7 +12,6 @@ import 'package:txme_app/View/Widgegt/OtpBoxes/OtpBoxes.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
-import '../../Sign-in/Verify_OTP_Page/VerifyOtpController.dart';
 
 class VerifyotppageS extends StatefulWidget {
   const VerifyotppageS({super.key});

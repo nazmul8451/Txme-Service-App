@@ -116,63 +116,7 @@ class AccountController extends GetxController {
 
 
 
-  Future<void> selectResidence(BuildContext context) async {
-    final selected = await showDialog<String>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text('Select Gender'),
-        children: [
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Dhaka");
-            },
-            child: Text("Dhaka"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Chattogram");
-            },
-            child: Text("Chattogram"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Sylhet");
-            },
-            child: Text("Sylhet"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Rajshahi");
-            },
-            child: Text("Rajshahi"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Khulna");
-            },
-            child: Text("Khulna"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Barishal");
-            },
-            child: Text("Barishal"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, "Rangpur");
-            },
-            child: Text("Rangpur"),
-          ),
-        ],
-      ),
-    );
 
-    if (selected != null) {
-      residenceController.text = selected;  // Update the controller with selected gender
-      selectedResidence.value = selected;  // Update the Rx value
-    }
-  }
 
   Future<void> selectMarital(BuildContext context) async {
     final selected = await showDialog<String>(

@@ -16,7 +16,7 @@ class FingerprintController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _startFingerprint(); // ✅ SAFE HERE
+    _startFingerprint(); //  SAFE HERE
   }
 
   /// ================= START BIOMETRIC =================
@@ -51,7 +51,7 @@ class FingerprintController extends GetxController {
       }
     } catch (e) {
       isScanning.value = false;
-      debugPrint("❌ BIOMETRIC ERROR => $e");
+      debugPrint(" BIOMETRIC ERROR => $e");
       _error("Biometric authentication failed");
     }
   }
@@ -102,7 +102,7 @@ class FingerprintController extends GetxController {
         user['role'],
       );
 
-      debugPrint("✅ BIOMETRIC LOGIN SUCCESS");
+      debugPrint(" BIOMETRIC LOGIN SUCCESS");
 
       /// 🚀 GO TO HOME
       Get.offAllNamed(AppRoute.signindone);
