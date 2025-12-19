@@ -170,7 +170,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             }),
              SizedBox(height: 20.h),
             CustomTextFieldC(
-              controller: c.nameController,
+              controller: c.nationalityController,
               color: Colors.grey.shade50,
 
               border:
@@ -204,37 +204,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
 
 
-            // Obx(() {
-            //   // Observing selectedGender and updating the hintText reactively
-            //   return CustomTextFieldC(
-            //     controller: c.residenceController,
-            //     color: Colors.grey.shade50,
-            //
-            //     border:
-            //     OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(12.r),
-            //       borderSide: BorderSide(color: AppColors.red601),
-            //     ),
-            //     readOnly: true, // Make the Gender field read-only
-            //     onTap: () => c.selectResidence(
-            //       context,
-            //     ), // Trigger gender selection dialog
-            //     hintText:
-            //         c.selectedResidence.value ??
-            //         AppString.selectResidence.tr, // Default hint text
-            //     label: AppString.countryResidence.tr,
-            //     suffixIcon: Icon(
-            //       Icons.arrow_drop_down,
-            //       color:AppColors.red601,
-            //     ), // Optional down-arrow icon
-            //   );
-            // }),
 
 
              SizedBox(height: 20.h),
 
             CustomTextFieldC(
-              controller: c.nameController,
+              controller: c.addressController,
               color: Colors.grey.shade50,
 
               border:
@@ -250,7 +225,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             ),
              SizedBox(height: 20.h),
             CustomTextFieldC(
-              controller: c.nameController,
+              controller: c.postalController,
               color: Colors.grey.shade50,
 
               border:
@@ -292,7 +267,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
              SizedBox(height: 20.h),
 
             CustomTextFieldC(
-              controller: c.nameController,
+              controller: c.idNumberController,
               color: Colors.grey.shade50,
 
               border:
@@ -384,13 +359,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    await c.submitCompleteProfile();
                     setState(() {
-                      isUserSelected = false;
-
-                      Get.toNamed(AppRoute.faceIDSetupScreen);
+                      isUserSelected = true;
                     });
                   },
+
                 ),
               ],
             ),
