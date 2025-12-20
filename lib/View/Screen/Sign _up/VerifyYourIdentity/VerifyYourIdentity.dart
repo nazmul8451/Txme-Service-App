@@ -81,7 +81,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 45.w),
+                              padding: EdgeInsets.only(right: 40.w),
                               child: Text(
                                 AppString.UploadcopyID.tr,
                                 style: TextStyle(
@@ -93,7 +93,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.arrow_forward_ios, size: 18),
+                              icon: Icon(Icons.arrow_forward_ios, size: 15),
                             ),
                           ],
                         ),
@@ -152,7 +152,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 45.w),
+                              padding: EdgeInsets.only(right: 40.w),
                               child: Text(
                                 AppString.UploadcopyID.tr,
                                 style: TextStyle(

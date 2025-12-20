@@ -6,7 +6,6 @@ import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/View/Widgegt/Email_Input_Field/CustomTextField.dart';
-import 'package:txme_app/core/App_Routes/app_routes.dart';
 import 'AccountController.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -20,11 +19,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool isUserSelected = true;
   final AccountController c = Get.put(AccountController());
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -309,68 +310,72 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               );
             }),
              SizedBox(height: 40.h),
-            Row(
-              children: [
-                CustomButton(
-                  height: 56.h,
-                  width: 160.w,
-                  BoxDecoration: BoxDecoration(
+        Row(
+          children: [
+            /// HELP BUTTON
+            CustomButton(
+              height: 56.h,
+              width: 160.w,
+              BoxDecoration: BoxDecoration(
+                color: isUserSelected
+                    ? AppColors.red601
+                    : Colors.transparent,
+                border: Border.all(color: AppColors.red601, width: 1.w),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Center(
+                child: Text(
+                  AppString.Help.tr,
+                  style: TextStyle(
                     color: isUserSelected
-                        ? AppColors.red601
-                        : Colors.transparent,
-                    border: Border.all(color: AppColors.red601, width: 1.w),
-                    borderRadius: BorderRadius.circular(12.r),
+                        ? AppColors.FFFFFF
+                        : AppColors.black900,
                   ),
-                  child: Center(
-                    child: Text(
-                      AppString.Help.tr,
-                      style: TextStyle(
-                        color: isUserSelected
-                            ? AppColors.FFFFFF
-                            : AppColors.black900,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      isUserSelected = true;
-                    });
-                  },
                 ),
-                SizedBox(width: 15.w),
-                CustomButton(
-                  height: 56.h,
-                  width: 160.w,
-                  BoxDecoration: BoxDecoration(
-                    color: !isUserSelected
-                        ? AppColors.red601
-                        : Colors.transparent,
-                    border: Border.all(color: AppColors.red601, width: 1.w),
-                    //color: AppColors.red601,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      AppString.next.tr,
-                      style: TextStyle(
-                        color: isUserSelected
-                            ? AppColors.black900
-                            : AppColors.FFFFFF,
-                      ),
-                    ),
-                  ),
-                  onTap: () async {
-                    await c.submitCompleteProfile();
-                    setState(() {
-                      isUserSelected = true;
-                    });
-                  },
-
-                ),
-              ],
+              ),
+              onTap: () {
+                setState(() {
+                  isUserSelected = true;
+                });
+              },
             ),
 
+            SizedBox(width: 15.w),
+
+            /// NEXT BUTTON
+            CustomButton(
+              height: 56.h,
+              width: 160.w,
+              BoxDecoration: BoxDecoration(
+                color: !isUserSelected
+                    ? AppColors.red601
+                    : Colors.transparent,
+                border: Border.all(color: AppColors.red601, width: 1.w),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Center(
+                child: Text(
+                  AppString.next.tr,
+                  style: TextStyle(
+                    color: !isUserSelected
+                        ? AppColors.FFFFFF
+                        : AppColors.black900,
+                  ),
+                ),
+              ),
+              onTap: () async {
+                setState(() {
+                  isUserSelected = false;
+                });
+
+                await c.submitCompleteProfile();
+              },
+            ),
           ],
+        )
+
+
+        ],
         ),
       ),
     );

@@ -142,31 +142,50 @@ class VerifyOtpController extends GetxController {
 
   /// ================= SAVE DATA =================
   Future<void> _saveUserData(dynamic data) async {
-    String? finalEmail = data['email'] ?? data['userInfo']?['email'];
-    if (finalEmail != null && finalEmail.isNotEmpty) {
+    if (data == null) return;
+
+    /// ================= USER BASIC INFO =================
+    if (data['email'] != null && data['email'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.userEmail,
-        finalEmail,
+        data['email'],
       );
     }
 
-    String? finalUserId = data['userId'] ?? data['userInfo']?['userId'];
-    if (finalUserId != null && finalUserId.isNotEmpty) {
+    if (data['userId'] != null && data['userId'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.userId,
-        finalUserId,
+        data['userId'],
       );
     }
 
-    String? finalRole = data['role'] ?? data['userInfo']?['role'];
-    if (finalRole != null && finalRole.isNotEmpty) {
+    if (data['role'] != null && data['role'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.userRole,
-        finalRole,
+        data['role'],
       );
     }
 
-    /// 🧬 BIOMETRIC TOKEN (ONE TOKEN)
+    /// ================= NORMAL TOKENS =================
+    /// (Email verify / Login case)
+    if (data['accessToken'] != null &&
+        data['accessToken'].toString().isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.bearerToken,
+        data['accessToken'],
+      );
+    }
+
+    if (data['refreshToken'] != null &&
+        data['refreshToken'].toString().isNotEmpty) {
+      await SharePrefsHelper.setString(
+        SharePrefsHelper.refreshToken,
+        data['refreshToken'],
+      );
+    }
+
+    /// ================= BIOMETRIC TOKEN =================
+    /// (Biometric enable case)
     if (data['biometricToken'] != null &&
         data['biometricToken'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
@@ -174,26 +193,8 @@ class VerifyOtpController extends GetxController {
         data['biometricToken'],
       );
     }
-
-    /// 🔐 NORMAL TOKENS
-    if (data['tokens'] != null) {
-      final tokens = data['tokens'];
-
-      if (tokens['accessToken'] != null) {
-        await SharePrefsHelper.setString(
-          SharePrefsHelper.bearerToken,
-          tokens['accessToken'],
-        );
-      }
-
-      if (tokens['refreshToken'] != null) {
-        await SharePrefsHelper.setString(
-          SharePrefsHelper.refreshToken,
-          tokens['refreshToken'],
-        );
-      }
-    }
   }
+
 
   void _error(String msg) {
     Get.snackbar(

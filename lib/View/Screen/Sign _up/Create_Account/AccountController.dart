@@ -20,22 +20,22 @@ class AccountController extends GetxController {
   final addressController = TextEditingController();
   final postalController = TextEditingController();
   final idNumberController = TextEditingController();
-
   final genderController = TextEditingController();
   final iDController = TextEditingController();
   final maritalController = TextEditingController();
 
-  /// ================= RX VALUES =================
+  /// ================= RX =================
   final selectedDate = Rxn<DateTime>();
-  final selectedGender = RxnString();     // male / female
-  final selectedID = RxnString();         // passport / nid
-  final selectedMarital = RxnString();    // married / unmarried
+  final selectedGender = RxnString();
+  final selectedID = RxnString();
+  final selectedMarital = RxnString();
+  final idFront = Rxn<File>();
+  final idBack = Rxn<File>();
+  final addressDoc = Rxn<File>();
 
-  /// ================= FILES =================
-  var profileImage = Rxn<File>();
-  final List<File> idDocuments = [];
-  final List<File> addressDocuments = [];
 
+  /// ================= IMAGE =================
+  final profileImage = Rxn<File>();
   final ImagePicker _picker = ImagePicker();
 
   /// ================= CAMERA =================
@@ -50,9 +50,9 @@ class AccountController extends GetxController {
     }
   }
 
-  /// ================= DATE PICKER =================
+  /// ================= DATE =================
   Future<void> selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: Get.context!,
       initialDate: DateTime(2000),
       firstDate: DateTime(1950),
@@ -140,18 +140,13 @@ class AccountController extends GetxController {
     }
   }
 
-  /// ================= COMPLETE PROFILE API =================
+  /// ================= SUBMIT PROFILE =================
   Future<void> submitCompleteProfile() async {
-    final accessToken =
+    final token =
     await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-    if (accessToken.isEmpty) {
+    if (token.isEmpty) {
       Get.snackbar("Error", "Unauthorized");
-      return;
-    }
-
-    if (profileImage.value == null) {
-      Get.snackbar("Error", "Profile image required");
       return;
     }
 
@@ -160,52 +155,107 @@ class AccountController extends GetxController {
 
     final request = http.MultipartRequest("PATCH", uri);
 
-    /// 🔐 HEADER
-    request.headers['Authorization'] = "Bearer $accessToken";
+    request.headers.addAll({
+      "Authorization": "Bearer $token",
+      "Accept": "application/json",
+    });
 
-    /// 🧠 JSON DATA (Postman same)
+    /// ================= FULL DATA =================
     final Map<String, dynamic> data = {
       "fullName": nameController.text.trim(),
-      "dateOfBirth": selectedDate.value
-          ?.toIso8601String()
-          .split("T")
-          .first,
+      "dateOfBirth": dobController.text.trim(),
       "gender": selectedGender.value,
       "nationality": nationalityController.text.trim(),
       "countryOfResidence": residenceController.text.trim(),
+
       "residentialAddress": {
         "address": addressController.text.trim(),
+        "latitude": 23.8103,
+        "longitude": 90.4125,
       },
+
       "postalAddress": postalController.text.trim(),
+
       "identification": {
         "type": selectedID.value,
         "value": idNumberController.text.trim(),
       },
+
       "maritalStatus": selectedMarital.value,
+
+      "providerProfile": {
+        "serviceCategory": ["plumber", "electrician"],
+        "workingHours": {
+          "startTime": "09:00",
+          "endTime": "18:00",
+          "duration": 120,
+          "workingDays": ["mon", "tue", "wed", "thu", "fri"],
+        },
+        "pricePerSlot": 500,
+        "bio": "Experienced service provider",
+        "experience": 5,
+        "skills": ["pipe fitting", "electrical wiring"],
+      }
     };
 
     request.fields['data'] = jsonEncode(data);
 
-    /// 📸 PROFILE IMAGE
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        "image",
-        profileImage.value!.path,
-      ),
-    );
+    /// ================= PROFILE IMAGE (optional) =================
+    if (profileImage.value != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "image",
+          profileImage.value!.path,
+        ),
+      );
+    }
 
+    /// ================= ID DOCUMENTS =================
+    if (idFront.value != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "idDocuments",
+          idFront.value!.path,
+        ),
+      );
+    }
 
-    /// 🚀 SEND
-    final response = await request.send();
-    final body = await response.stream.bytesToString();
+    if (idBack.value != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "idDocuments",
+          idBack.value!.path,
+        ),
+      );
+    }
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.snackbar("Success", "Profile completed successfully");
-      Get.offAllNamed(AppRoute.verifyyouridentity);
-    } else {
-      Get.snackbar("Error", body);
+    /// ================= ADDRESS DOCUMENT =================
+    if (addressDoc.value != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "addressDocuments",
+          addressDoc.value!.path,
+        ),
+      );
+    }
+
+    /// ================= SEND =================
+    try {
+      final response = await request.send();
+      final body = await response.stream.bytesToString();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar("Success", "Profile completed");
+        Get.offAllNamed(AppRoute.faceIDSetupScreen);
+      } else {
+        Get.snackbar("Error", body);
+      }
+    } catch (e) {
+      print("UPLOAD ERROR => $e");
+      Get.snackbar("Error", e.toString());
     }
   }
+
 
   @override
   void onClose() {

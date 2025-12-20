@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../View/Screen/Service Provider Role/Contactsupport/ContactSupportController.dart';
+import '../../View/Screen/Sign _up/VerifyYourIdentity/verify_identity_controller.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWalletController.dart';
 import '../../View/Screen/User Role/Profile/EditProfile/EditProfileController.dart';
@@ -23,5 +24,6 @@ class dependencies {
     Get.put(WalletController(), permanent: true);
     Get.put(Topupcontroller(), permanent: true);
     Get.put(SplashController(), permanent: true);
+    Get.put(VerifyIdentityController(), permanent: true);
   }
 }
