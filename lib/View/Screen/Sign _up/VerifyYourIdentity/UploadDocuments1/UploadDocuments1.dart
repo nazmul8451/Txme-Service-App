@@ -106,31 +106,49 @@ class Uploaddocuments1 extends StatelessWidget {
                 ),
 
                 /// UPLOAD BUTTON
-                CustomButton(
-                  height: 56.h,
-                  width: 353.w,
-                  BoxDecoration: BoxDecoration(
-                    color: controller.isUploading.value
-                        ? Colors.grey
-                        : AppColors.red601,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: controller.isUploading.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Center(
-                          child: Text(
-                            AppString.Upload,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
+                /// UPLOAD BUTTON
+                Obx(() => Column(
+                  children: [
+                    /// 🔘 BUTTON (STATIC)
+                    CustomButton(
+                      height: 56.h,
+                      width: 353.w,
+                      BoxDecoration: BoxDecoration(
+                        color: controller.isUploading.value
+                            ? Colors.grey
+                            : AppColors.red601,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      onTap: controller.isUploading.value
+                          ? null
+                          : controller.uploadSelectedDocuments,
+                      child: Center(
+                        child: Text(
+                          AppString.Upload,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                  onTap: controller.isUploading.value
-                      ? null
-                      : controller.uploadSelectedDocuments,
-                ),
+                      ),
+                    ),
+
+                    /// ⬇ LOADER (ONLY WHEN UPLOADING)
+                    if (controller.isUploading.value) ...[
+                      SizedBox(height: 12.h),
+                      const SizedBox(
+                        height: 26,
+                        width: 26,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                    ],
+                  ],
+                )),
+
+
               ],
             );
           },

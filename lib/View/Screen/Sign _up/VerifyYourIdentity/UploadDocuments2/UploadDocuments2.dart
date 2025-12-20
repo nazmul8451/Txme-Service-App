@@ -74,40 +74,47 @@ class Uploaddocuments2 extends StatelessWidget {
             SizedBox(height: 34.h),
 
             /// ⬆ Upload button
-            Obx(() {
-              return Column(
-                children: [
-                  CustomButton(
-                    height: 56.h,
-                    width: 353.w,
-                    BoxDecoration: BoxDecoration(
-                      color: AppColors.red601,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        AppString.Upload,
-                        style: TextStyle(
-                          color: AppColors.FFFFFF,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18.sp,
-                        ),
+            Obx(() => Column(
+              children: [
+                /// 🔘 BUTTON (STATIC)
+                CustomButton(
+                  height: 56.h,
+                  width: 353.w,
+                  BoxDecoration: BoxDecoration(
+                    color: controller.isUploading.value
+                        ? Colors.grey
+                        : AppColors.red601,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  onTap: controller.isUploading.value
+                      ? null
+                      : controller.uploadImage,
+                  child: Center(
+                    child: Text(
+                      AppString.Upload,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTap: () {
-                      controller.uploadImage();
-                    },
                   ),
+                ),
 
-                  SizedBox(height: 20.h),
-
-                  /// Bottom loader
-                  controller.isUploading.value
-                      ? const CircularProgressIndicator()
-                      : SizedBox(), /// hidden when false
+                /// ⬇️ LOADER (ONLY WHEN UPLOADING)
+                if (controller.isUploading.value) ...[
+                  SizedBox(height: 12.h),
+                  const SizedBox(
+                    height: 26,
+                    width: 26,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                    ),
+                  ),
                 ],
-              );
-            }),
+              ],
+            )),
+
 
           ],
         ),

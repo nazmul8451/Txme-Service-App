@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:http_parser/http_parser.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'package:txme_app/service/api_url.dart';
 import 'package:txme_app/helper/Shared_prefe/shared_prefe.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
@@ -24,19 +24,22 @@ class AccountController extends GetxController {
   final iDController = TextEditingController();
   final maritalController = TextEditingController();
 
-  /// ================= RX =================
+  /// ================= RX VALUES =================
   final selectedDate = Rxn<DateTime>();
-  final selectedGender = RxnString();
-  final selectedID = RxnString();
-  final selectedMarital = RxnString();
-  final idFront = Rxn<File>();
-  final idBack = Rxn<File>();
-  final addressDoc = Rxn<File>();
+  final selectedGender = RxnString();     // male / female
+  final selectedID = RxnString();         // passport / nid
+  final selectedMarital = RxnString();    // married / unmarried
 
+  /// ================= FILES =================
+  var profileImage = Rxn<File>();
+  final List<File> idDocuments = [];
+  final List<File> addressDocuments = [];
 
-  /// ================= IMAGE =================
-  final profileImage = Rxn<File>();
   final ImagePicker _picker = ImagePicker();
+
+  double? latitude;
+  double? longitude;
+
 
   /// ================= CAMERA =================
   Future<void> openCamera() async {
@@ -50,9 +53,36 @@ class AccountController extends GetxController {
     }
   }
 
-  /// ================= DATE =================
+
+  Future<void> getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Get.snackbar("Error", "Location service disabled");
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Get.snackbar("Error", "Location permission denied forever");
+      return;
+    }
+
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    latitude = position.latitude;
+    longitude = position.longitude;
+  }
+
+
+  /// ================= DATE PICKER =================
   Future<void> selectDate() async {
-    final picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: Get.context!,
       initialDate: DateTime(2000),
       firstDate: DateTime(1950),
@@ -140,121 +170,101 @@ class AccountController extends GetxController {
     }
   }
 
-  /// ================= SUBMIT PROFILE =================
+  /// ================= COMPLETE PROFILE API =================
   Future<void> submitCompleteProfile() async {
-    final token =
-    await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+    try {
 
-    if (token.isEmpty) {
-      Get.snackbar("Error", "Unauthorized");
-      return;
-    }
+      await getCurrentLocation();
 
-    final uri =
-    Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
+      final accessToken =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-    final request = http.MultipartRequest("PATCH", uri);
-
-    request.headers.addAll({
-      "Authorization": "Bearer $token",
-      "Accept": "application/json",
-    });
-
-    /// ================= FULL DATA =================
-    final Map<String, dynamic> data = {
-      "fullName": nameController.text.trim(),
-      "dateOfBirth": dobController.text.trim(),
-      "gender": selectedGender.value,
-      "nationality": nationalityController.text.trim(),
-      "countryOfResidence": residenceController.text.trim(),
-
-      "residentialAddress": {
-        "address": addressController.text.trim(),
-        "latitude": 23.8103,
-        "longitude": 90.4125,
-      },
-
-      "postalAddress": postalController.text.trim(),
-
-      "identification": {
-        "type": selectedID.value,
-        "value": idNumberController.text.trim(),
-      },
-
-      "maritalStatus": selectedMarital.value,
-
-      "providerProfile": {
-        "serviceCategory": ["plumber", "electrician"],
-        "workingHours": {
-          "startTime": "09:00",
-          "endTime": "18:00",
-          "duration": 120,
-          "workingDays": ["mon", "tue", "wed", "thu", "fri"],
-        },
-        "pricePerSlot": 500,
-        "bio": "Experienced service provider",
-        "experience": 5,
-        "skills": ["pipe fitting", "electrical wiring"],
+      if (accessToken.isEmpty) {
+        Get.snackbar("Error", "Unauthorized");
+        return;
       }
-    };
 
-    request.fields['data'] = jsonEncode(data);
+      if (profileImage.value == null) {
+        Get.snackbar("Error", "Profile image required");
+        return;
+      }
 
-    /// ================= PROFILE IMAGE (optional) =================
-    if (profileImage.value != null) {
+      final uri =
+      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
+
+      final request = http.MultipartRequest("PATCH", uri);
+
+      /// HEADER
+      request.headers.addAll({
+        "Authorization": "Bearer $accessToken",
+        "Accept": "application/json",
+      });
+
+      /// JSON DATA
+      final Map<String, dynamic> data = {
+        "fullName": nameController.text.trim(),
+        "dateOfBirth": selectedDate.value
+            ?.toIso8601String()
+            .split("T")
+            .first,
+        "gender": selectedGender.value,
+        "nationality": nationalityController.text.trim(),
+        "countryOfResidence": residenceController.text.trim(),
+        "residentialAddress": {
+          "address": addressController.text.trim(),
+          "latitude": latitude ?? 23.8103,     // fallback (Dhaka)
+          "longitude": longitude ?? 90.4125,
+        },
+        "postalAddress": postalController.text.trim(),
+        "identification": {
+          "type": selectedID.value,
+          "value": idNumberController.text.trim(),
+        },
+        "maritalStatus": selectedMarital.value,
+      };
+
+      /// IMPORTANT ❗
+      request.fields["data"] = jsonEncode(data);
+
+      /// IMAGE FILE
+      final imageFile = profileImage.value!;
+      final extension = imageFile.path.split('.').last.toLowerCase();
+
+      String mimeType = "image/jpeg";
+      if (extension == "png") {
+        mimeType = "image/png";
+      }
+
       request.files.add(
         await http.MultipartFile.fromPath(
           "image",
-          profileImage.value!.path,
+          imageFile.path,
+          filename: "profile.$extension",
+          contentType: MediaType.parse(mimeType),
         ),
       );
-    }
 
-    /// ================= ID DOCUMENTS =================
-    if (idFront.value != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          "idDocuments",
-          idFront.value!.path,
-        ),
-      );
-    }
+      debugPrint("📤 DATA => ${request.fields}");
+      debugPrint("📤 FILE => ${profileImage.value!.path}");
 
-    if (idBack.value != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          "idDocuments",
-          idBack.value!.path,
-        ),
-      );
-    }
-
-    /// ================= ADDRESS DOCUMENT =================
-    if (addressDoc.value != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          "addressDocuments",
-          addressDoc.value!.path,
-        ),
-      );
-    }
-
-    /// ================= SEND =================
-    try {
       final response = await request.send();
       final body = await response.stream.bytesToString();
 
+      debugPrint("📥 STATUS => ${response.statusCode}");
+      debugPrint("📥 BODY => $body");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar("Success", "Profile completed");
-        Get.offAllNamed(AppRoute.faceIDSetupScreen);
+        Get.snackbar("Success", "Profile completed successfully");
+        Get.offAllNamed(AppRoute.verifyyouridentity);
       } else {
         Get.snackbar("Error", body);
       }
     } catch (e) {
-      print("UPLOAD ERROR => $e");
-      Get.snackbar("Error", e.toString());
+      debugPrint("❌ COMPLETE PROFILE ERROR => $e");
+      Get.snackbar("Error", "Server error, try again");
     }
   }
+
 
 
   @override

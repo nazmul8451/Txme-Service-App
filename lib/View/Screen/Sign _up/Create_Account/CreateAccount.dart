@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
+import 'package:txme_app/Utils/AppIcons/app_icons.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/View/Widgegt/Email_Input_Field/CustomTextField.dart';
@@ -49,28 +51,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
              SizedBox(height: 20.h),
 
 
+
+
             GestureDetector(
               onTap: c.openCamera,
               child: Obx(
                 () => Stack(
                   alignment: Alignment.center,
                   children: [
-                    Container(
-                      width: 83.2.w,
-                      height: 83.2.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.red601, width: 2),
-                      ),
-                    ),
-                    Container(
-                      width: 96.w,
-                      height: 96.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.red601, width: 2.w),
-                      ),
-                    ),
+
                     Container(
                       width: 110.w,
                       height: 110.h,
@@ -84,11 +73,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             : null,
                       ),
                       child: c.profileImage.value == null
-                          ? Icon(
-                              Icons.camera_alt,
-                              size: 44,
-                              color: AppColors.red601,
-                            )
+                          ?  SvgPicture.asset(AppIcons.openYourCamera,
+                        height: 96.h,
+                        width: 96.w,
+                      )
                           : null,
                     ),
                   ],

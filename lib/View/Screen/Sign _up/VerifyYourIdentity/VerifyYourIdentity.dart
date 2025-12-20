@@ -57,7 +57,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                       padding: EdgeInsets.only(
                         top: 17.h,
                         left: 8.w,
-                        right: 8.w,
+                        //right: 8.w,
                       ),
                       child: Image.asset(
                         AppImg.image10,
@@ -68,7 +68,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                     Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 21.h, right: 185.w),
+                          padding: EdgeInsets.only(top: 21.h, right: 155.w),
                           child: Text(
                             AppString.Verification.tr,
                             style: TextStyle(
@@ -81,11 +81,11 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 40.w),
+                              padding: EdgeInsets.only(left:5.w, right: 15.w),
                               child: Text(
                                 AppString.UploadcopyID.tr,
                                 style: TextStyle(
-                                  fontSize: 15.sp,
+                                  fontSize: 15.sp.clamp(14, 16),
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.black700,
                                 ),
@@ -93,12 +93,12 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.arrow_forward_ios, size: 15),
+                              icon: Icon(Icons.arrow_forward_ios, size: 16),
                             ),
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 210.w),
+                          padding: EdgeInsets.only(right: 195.w),
                           child: Text(
                             AppString.Passport.tr,
                             style: TextStyle(
@@ -139,7 +139,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                     Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 21.h, right: 185.w),
+                          padding: EdgeInsets.only(top: 21.h, right: 155.w),
                           child: Text(
                             AppString.Verification.tr,
                             style: TextStyle(
@@ -152,7 +152,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 40.w),
+                              padding: EdgeInsets.only(left:5.w, right: 15.w),
                               child: Text(
                                 AppString.UploadcopyID.tr,
                                 style: TextStyle(
@@ -164,12 +164,12 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.arrow_forward_ios, size: 18),
+                              icon: Icon(Icons.arrow_forward_ios, size: 15),
                             ),
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 210.w),
+                          padding: EdgeInsets.only(right: 195.w),
                           child: Text(
                             AppString.Passport.tr,
                             style: TextStyle(
