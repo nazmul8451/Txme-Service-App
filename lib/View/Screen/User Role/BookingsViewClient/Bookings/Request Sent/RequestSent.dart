@@ -65,7 +65,7 @@ class _RequestSentState extends State<RequestSent> {
               Requestcustom(),
               SizedBox(height: 20.h),
               Padding(
-                padding: EdgeInsets.only(right: 240.w),
+                padding: EdgeInsets.only(right: 230.w),
                 child: Text(
                   "Add Job note",
                   style: TextStyle(
@@ -76,8 +76,7 @@ class _RequestSentState extends State<RequestSent> {
               ),
               SizedBox(height: 6.h),
               Container(
-                width: 348.w,
-                height: 92.h,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 25.h),
                 decoration: BoxDecoration(
                   color: Color(0xffF7F7F7),
                   border: Border.all(color: Color(0xff3A7DFF)),
@@ -91,17 +90,13 @@ class _RequestSentState extends State<RequestSent> {
                     ),
                   ],
                 ),
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    AppString.onlyPlease.tr,
-                    style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff1F2937)),
-                  ),
-                )),
+                child: Text(
+                  AppString.onlyPlease.tr,
+                  style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff1F2937)),
+                ),
               ),
               SizedBox(height: 33.h),
               CustomButton(

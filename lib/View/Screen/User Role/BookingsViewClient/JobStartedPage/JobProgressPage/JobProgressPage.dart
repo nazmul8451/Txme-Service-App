@@ -57,101 +57,97 @@ class JobPage extends StatelessWidget {
               TimeProgressBarWidget(totalDuration: jobDuration),
               SizedBox(height: 28.h),
               Container(
-                width: 353.w,
-                height: 175.h,
+              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(color: Color(0xffFF5A36), width: 1.w)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20.h, left: 23.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Lawn Mowing & Edging",
-                        style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.location,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "123 Maple Street",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.date,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Tuesday, 28th May",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.prof,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Michelle R.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Lawn Mowing & Edging",
+                      style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff1F2937)),
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.location,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "123 Maple Street",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.date,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "Tuesday, 28th May",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.prof,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "Michelle R.",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 28.h),
               Container(
-                width: 351.w,
-                height: 93.h,
+
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: Color(0xffF7F7F7),
                   border: Border.all(color: Color(0xffFF5A36), width: 1.w),
@@ -165,27 +161,24 @@ class JobPage extends StatelessWidget {
                   //   ),
                   // ],
                 ),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8.h, left: 8.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Job Notes",
-                        style: TextStyle(
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff1F2937)),
-                      ),
-                      Text(
-                        AppString.onlyPlease.tr,
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff1F2937)),
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Job Notes",
+                      style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff1F2937)),
+                    ),
+                    Text(
+                      AppString.onlyPlease.tr,
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff1F2937)),
+                    ),
+                  ],
                 ),
               ),
             ],

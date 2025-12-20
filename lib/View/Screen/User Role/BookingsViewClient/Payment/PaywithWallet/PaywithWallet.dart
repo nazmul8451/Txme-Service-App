@@ -94,11 +94,11 @@ class Paywithwallet extends StatelessWidget {
                   fillColor: Color(0xffF7F7F7),
                   border: OutlineInputBorder(
                     borderSide:
-                    BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                    BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
-                    BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                    BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                   ),
                   contentPadding:
                   EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
@@ -112,10 +112,10 @@ class Paywithwallet extends StatelessWidget {
                 filled: true,
                 fillColor: Color(0xffF7F7F7),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                  borderSide: BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                  borderSide: BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                 ),
                 hintText: "Note(Optional)",
                 hintStyle: TextStyle(

@@ -39,6 +39,7 @@ import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentPage.dart'
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentSuccessful/PaymentSuccessful.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWallet.dart';
 import '../../View/Screen/User Role/BookingsViewClient/TotalDuration/TotalDuration.dart';
+import '../../View/Screen/User Role/Home_Page/AllReviews/AllReviews.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
 import '../../View/Screen/User Role/Home_Page/ElectricianProviders/ElectricianProviders.dart';
 import '../../View/Screen/User Role/Home_Page/NotificationPage/NotificationPage.dart';
@@ -115,6 +116,7 @@ class AppRoute {
   static const String sendpage = "/sendpage";
   static const String requestpage = "/requestpage";
   static const String withdrawpage = "/withdrawpage";
+  static const String allreviews = "/allreviews";
 
 
 
@@ -179,6 +181,7 @@ class AppRoute {
     GetPage(name: sendpage, page: () =>  Sendpage()),
     GetPage(name: requestpage, page: () =>  Requestpage()),
     GetPage(name: withdrawpage, page: () =>  Withdrawpage()),
+    GetPage(name: allreviews, page: () =>  Allreviews()),
 
 
 

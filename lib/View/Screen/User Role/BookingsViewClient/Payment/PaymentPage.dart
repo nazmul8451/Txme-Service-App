@@ -55,8 +55,8 @@ class _PaymentpageState extends State<Paymentpage> {
                 height: 20.h,
               ),
               Container(
-                width: 353.w,
-                height: 175.h,
+                padding: EdgeInsets.only(
+                    top: 21.h, left: 12.w, bottom: 8.h, right: 2.w),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(8.r),
@@ -64,54 +64,50 @@ class _PaymentpageState extends State<Paymentpage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 21.h, left: 12.w, right: 12.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Job Details",
-                            style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Service:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Date:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Service Provider:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Job Details",
+                          style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Service:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Date:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Service Provider:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 47.h, right: 12.w),
+                      padding:  EdgeInsets.only(top: 30.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -149,73 +145,64 @@ class _PaymentpageState extends State<Paymentpage> {
                 height: 20.h,
               ),
               Container(
-                width: 351.w,
-                height: 173.h,
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(color: Color(0xffFF5A36), width: 1.w)),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.h, right: 160.w),
-                      child: Text(
-                        "Invoice Breakdown",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff1F2937)),
-                      ),
+                    Text(
+                      "Invoice Breakdown",
+                      style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff1F2937)),
                     ),
                     SizedBox(
                       height: 20.h,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.w, right: 8.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Time Worked:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w200,
-                                color: Color(0xff4C545F)),
-                          ),
-                          Text(
-                            "2.5 hours",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Time Worked:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w200,
+                              color: Color(0xff4C545F)),
+                        ),
+                        Text(
+                          "2.5 hours",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 12.h,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.w, right: 8.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Hourly Rate:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w200,
-                                color: Color(0xff4C545F)),
-                          ),
-                          Text(
-                            "€35.00/ hour",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Hourly Rate:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w200,
+                              color: Color(0xff4C545F)),
+                        ),
+                        Text(
+                          "€35.00/ hour",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 9.h,

@@ -52,89 +52,107 @@ class _PaywithcashState extends State<Paywithcash> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text("Recipient Account Name" , style: TextStyle(
-              fontWeight: FontWeight.w600,
-               fontSize: 18.sp,
-               color: Color(0xff4C545F)
-            ),),
-            SizedBox(height: 8.h,),
-            Obx(() => TextField(
-              controller: TextEditingController(
-                  text: controller.recipientName.value),  style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)
+            Text(
+              "Recipient Account Name",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.sp,
+                  color: Color(0xff4C545F)),
             ),
-              readOnly: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xffF7F7F7),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              ),
-            )),
-            SizedBox(height: 16.h),
-             Text("Recipient Account Number", style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)),),
-            SizedBox(height: 8.h,),
+            SizedBox(
+              height: 8.h,
+            ),
             Obx(() => TextField(
-              controller: TextEditingController(
-                  text: controller.accountNumber.value),
+                  controller: TextEditingController(
+                      text: controller.recipientName.value),
                   style: TextStyle(
-            fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)
-            ),
-              readOnly: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xffF7F7F7),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              ),
-            )),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.sp,
+                      color: Color(0xff4C545F)),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xffF7F7F7),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36), width: 1.w),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36), width: 1.w),
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  ),
+                )),
             SizedBox(height: 16.h),
-             Text("Routing Number", style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)),),
-            SizedBox(height: 8.h,),
-            Obx(() => TextField(
-              controller: TextEditingController(
-                  text: controller.routingNumber.value),
-                 style: TextStyle(
-            fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)
+            Text(
+              "Recipient Account Number",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.sp,
+                  color: Color(0xff4C545F)),
             ),
-              readOnly: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xffF7F7F7),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
-                ),
-                contentPadding:
-                EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              ),
-            )),
+            SizedBox(
+              height: 8.h,
+            ),
+            Obx(() => TextField(
+                  controller: TextEditingController(
+                      text: controller.accountNumber.value),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.sp,
+                      color: Color(0xff4C545F)),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xffF7F7F7),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36),  width: 1.w),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36),  width: 1.w),
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  ),
+                )),
+            SizedBox(height: 16.h),
+            Text(
+              "Routing Number",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.sp,
+                  color: Color(0xff4C545F)),
+            ),
+            SizedBox(
+              height: 8.h,
+            ),
+            Obx(() => TextField(
+                  controller: TextEditingController(
+                      text: controller.routingNumber.value),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.sp,
+                      color: Color(0xff4C545F)),
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xffF7F7F7),
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36),  width: 1.w),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xffFF5A36),  width: 1.w),
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                  ),
+                )),
             SizedBox(height: 16.h),
             TextField(
               controller: controller.noteController,
@@ -142,10 +160,10 @@ class _PaywithcashState extends State<Paywithcash> {
                 filled: true,
                 fillColor: Color(0xffF7F7F7),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                  borderSide: BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFF5A36), width: 2.w),
+                  borderSide: BorderSide(color: Color(0xffFF5A36),  width: 1.w),
                 ),
                 hintText: "Note(Optional)",
                 hintStyle: TextStyle(
@@ -153,46 +171,48 @@ class _PaywithcashState extends State<Paywithcash> {
                   fontSize: 18.sp,
                   color: Color(0xff4C545F),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
               ),
             ),
-
             SizedBox(height: 16.h),
-             Text("Amount", style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                color: Color(0xff4C545F)),),
+            Text(
+              "Amount",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.sp,
+                  color: Color(0xff4C545F)),
+            ),
             SizedBox(height: 8.h),
             Obx(() => Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                color: Color(0xffF7F7F7),
-                border: Border.all(color: Color(0xffFF5A36), width: 2.w),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Total", style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18.sp,
-                      color: Color(0xff4C545F)),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+                  decoration: BoxDecoration(
+                    color: Color(0xffF7F7F7),
+                    border: Border.all(color: Color(0xffFF5A36),  width: 1.w),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
-                  Text(
-                    "${controller.amount.value}",
-                       style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                      fontSize: 18.sp,
-                      color: Color(0xff4C545F)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18.sp,
+                            color: Color(0xff4C545F)),
+                      ),
+                      Text(
+                        "${controller.amount.value}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18.sp,
+                            color: Color(0xff4C545F)),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )),
-
-
+                )),
             SizedBox(height: 40.h),
-
             CustomButton(
                 height: 56.h,
                 width: 353.w,
@@ -202,12 +222,12 @@ class _PaywithcashState extends State<Paywithcash> {
                 ),
                 child: Center(
                     child: Text(
-                      "Make Payment",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Color(0xffFFFFFF)),
-                    )),
+                  "Make Payment",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Color(0xffFFFFFF)),
+                )),
                 onTap: () {
                   Get.toNamed(AppRoute.paymentsuccessful);
                 }),

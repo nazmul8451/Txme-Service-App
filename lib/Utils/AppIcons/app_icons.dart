@@ -30,6 +30,8 @@ class AppIcons {
   static const String dots3 = "$basePath/dots-vertical.svg";
   static const String rightarrow = "$basePath/arrow-sm-right.svg";
   static const String openYourCamera = "$basePath/Open Your Camera.svg";
+  static const String adjustments = "$basePath/adjustments.svg";
+  static const String switchVertical = "$basePath/switch-vertical.svg";
 
 
 

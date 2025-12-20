@@ -75,101 +75,97 @@ class _TotaldurationState extends State<Totalduration> {
                 height: 20.h,
               ),
               Container(
-                width: 353.w,
-                height: 175.h,
+
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(color: Color(0xffFF5A36), width: 1.w)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20.h, left: 23.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Lawn Mowing & Edging",
-                        style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.location,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "123 Maple Street",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.date,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Tuesday, 28th May",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.prof,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Michelle R.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Lawn Mowing & Edging",
+                      style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff1F2937)),
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.location,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "123 Maple Street",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.date,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "Tuesday, 28th May",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.prof,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "Michelle R.",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 28.h),
               Container(
-                width: 353.w,
-                height: 137.h,
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 9.w),
                 decoration: BoxDecoration(
                   color: Color(0xffF7F7F7),
                   border: Border.all(color: Color(0xffFF5A36), width: 1.w),
@@ -183,31 +179,28 @@ class _TotaldurationState extends State<Totalduration> {
                   //   ),
                   // ],
                 ),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8.h, left: 9.w, right: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Job Notes",
-                        style: TextStyle(
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      Text(
-                        "Please be careful with the rose bushes near the driveway. The sprinkler system is scheduled to run at 5 PM.",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff1F2937)),
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Job Notes",
+                      style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff1F2937)),
+                    ),
+                    SizedBox(
+                      height: 8.h,
+                    ),
+                    Text(
+                      "Please be careful with the rose bushes near the driveway. The sprinkler system is scheduled to run at 5 PM.",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff1F2937)),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(

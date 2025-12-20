@@ -33,8 +33,7 @@ class CustomDebitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 352.w,
-      height: 190.h,
+     padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         image: DecorationImage(

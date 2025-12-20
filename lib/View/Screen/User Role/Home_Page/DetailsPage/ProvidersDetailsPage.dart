@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Home_Page/models/review_model.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../models/provider_model.dart';
@@ -56,29 +59,24 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
 
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding:  EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 210.w),
-                  child: Text(
-                    widget.provider.name,
-                    style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff4C545F)),
-                  ),
+                Text(
+                  widget.provider.name,
+                  style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff4C545F)),
                 ),
 
-                Padding(
-                  padding: EdgeInsets.only(right: 270.w),
-                  child: Text(
-                    widget.provider.service,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Color(0xff4C545F),
-                      fontWeight: FontWeight.w500,
-                    ),
+                Text(
+                  widget.provider.service,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Color(0xff4C545F),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
 
@@ -299,28 +297,25 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
 
                 // Bio
-                Padding(
-                  padding:  EdgeInsets.only(right: 120.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bio",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Bio",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        widget.provider.bio,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                        ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      widget.provider.bio,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20.h),
                 Column(
@@ -338,12 +333,13 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              showAll = !showAll; // toggle true/false
-                            });
+
+
+                            Get.toNamed(AppRoute.allreviews);
+
                           },
                           child: Text(
-                            showAll ? "Show less" : "Show all",
+                             "Show all",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16.sp,
