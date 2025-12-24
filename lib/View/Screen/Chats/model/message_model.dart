@@ -11,12 +11,15 @@ class MessageModel {
     required this.time,
   });
 
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
+  factory MessageModel.fromJson(
+      Map<String, dynamic> json,
+      String myUserId,
+      ) {
     return MessageModel(
-      id: json['id'],
-      message: json['message'],
-      isMe: json['is_me'],
-      time: json['time'],
+      id: json['_id'],
+      message: json['text'] ?? "",
+      isMe: json['sender']?['_id'] == myUserId,
+      time: json['createdAt'] ?? "",
     );
   }
 }

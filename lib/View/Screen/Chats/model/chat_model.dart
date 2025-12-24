@@ -2,28 +2,50 @@ class ChatModel {
   final String id;
   final String name;
   final String lastMessage;
-  final String avatar;
   final String time;
   final int unreadCount;
+  final String avatar;
 
   ChatModel({
     required this.id,
     required this.name,
     required this.lastMessage,
-    required this.avatar,
     required this.time,
     required this.unreadCount,
+    required this.avatar,
   });
 
-  /// API / Socket data support
-  factory ChatModel.fromJson(Map<String, dynamic> json) {
+  factory ChatModel.fromJson(Map<String, dynamic> json, String myUserId) {
+    final participants = json['participants'] as List;
+
+    final participant = participants.firstWhere(
+          (p) => p['_id'] != myUserId,
+      orElse: () => participants.first,
+    );
+
     return ChatModel(
-      id: json['id'],
-      name: json['name'],
-      lastMessage: json['last_message'],
-      avatar: json['avatar'],
-      time: json['time'],
-      unreadCount: json['unread_count'] ?? 0,
+      id: json['_id'],
+      name: participant['fullName'] ?? "Unknown",
+      lastMessage: json['lastMessage']?['text'] ?? "",
+      time: json['lastMessage']?['createdAt'] ?? "",
+      unreadCount: json['unreadCount'] ?? 0,
+      avatar: participant['avatar'] ??
+          "https://i.pravatar.cc/150?img=12",
+    );
+  }
+
+  ChatModel copyWith({
+    String? lastMessage,
+    String? time,
+    int? unreadCount,
+  }) {
+    return ChatModel(
+      id: id,
+      name: name,
+      lastMessage: lastMessage ?? this.lastMessage,
+      time: time ?? this.time,
+      unreadCount: unreadCount ?? this.unreadCount,
+      avatar: avatar,
     );
   }
 }

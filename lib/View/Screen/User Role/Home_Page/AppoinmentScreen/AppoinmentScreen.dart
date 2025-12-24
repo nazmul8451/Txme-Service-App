@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../../Utils/AppColors/app_colors.dart';
+import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import 'AppointmentsController.dart';
 import 'ScheduleBookingPage.dart';
 
@@ -162,6 +163,7 @@ class AppointmentsPage extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
   }
 }

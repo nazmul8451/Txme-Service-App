@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppIcons/app_icons.dart';
-
+import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/MessageBubbleWidget/ChatTile.dart';
 import '../controller/chat_controller.dart';
 import 'chat_details_page.dart';
@@ -89,6 +89,7 @@ class ChatHomePage extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 2),
     );
   }
 }

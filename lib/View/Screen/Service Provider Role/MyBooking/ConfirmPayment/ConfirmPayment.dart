@@ -358,7 +358,8 @@ class ConfirmPaymentpage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      //bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }
 }

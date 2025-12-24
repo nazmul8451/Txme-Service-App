@@ -2,26 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
-
+import 'package:txme_app/helper/Shared_prefe/shared_prefe.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int selectedIndex;
 
   const CustomBottomNavBar({super.key, required this.selectedIndex});
 
-  void _onItemTapped(int index) {
+  ///  Role-based navigation
+  Future<void> _onItemTapped(int index) async {
+    final role =
+    await SharePrefsHelper.getString(SharePrefsHelper.userRole);
+    // role = "CUSTOMER" or "PROVIDER"
+
     switch (index) {
       case 0:
-        Get.toNamed(AppRoute.homepage);
+      ///  HOME
+        if (role == "CUSTOMER") {
+          Get.toNamed(AppRoute.homepage);
+        } else {
+          Get.toNamed(AppRoute.providerHomeScreen);
+        }
         break;
+
       case 1:
-        Get.toNamed(AppRoute.requestSent);
+      ///  REQUEST / BOOKINGS
+        if (role == "CUSTOMER") {
+          Get.toNamed(AppRoute.bookingspage);
+        } else {
+          Get.toNamed(AppRoute.providerMyBookingsPage);
+        }
         break;
+
       case 2:
-        Get.toNamed(AppRoute.messagepage);
+      ///  MESSAGE (same for all)
+        Get.toNamed(AppRoute.chatspage);
         break;
+
       case 3:
-        Get.toNamed(AppRoute.profilePage);
+      /// 👤 PROFILE
+        if (role == "CUSTOMER") {
+          Get.toNamed(AppRoute.profilePage);
+        } else {
+          Get.toNamed(AppRoute.providerProfilePage);
+        }
         break;
     }
   }
@@ -39,7 +63,7 @@ class CustomBottomNavBar extends StatelessWidget {
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 6,
@@ -47,7 +71,6 @@ class CustomBottomNavBar extends StatelessWidget {
           )
         ],
       ),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -71,15 +94,16 @@ class CustomBottomNavBar extends StatelessWidget {
           Icon(
             icon,
             size: 26,
-            color: isActive ? Color(0xffFF5A36) : AppColors.gray,
+            color: isActive ? const Color(0xffFF5A36) : AppColors.gray,
           ),
           const SizedBox(height: 6),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: isActive ? Color(0xffFF5A36) :AppColors.gray,
-              fontWeight: isActive ? FontWeight.w500 : FontWeight.normal,
+              color: isActive ? const Color(0xffFF5A36) : AppColors.gray,
+              fontWeight:
+              isActive ? FontWeight.w500 : FontWeight.normal,
             ),
           ),
         ],

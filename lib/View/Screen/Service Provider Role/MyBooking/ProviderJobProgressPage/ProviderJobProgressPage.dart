@@ -6,6 +6,7 @@ import 'package:txme_app/Utils/AppIcons/app_icons.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../../Utils/StaticString/static_string.dart';
+import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
@@ -201,7 +202,9 @@ class Providerjobprogresspage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      //bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }
 }

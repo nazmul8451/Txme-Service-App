@@ -7,7 +7,7 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../Utils/AppImg/app_img.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
-import '../WalletAddNewCardPage/WalletAddNewCardPage.dart';
+import '../Availablebalance/Availablebalance.dart';
 import 'TopUpController.dart';
 
 class Topuppage extends StatefulWidget {
@@ -28,6 +28,7 @@ class _TopuppageState extends State<Topuppage> {
       backgroundColor: AppColors.FFFFFF,
       appBar: AppBar(
         backgroundColor: AppColors.FFFFFF,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           onPressed: () => Get.back(),
@@ -37,47 +38,12 @@ class _TopuppageState extends State<Topuppage> {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Obx(() => Column(
+          child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Balance Card
-              Center(
-                child: Container(
-                  width: 259.w,
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF7F7F7),
-                    borderRadius: BorderRadius.circular(10.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Available balance",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(height: 20.sp),
-                      Text(
-                        controller.balance.value,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 48.sp,
-                            color: Color(0xff1F2937)),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+
+              Availablebalance(),
 
               SizedBox(height: 20.sp),
 
@@ -93,6 +59,7 @@ class _TopuppageState extends State<Topuppage> {
               SizedBox(height: 8.h),
               TextField(
                 controller: controller.ammountController,
+                keyboardType: TextInputType.number,
                 decoration: _inputDecoration(hint: "€0.00"),
               ),
               SizedBox(height: 20.h),
@@ -214,10 +181,10 @@ class _TopuppageState extends State<Topuppage> {
                 ),
                 onTap: () {
                   setState(() {
-                    selectedIndex = 2;
+                    selectedIndex = 2; // Stripe selected
                   });
-                  //Get.toNamed(AppRoute.chatspage);
                 },
+
               ),
 
               SizedBox(height: 15.h),
@@ -228,28 +195,62 @@ class _TopuppageState extends State<Topuppage> {
                 height: 56.h,
                 width: 353.w,
                 BoxDecoration: BoxDecoration(
-                    color: AppColors.red601,
-                    borderRadius: BorderRadius.circular(12.r),
-                    //border: Border.all(color: AppColors.red601)
+                  color: AppColors.red601,
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Center(
-                  child: Text(
-                    "Continue",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors. FFFFFF,
-                    ),
-                  ),
+                  child: Obx(() {
+                    return controller.isLoading.value
+                        ? const SizedBox(
+                      height: 22,
+                      width: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                        : Text(
+                      "Continue",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.FFFFFF,
+                      ),
+                    );
+                  }),
                 ),
                 onTap: () {
-                  Get.toNamed(AppRoute.walletpaypalselectpaymentmethod);
+                  ///  Prevent double click
+                  if (controller.isLoading.value) return;
+
+                  ///  Amount empty
+                  if (controller.ammountController.text.trim().isEmpty) {
+                    Get.snackbar("Error", "Please enter amount");
+                    return;
+                  }
+
+                  ///  Amount invalid
+                  final amount =
+                  int.tryParse(controller.ammountController.text.trim());
+                  if (amount == null || amount <= 0) {
+                    Get.snackbar("Error", "Invalid amount");
+                    return;
+                  }
+
+                  ///  Payment method not Stripe
+                  if (selectedIndex != 2) {
+                    Get.snackbar("Error", "Please select Stripe payment");
+                    return;
+                  }
+
+                  ///  Everything OK → Stripe flow
+                  controller.createPaymentIntent();
                 },
               ),
+
             ],
           )),
         ),
-      ),
     );
   }
 
@@ -299,7 +300,9 @@ class _TopuppageState extends State<Topuppage> {
             ],
           ),
         ),
-        onTap: () => controller.selectPaymentMethod(index),
+            onTap: () {
+              controller.createPaymentIntent();
+            },
       ),
     );
   }

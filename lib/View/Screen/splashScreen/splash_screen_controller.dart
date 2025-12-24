@@ -8,37 +8,47 @@ class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _checkSplash();
+    _checkSplash(); // 🔥 FIX
   }
 
-  ///  CHECK SPLASH (only once)
   Future<void> _checkSplash() async {
     await Future.delayed(const Duration(milliseconds: 800));
 
     final isSplashSeen =
-    await SharePrefsHelper.getBool(splashSeen);
+        await SharePrefsHelper.getBool(splashSeen) ?? false;
 
     final bearerToken =
-    await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+    await SharePrefsHelper.getString(
+      SharePrefsHelper.bearerToken,
+    );
 
-    ///  SPLASH ALREADY SEEN
+    final role =
+    await SharePrefsHelper.getString(
+      SharePrefsHelper.userRole,
+    );
+
+    /// SPLASH SEEN
     if (isSplashSeen) {
-
-      ///  USER LOGGED IN (refresh token exists)
+      /// USER LOGGED IN
       if (bearerToken.isNotEmpty) {
-        Get.offAllNamed(AppRoute.homepage);
-      }
-      ///  NOT LOGGED IN
-      else {
+        if (role == "CUSTOMER") {
+          Get.offAllNamed(AppRoute.homepage);
+        } else if (role == "PROVIDER") {
+          Get.offAllNamed(AppRoute.providerHomeScreen);
+        } else {
+          Get.offAllNamed(AppRoute.signinwithbiometrics);
+        }
+      } else {
+        /// NOT LOGGED IN
         Get.offAllNamed(AppRoute.signinwithbiometrics);
       }
+    } else {
+      /// FIRST TIME USER
+      // splash screen e thakbe / get started দেখাবে
     }
-
-    ///  splashSeen == false হলে
-    /// UI তেই থাকবে → Get Started দেখাবে
   }
 
-  ///  GET STARTED BUTTON
+  /// GET STARTED
   Future<void> onGetStarted() async {
     await SharePrefsHelper.setBool(splashSeen, true);
     Get.offAllNamed(AppRoute.signinwithbiometrics);

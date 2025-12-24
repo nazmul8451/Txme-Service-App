@@ -70,7 +70,7 @@ class CompleteProfileController extends GetxController {
 
       request.files.add(
         await http.MultipartFile.fromPath(
-          "idDocuments", // ✅ REQUIRED KEY
+          "addressDocuments", // ✅ REQUIRED KEY
           file.path,
           filename: basename(file.path),
           contentType: MediaType.parse(mimeType),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:txme_app/View/Screen/Wallet/Availablebalance/Availablebalance.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../../Utils/AppIcons/app_icons.dart';
@@ -46,45 +47,11 @@ class Walletpaypalselectpaymentmethod extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.only(top: 40.h, left: 20.w, right: 20.w),
         child: SingleChildScrollView(
-          child: Obx(
-                () => Column(
+          child: Column(
               children: [
                 ///================  Available balance =================///
-                Container(
-                  width: 259.w,
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF7F7F7),
-                    borderRadius: BorderRadius.circular(10.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Available balance",
-                        style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        controller.balance.value,
-                        style: TextStyle(
-                            fontSize: 48.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff1F2937)),
-                      ),
-                    ],
-                  ),
-                ),
+
+                Availablebalance(),
 
                 SizedBox(height: 20.h),
 
@@ -159,7 +126,6 @@ class Walletpaypalselectpaymentmethod extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }

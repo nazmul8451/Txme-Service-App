@@ -12,6 +12,7 @@ import '../../User Role/Profile/EditProfile/EditProfile.dart';
 import '../../User Role/Profile/NotificationPage/NotificationSettingsPage.dart';
 import '../../User Role/Profile/VerificationPage/VerificationPage.dart';
 import '../../User Role/Profile/pastInvoice/InvoiceListPage.dart';
+import 'EditProfileProfession/EditProfileProfession.dart';
 
 class ProviderProfilePage extends StatelessWidget {
   const ProviderProfilePage({super.key});
@@ -153,7 +154,7 @@ class ProviderProfilePage extends StatelessWidget {
             ),
 
             GestureDetector(
-              onTap: () => Get.to(() => VerificationPage()),
+              onTap: () => Get.to(() => Editprofileprofession()),
               child: menuItem(
                   img: AppImg.profession,
                   title: "Profession"),
@@ -280,7 +281,7 @@ class ProviderProfilePage extends StatelessWidget {
       ),
 
 
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 3),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
 
     );
   }

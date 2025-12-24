@@ -5,18 +5,20 @@ import 'package:txme_app/Utils/AppColors/app_colors.dart';
 class Customcontainer extends StatelessWidget {
   final String img;
   final String cText;
-   Customcontainer({
-     Key? key,
-     required this.cText,
-     required this.img
 
-   }): super(key: key);
+  const Customcontainer({
+    Key? key,
+    required this.cText,
+    required this.img,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final bool isNetworkImage = img.startsWith('http');
+
     return Container(
       height: 100.h,
-      width: 100.w,
+      width: 120.w,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         color: AppColors.FFFFFF,
@@ -25,23 +27,44 @@ class Customcontainer extends StatelessWidget {
             color: Colors.black.withOpacity(0.2),
             blurRadius: 8,
             spreadRadius: 2,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
         children: [
           Padding(
-            padding:  EdgeInsets.only(top: 10.5.h, left: 15.w, right: 15.w),
-            child: Image.asset(img),
+            padding: EdgeInsets.only(top: 10.5.h, ),
+            child: isNetworkImage
+                ? Image.network(
+              img,
+              height: 45.h,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) =>
+              const Icon(Icons.broken_image),
+            )
+                : Image.asset(
+              img,
+              height: 45.h,
+              fit: BoxFit.contain,
+            ),
           ),
-          Text(
-              cText, style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Color(0xff565656)
+
+
+          Padding(
+            padding:  EdgeInsets.only(top: 15.h, left: 2.w, right: 2.w),
+            child: Text(
+              cText,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff565656),
+              ),
+            ),
           ),
-          )
         ],
       ),
     );

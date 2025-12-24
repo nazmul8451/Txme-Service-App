@@ -3,10 +3,12 @@ import '../../View/Screen/Service Provider Role/Contactsupport/ContactSupportCon
 import '../../View/Screen/Sign _up/VerifyYourIdentity/verify_identity_controller.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWalletController.dart';
+import '../../View/Screen/User Role/Home_Page/Popularservices/ServiceController.dart';
 import '../../View/Screen/User Role/Profile/EditProfile/EditProfileController.dart';
 import '../../View/Screen/User Role/Profile/NotificationPage/NotificationController.dart';
 import '../../View/Screen/User Role/Profile/VerificationPage/VerificationController.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PayWithCash/PayWithCashController.dart';
+import '../../View/Screen/Wallet/Availablebalance/WalletController.dart';
 import '../../View/Screen/Wallet/Top_up/TopUpController.dart';
 import '../../View/Screen/Wallet/WalletController.dart';
 import '../../View/Screen/splashScreen/splash_screen_controller.dart';
@@ -25,5 +27,9 @@ class dependencies {
     Get.put(Topupcontroller(), permanent: true);
     Get.put(SplashController(), permanent: true);
     Get.put(VerifyIdentityController(), permanent: true);
+    Get.put(ServiceController(), permanent: true);
+    Get.put(WalletControllerA(), permanent: true);
+    Get.put(WalletControllerA(), permanent: true);
+
   }
 }

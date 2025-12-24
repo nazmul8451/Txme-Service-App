@@ -35,6 +35,59 @@ class ApiConstant {
 
 
 
+  ///===================== Home (user) =========================///
+
+
+  static const String serviceGet  =
+      "$apiVersion/service/get-services";
+
+
+
+  ///===================== Wallet =========================///
+
+
+
+  static const String myWalletAvailableBalance  =
+      "$apiVersion/wallet/my-wallet";
+  static const String createPaymentIntent  =
+      "$apiVersion/wallet/create-payment-intent";
+
+
+  ///===================== Chats =========================///
+
+  /// ======================== post Api =========================///
+
+
+  static const String CeatsChat  = "$apiVersion/chat";
+
+  static const String chatAdminSupport  = "$apiVersion/chat/admin-support";
+
+
+  /// ====================== Get Api ======================= ///
+
+  static const String  getChat = "$apiVersion/chat";  ///
+  static const String  getAdminSupportAll = "$apiVersion/chat/admin-support/all";
+  static const String  deleteChat = "$apiVersion/api/chat/"; //+id caicce
+
+
+  ///=====================  message =========================///
+
+  /// ======================== post Api =========================///
+
+
+  static const String  message = "$apiVersion/message";                        ///
+
+  ///================================ Get Api ==================================///
+
+
+  static const String getMessage = "$apiVersion/message"; // + /{chatId}?page=&limit=
+
+  static const String deleteMessage = "$apiVersion/message"; // + /{messageId}
+
+
+
+
+
   static const String bearerToken = "bearerToken";
 
 }

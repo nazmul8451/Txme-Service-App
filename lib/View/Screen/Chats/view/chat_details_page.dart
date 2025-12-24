@@ -90,7 +90,6 @@ class ChatDetailsPage extends StatelessWidget {
 
             /// INPUT FIELD
 
-
             Container(
               width: 353.w,
               height: 64.h,
@@ -135,33 +134,6 @@ class ChatDetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Row(
-            //     children: [
-            //       Expanded(
-            //         child: TextField(
-            //           controller: controller.messageController,
-            //           decoration: InputDecoration(
-            //             hintText: "Type a message",
-            //             border: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(43.r),
-            //               borderSide: BorderSide.none,
-            //             ),
-            //             filled: true,
-            //             fillColor: Color(0xffF7F7F7),
-            //           ),
-            //         ),
-            //       ),
-            //       SizedBox(width: 8),
-            //       CircleAvatar(
-            //         backgroundColor: Colors.black,
-            //         child: IconButton(
-            //           icon: Icon(Icons.send, color: Colors.white),
-            //           onPressed: controller.sendMessage,
-            //         ),
-            //       )
-            //     ],
-            //   ),
 
           ],
         ),

@@ -1,62 +1,92 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import '../../../../helper/Shared_prefe/shared_prefe.dart';
+import '../../../../service/api_url.dart';
+import '../../../../service/socket_service.dart';
 import '../model/chat_model.dart';
 
 class ChatController extends GetxController {
-  /// Chat list (Reactive)
   RxList<ChatModel> chatList = <ChatModel>[].obs;
 
-  /// Search
+  /// 🔍 SEARCH
   RxString searchQuery = "".obs;
+
+  RxBool isLoading = false.obs;
+
+  final SocketApi socketApi = Get.find<SocketApi>();
+  late String myUserId;
 
   @override
   void onInit() {
     super.onInit();
-    loadInitialChats();
-    // connectSocket(); // later
+    loadUser();
   }
 
-  /// Dummy data (replace with API)
-  void loadInitialChats() {
-    chatList.value = [
-      ChatModel(
-        id: "1",
-        name: "Help & support",
-        lastMessage: "Hello are you home?",
-        avatar: "https://i.pravatar.cc/150?img=11",
-        time: "5mins",
-        unreadCount: 2,
-      ),
-      ChatModel(
-        id: "2",
-        name: "Leslie",
-        lastMessage: "Yes, i will be available tomorrow...",
-        avatar: "https://i.pravatar.cc/150?img=12",
-        time: "3:00PM",
-        unreadCount: 3,
-      ),
-      ChatModel(
-        id: "3",
-        name: "Dianne",
-        lastMessage: "Nice performance today dear!",
-        avatar: "https://i.pravatar.cc/150?img=13",
-        time: "1:35PM",
-        unreadCount: 0,
-      ),
-    ];
+  Future<void> loadUser() async {
+    myUserId = await SharePrefsHelper.getString("userId");
+    await getChats();
+    initSocket();
   }
 
-  /// 🔌 Socket message receive example
-  void onNewMessage(Map<String, dynamic> data) {
-    final newChat = ChatModel.fromJson(data);
-    chatList.insert(0, newChat);
+  void initSocket() async {
+    await socketApi.init();
+
+    socketApi.onMessage((data) {
+      final chatId = data['chatId'];
+      final index = chatList.indexWhere((c) => c.id == chatId);
+      if (index == -1) return;
+
+      final old = chatList[index];
+
+      chatList[index] = old.copyWith(
+        lastMessage: data['text'],
+        time: "Now",
+        unreadCount: old.unreadCount + 1,
+      );
+    });
   }
 
-  /// 🔍 Search filter
+  Future<void> getChats() async {
+    try {
+      isLoading.value = true;
+
+      final token =
+      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+
+      final response = await http.get(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.getChat}"),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        chatList.value = (decoded['data'] as List)
+            .map((e) => ChatModel.fromJson(e, myUserId))
+            .toList();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// ✅ THIS IS WHAT YOUR UI NEEDS
   List<ChatModel> get filteredChats {
-    if (searchQuery.value.isEmpty) return chatList;
+    if (searchQuery.value.isEmpty) {
+      return chatList;
+    }
+
     return chatList
         .where((c) =>
-        c.name.toLowerCase().contains(searchQuery.value.toLowerCase()))
+        c.name.toLowerCase().contains(
+          searchQuery.value.toLowerCase(),
+        ))
         .toList();
   }
 }
+
+
+
+

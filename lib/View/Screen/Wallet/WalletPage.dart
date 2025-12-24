@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:txme_app/View/Screen/Wallet/Availablebalance/Availablebalance.dart';
 import '../../../Utils/AppColors/app_colors.dart';
 import '../../../Utils/AppIcons/app_icons.dart';
 import '../../../core/App_Routes/app_routes.dart';
+import '../../../helper/Shared_prefe/shared_prefe.dart';
 import 'WalletController.dart';
 
 
@@ -12,6 +14,11 @@ class Walletpage extends StatelessWidget {
   Walletpage({Key? key}) : super(key: key);
 
   final WalletController controller = Get.put(WalletController());
+
+  final role =
+       SharePrefsHelper.getString(
+  SharePrefsHelper.userRole,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,9 @@ class Walletpage extends StatelessWidget {
         backgroundColor: AppColors.FFFFFF,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.back();
+          },
           icon: SvgPicture.asset(AppIcons.chevronleft),
         ),
         title: Text(
@@ -39,43 +48,10 @@ class Walletpage extends StatelessWidget {
         child: Obx(() => Column(
           children: [
             SizedBox(height: 12.h),
-            Center(
-              child: Container(
-                width: 259.w,
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Color(0xffF7F7F7),
-                  borderRadius: BorderRadius.circular(10.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      "Available balance",
-                      style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w300,
-                          color: Color(0xff1F2937)),
-                    ),
-                    SizedBox(height: 20.sp),
-                    Text(
-                      controller.balance.value,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 48.sp,
-                          color: Color(0xff1F2937)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+
+            Availablebalance(),
+
+
             SizedBox(height: 34.5.h),
             // Buttons Row
             Row(

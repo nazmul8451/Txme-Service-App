@@ -206,7 +206,7 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
               ),
               onTap: () {
 
-                Get.toNamed(AppRoute.homepage);
+                Get.toNamed(AppRoute.signindone);
               },
             ),
           ],

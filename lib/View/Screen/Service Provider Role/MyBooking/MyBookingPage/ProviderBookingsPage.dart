@@ -6,6 +6,7 @@ import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
+import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../User Role/Home_Page/AppoinmentScreen/ScheduleBookingPage.dart';
 import 'ProviderBookingsController.dart';
@@ -155,7 +156,8 @@ class ProviderMyBookingsPageUI extends StatelessWidget {
           ),
         );
       }),
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      //bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }
 }

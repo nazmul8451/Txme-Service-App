@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
+import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
@@ -238,7 +239,9 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      //bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }
 }

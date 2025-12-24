@@ -72,6 +72,8 @@ class _SearchfilterState extends State<Searchfilter> {
     }
   }
 
+  final languagesSpokenController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +148,9 @@ class _SearchfilterState extends State<Searchfilter> {
                 SizedBox(height: 20.h),
 
                 /// 🌍 LANGUAGE SELECTION
-                const ChooseLanguage(),
+                CustomTextField(
+                    controller: languagesSpokenController,
+                    label: "Languages Spoken", hint: "English"),
 
                 SizedBox(height: 20.h),
 

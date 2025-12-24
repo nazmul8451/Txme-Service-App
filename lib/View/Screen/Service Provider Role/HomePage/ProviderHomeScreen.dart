@@ -390,7 +390,7 @@ class ProviderHomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: CustomProvidernavbar(selectedIndex: 0),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
   }
 }

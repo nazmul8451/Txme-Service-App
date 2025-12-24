@@ -1,6 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:txme_app/View/Screen/Service%20Provider%20Role/MyBooking/MyBookingPage/ProviderBookingsPage.dart';
-import '../../View/Screen/Chats/ChatsPage.dart';
 import '../../View/Screen/Chats/view/chat_home_page.dart';
 import '../../View/Screen/Choose_Language/LanguagePage.dart';
 import '../../View/Screen/Service Provider Role/Contactsupport/Contactsupport.dart';
@@ -151,7 +150,6 @@ class AppRoute {
     GetPage(name: notificationPage, page: () =>  NotificationPage()),
     GetPage(name: appointmentsPage, page: () =>  AppointmentsPage()),
     GetPage(name: profilePage, page: () =>  ProfilePage()),
-    //GetPage(name: messagepage, page: () =>  Messagepage()),
     GetPage(name: requestSent, page: () =>  RequestSent()), ///Request Page
     GetPage(name: providerProfilePage, page: () =>  ProviderProfilePage()),
     GetPage(name: providerHomeScreen, page: () =>  ProviderHomeScreen()),

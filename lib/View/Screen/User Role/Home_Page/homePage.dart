@@ -9,7 +9,10 @@ import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../Utils/AppColors/app_colors.dart';
 
+import '../../../../service/api_url.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
+import 'ChildService/ChildServiceScreen.dart';
+import 'Popularservices/ServiceController.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -19,6 +22,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final serviceController = Get.find<ServiceController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +32,11 @@ class _HomepageState extends State<Homepage> {
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.FFFFFF,
         actions: [
-          IconButton(onPressed: () {
-            Get.toNamed(AppRoute.notificationPage);
-          }, icon: Icon(Icons.notifications)),
+          IconButton(
+              onPressed: () {
+                Get.toNamed(AppRoute.notificationPage);
+              },
+              icon: Icon(Icons.notifications)),
         ],
         title: Row(
           children: [
@@ -95,7 +102,7 @@ class _HomepageState extends State<Homepage> {
                         color: AppColors.gray900),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Get.toNamed(AppRoute.popularservices);
                     },
                     child: Text(
@@ -111,32 +118,45 @@ class _HomepageState extends State<Homepage> {
               SizedBox(
                 height: 20.h,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Customcontainer(
-                      cText: AppString.plumbing, img: AppImg.plumber),
-                  Customcontainer(
-                      cText: AppString.painting, img: AppImg.painting),
-                  Customcontainer(
-                      cText: AppString.solar, img: AppImg.solarEnergy),
-                ],
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Customcontainer(
-                      cText: AppString.airCondition,
-                      img: AppImg.airConditenior),
-                  Customcontainer(
-                      cText: AppString.roofRepair, img: AppImg.roofRepair),
-                  Customcontainer(
-                      cText: AppString.electric, img: AppImg.multimeter),
-                ],
-              ),
+              Obx(() {
+                if (serviceController.isLoading.value) {
+                  return CircularProgressIndicator();
+                }
+
+                final services = serviceController.parentServices.length > 6
+                    ? serviceController.parentServices.take(6).toList()
+                    : serviceController.parentServices;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: services.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 8,
+                  ),
+                  itemBuilder: (context, index) {
+                    final service = services[index];
+
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(
+                              () => ChildServiceScreen(
+                            parentId: service.id,   //  VERY IMPORTANT
+                            title: service.name,
+                          ),
+                        );
+                      },
+                      child: Customcontainer(
+                        cText: service.name,
+                        img: "${ApiConstant.baseUrl}${service.image}",
+                      ),
+                    );
+                  },
+                );
+              }),
+
               SizedBox(
                 height: 20.h,
               ),
@@ -151,7 +171,7 @@ class _HomepageState extends State<Homepage> {
                         color: AppColors.gray900),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Get.toNamed(AppRoute.electricianproviders);
                     },
                     child: Text(
@@ -190,7 +210,7 @@ class _HomepageState extends State<Homepage> {
                         color: AppColors.gray900),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Get.toNamed(AppRoute.appointmentsPage);
                     },
                     child: Text(
