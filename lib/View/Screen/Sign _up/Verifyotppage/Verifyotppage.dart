@@ -26,7 +26,10 @@ class _VerifyotppageSState extends State<VerifyotppageS> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.FFFFFF,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.FFFFFF,
         title: Center(
           child: Text(
             AppString.verifyOTP.tr,

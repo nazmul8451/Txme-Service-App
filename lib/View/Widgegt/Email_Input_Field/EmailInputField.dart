@@ -4,6 +4,7 @@ import 'package:txme_app/Utils/AppColors/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
+  final String? errorText;
   final String hint;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -11,7 +12,9 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
+
     required this.label,
+    this.errorText,
     this.keyboardType,
     this.controller,
     required this.hint,
@@ -56,9 +59,11 @@ class CustomTextField extends StatelessWidget {
 
               Expanded(
                 child: TextField(
+
                   controller: controller,
                   keyboardType: keyboardType,
                   decoration: InputDecoration(
+                    errorText: errorText,
                     hintText: hint,
                     border: InputBorder.none,
                   ),

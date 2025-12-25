@@ -8,6 +8,8 @@ import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 
+import '../../../../helper/Shared_prefe/shared_prefe.dart';
+
 class Verifyyouridentity extends StatefulWidget {
   const Verifyyouridentity({super.key});
 
@@ -204,11 +206,26 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                   ),
                 ),
               ),
-              onTap: () {
+              onTap: () async {
+                final role = await SharePrefsHelper.getString(
+                  SharePrefsHelper.userRole,
+                );
 
-                Get.toNamed(AppRoute.signindone);
+                if (role == "PROVIDER") {
+                  Get.toNamed(AppRoute.profession);
+                } else if (role == "CUSTOMER") {
+                  Get.toNamed(AppRoute.signindone);
+                } else {
+                  // fallback (optional)
+                  Get.snackbar("Error", "User role not found");
+
+                  Get.toNamed(AppRoute.signinwithbiometrics);
+
+                }
               },
+
             ),
+
           ],
         ),
       ),

@@ -10,6 +10,7 @@ import '../../View/Screen/Service Provider Role/MyBooking/NewBookingRequest/NewB
 import '../../View/Screen/Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ProviderJobProgressPage/ProviderJobProgressPage.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
+import '../../View/Screen/Service Provider Role/Provider Profile/EditProfileProfession/EditProfileProfession.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/ProviderProfile.dart';
 import '../../View/Screen/Sign _up/Create_Account/CreateAccount.dart';
 import '../../View/Screen/Sign _up/FaceIDSetupScreen/FaceIDSetupScreen.dart';
@@ -116,6 +117,7 @@ class AppRoute {
   static const String requestpage = "/requestpage";
   static const String withdrawpage = "/withdrawpage";
   static const String allreviews = "/allreviews";
+  static const String profession = "/profession";
 
 
 
@@ -180,6 +182,7 @@ class AppRoute {
     GetPage(name: requestpage, page: () =>  Requestpage()),
     GetPage(name: withdrawpage, page: () =>  Withdrawpage()),
     GetPage(name: allreviews, page: () =>  Allreviews()),
+    GetPage(name: profession, page: () =>  Editprofileprofession()),
 
 
 

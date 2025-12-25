@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:txme_app/Utils/AppImg/app_img.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import 'EditProfileController.dart';
 
 class EditProfilePage extends GetView<EditProfileController> {
-  const EditProfilePage({super.key});
+  EditProfilePage({super.key});
+
+  final controller = Get.put(EditProfileController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.FFFFFF,
         elevation: 0,
         leading: IconButton(
@@ -27,178 +29,128 @@ class EditProfilePage extends GetView<EditProfileController> {
         ),
         centerTitle: true,
       ),
-
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            /// ================= PROFILE IMAGE =================
-            Center(
-              child: GestureDetector(
-                onTap: controller.pickProfileImage, // optional (tap on image)
-                child: Obx(() => Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
+          final user = controller.user.value;
+          if (user == null) return const SizedBox();
 
-                    /// ================= PROFILE IMAGE =================
-                    CircleAvatar(
-                      radius: 55.r,
-                      backgroundColor: Colors.grey.shade300,
-                      backgroundImage: controller.profileImage.value != null
-                          ? FileImage(controller.profileImage.value!)
-                          : const AssetImage("")
-                      as ImageProvider,
-                    ),
-
-                    /// ================= CAMERA ICON =================
-                    Positioned(
-                      bottom: 0.h,
-
-                      right: 8.w,
-                      child: GestureDetector(
-                        onTap: controller.pickProfileImage,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// PROFILE IMAGE
+              Center(
+                child: GestureDetector(
+                  onTap: controller.pickProfileImage,
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 45.r,
+                        backgroundImage:
+                        user.profileImageUrl != null &&
+                            user.profileImageUrl!.isNotEmpty
+                            ? NetworkImage(user.profileImageUrl!)
+                            : const AssetImage(
+                            AppImg.editProfile)
+                        as ImageProvider,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 4,
                         child: Container(
                           padding: EdgeInsets.all(6.w),
                           decoration: BoxDecoration(
                             color: AppColors.red601,
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2.w),
                           ),
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 15.sp,
-                          ),
+                          child: Icon(Icons.camera_alt,
+                              color: Colors.white, size: 15.sp),
                         ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  ),
+                ),
               ),
-            ),
 
+              SizedBox(height: 25.h),
 
-            SizedBox(height: 25.h),
+              _label("Full Name"),
+              _input(controller.nameController),
 
-            /// ================= NAME =================
-            _inputLabel("Name"),
-            _inputField(controller.nameController),
+              SizedBox(height: 15.h),
+              _label("Nationality"),
+              _countryDropdown(context),
 
+              SizedBox(height: 15.h),
+              _label("Phone"),
+              _phoneInput(),
 
+              SizedBox(height: 15.h),
+              _label("Address"),
+              _input(controller.addressController),
 
-            /// ================= EMAIL =================
+              SizedBox(height: 15.h),
+              _label("Bio"),
+              _bioInput(),
 
+              SizedBox(height: 15.h),
+              _label("Country of Residence"),
+              _input(controller.residenceController),
 
-            SizedBox(height: 15.h),
+              SizedBox(height: 15.h),
+              _label("Postal Address"),
+              _input(controller.postalController),
 
-            /// ================= COUNTRY =================
-            _inputLabel("Country"),
-            _countryDropdown(context),
-
-            SizedBox(height: 15.h),
-
-            /// ================= PHONE =================
-            _inputLabel("Phone number"),
-            _phoneInput(),
-
-            SizedBox(height: 15.h),
-
-            /// ================= ADDRESS =================
-            _inputLabel("Address"),
-            _inputField(controller.addressController),
-
-            SizedBox(height: 15.h),
-
-            /// ================= BIO =================
-            _inputLabel("Bio"),
-            _bioInput(),
-            /// ================= NEW FROM CREATE ACCOUNT =================
-            SizedBox(height: 20.h),
-
-
-            SizedBox(height: 15.h),
-
-            _inputLabel("Country of Residence"),
-            _inputField(controller.residenceController),
-
-            SizedBox(height: 15.h),
-
-            _inputLabel("Postal Address"),
-            _inputField(controller.postalController),
-
-            SizedBox(height: 30.h),
-
-            /// ================= UPDATE BUTTON =================
-            _updateButton(),
-
-            SizedBox(height: 20.h),
-
-            Text(
-              "Profile information will be updated securely.",
-              style: TextStyle(fontSize: 12.sp, color: Colors.black54),
-            ),
-          ],
-        ),
+              SizedBox(height: 30.h),
+              _updateButton(),
+            ],
+          );
+        }),
       ),
-
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
     );
   }
 
-  // 🔹 Label
-  Widget _inputLabel(String label) {
+  Widget _label(String text) {
     return Padding(
       padding: EdgeInsets.only(bottom: 6.h),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
-      ),
+      child: Text(text,
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)),
     );
   }
 
-  // 🔹 Normal Input Field
-  Widget _inputField(TextEditingController textController,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _input(TextEditingController c) {
     return TextField(
-      controller: textController,
-      keyboardType: keyboardType,
+      controller: c,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: Colors.orange, width: 1.5.w),
-        ),
+        border:
+        OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
       ),
     );
   }
 
-  //  Country Dropdown
   Widget _countryDropdown(BuildContext context) {
     return Obx(() => GestureDetector(
       onTap: () => controller.pickCountry(context),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+        padding:
+        EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: Colors.grey.shade400),
+          border: Border.all(color: Colors.grey),
         ),
         child: Row(
           children: [
-            Text(
-              controller.selectedFlag.value,
-              style: TextStyle(fontSize: 20.sp),
-            ),
+            Text(controller.selectedFlag.value),
             SizedBox(width: 10.w),
             Expanded(
-              child: Text(
-                controller.selectedCountryName.value,
-                style: TextStyle(fontSize: 14.sp),
-              ),
-            ),
+                child:
+                Text(controller.selectedCountryName.value)),
             const Icon(Icons.keyboard_arrow_down),
           ],
         ),
@@ -206,27 +158,26 @@ class EditProfilePage extends GetView<EditProfileController> {
     ));
   }
 
-
-  // 🔹 Phone Number Input
   Widget _phoneInput() {
     return Obx(() => Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      padding:
+      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(color: Colors.grey),
       ),
       child: Row(
         children: [
-          // Flag of country
-          Text(controller.selectedFlag.value, style: TextStyle(fontSize: 18.sp)),
-          SizedBox(width: 10.w),
-          Text(controller.phoneCode.value, style: TextStyle(fontSize: 14.sp)),
-          SizedBox(width: 10.w),
+          Text(controller.selectedFlag.value),
+          SizedBox(width: 6.w),
+          Text(controller.phoneCode.value),
+          SizedBox(width: 8.w),
           Expanded(
             child: TextField(
               controller: controller.phoneController,
               keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(border: InputBorder.none),
+              decoration:
+              const InputDecoration(border: InputBorder.none),
             ),
           ),
         ],
@@ -234,22 +185,18 @@ class EditProfilePage extends GetView<EditProfileController> {
     ));
   }
 
-  // 🔹 Bio Input
   Widget _bioInput() {
     return TextField(
       controller: controller.bioController,
       maxLines: 4,
       decoration: InputDecoration(
-        hintText: "Tell more about yourself",
-        hintStyle: TextStyle(fontSize: 13.sp),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
+        border:
+        OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
       ),
     );
   }
 
-  //  Update Button
+
   Widget _updateButton() {
     return SizedBox(
       width: double.infinity,

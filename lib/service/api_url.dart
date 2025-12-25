@@ -3,6 +3,7 @@ class ApiConstant {
   static const String apiVersion = "/api/v1";
 
 
+
   static const String socketUrl = baseUrl;
 
   ///===================== SIGN UP =========================///
@@ -86,6 +87,19 @@ class ApiConstant {
 
 
 
+
+
+  static const String childServices = "$apiVersion/service/get-all-child-services";
+
+
+  static const String userMe = "$apiVersion/user/me";
+
+
+
+
+
+
+  
 
 
   static const String bearerToken = "bearerToken";

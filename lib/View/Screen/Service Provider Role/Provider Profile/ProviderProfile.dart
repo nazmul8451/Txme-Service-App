@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
-import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Screen/User%20Role/Home_Page/homePage.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
 import '../../User Role/Profile/EditProfile/EditProfile.dart';
 import '../../User Role/Profile/NotificationPage/NotificationSettingsPage.dart';
 import '../../User Role/Profile/VerificationPage/VerificationPage.dart';
 import '../../User Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'EditProfileProfession/EditProfileProfession.dart';
+import 'UserHeaderController.dart';
 
 class ProviderProfilePage extends StatelessWidget {
-  const ProviderProfilePage({super.key});
+  ProviderProfilePage({super.key});
+
+  final controller = Get.put(UserHeaderController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,62 +39,55 @@ class ProviderProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// PROFILE HEADER
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 45,
-                  backgroundImage: NetworkImage(
-                    "https://i.pravatar.cc/300",
+
+            Obx(() {
+              if (controller.isLoading.value) {
+                return const CircularProgressIndicator();
+              }
+
+              final user = controller.user.value;
+              if (user == null) return const SizedBox();
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundImage: NetworkImage(user.profileImageUrl),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Mahram",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      softWrap: true,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      "Electrician",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      softWrap: true,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.star, size: 18, color: Colors.orange),
-                        SizedBox(width: 5),
-                        Text(
-                          "4.5",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
+                      Text(
+                        user.fullName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      ),
+                      const SizedBox(height: 4),
+
+                      Text(
+                        user.providerProfile?.designation ?? '',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.star,
+                              size: 18, color: Colors.orange),
+                          const SizedBox(width: 5),
+                          Text(user.review.toString()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
 
             const SizedBox(height: 22),
 
@@ -147,31 +141,20 @@ class ProviderProfilePage extends StatelessWidget {
 
             GestureDetector(
               onTap: () => Get.to(() => EditProfilePage()),
-              child:
-                  menuItem(
-                      img: AppImg.editProfile,
-                      title: "Edit Profile"),
+              child: menuItem(img: AppImg.editProfile, title: "Edit Profile"),
             ),
 
             GestureDetector(
               onTap: () => Get.to(() => Editprofileprofession()),
-              child: menuItem(
-                  img: AppImg.profession,
-                  title: "Profession"),
+              child: menuItem(img: AppImg.profession, title: "Profession"),
             ),
 
             GestureDetector(
               onTap: () => Get.to(() => VerificationPage()),
-              child: menuItem(
-                  img: AppImg.verification,
-                  title: "Verification"),
+              child: menuItem(img: AppImg.verification, title: "Verification"),
             ),
 
-            menuItem(
-                img: AppImg.faceIdImg,
-                title: "Setup FaceID"),
-
-
+            // menuItem(img: AppImg.faceIdImg, title: "Setup FaceID"),
 
             const SizedBox(height: 20),
             const Text(
@@ -184,25 +167,15 @@ class ProviderProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             GestureDetector(
-             onTap: () {
-
-               Get.toNamed(AppRoute.walletpage);
-             },
-
-              child: menuItem(
-                  img: AppImg.wallet,
-                  title: "Wallet"),
+              onTap: () {
+                Get.toNamed(AppRoute.walletpage);
+              },
+              child: menuItem(img: AppImg.wallet, title: "Wallet"),
             ),
             GestureDetector(
               onTap: () => Get.to(() => InvoiceListPage()),
-              child: menuItem(
-                  img: AppImg.pastInvoices,
-
-                  title: "Past Invoices"),
+              child: menuItem(img: AppImg.pastInvoices, title: "Past Invoices"),
             ),
-
-
-
 
             const SizedBox(height: 20),
             const Text(
@@ -217,13 +190,8 @@ class ProviderProfilePage extends StatelessWidget {
 
             GestureDetector(
               onTap: () => Get.to(() => NotificationSettings()),
-              child: menuItem(
-
-                  img: AppImg.notification,
-                  title: "Notification"),
+              child: menuItem(img: AppImg.notification, title: "Notification"),
             ),
-
-
 
             faqItem(),
 
@@ -234,55 +202,53 @@ class ProviderProfilePage extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
-
-            /// SWITCH MODE
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
-                Image.asset(AppImg.Change,),
-                SizedBox(width: 6),
-                Text(
-                  "Change to Service Provider Mode",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            GestureDetector(
-              onTap: () => Get.offAll(() => const Homepage()), // switch mode
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.redAccent),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Switch",
-                    style: TextStyle(
-                      color: Color(0xff000000),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            //
+            // /// SWITCH MODE
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Image.asset(
+            //       AppImg.Change,
+            //     ),
+            //     SizedBox(width: 6),
+            //     Text(
+            //       "Change to Service Provider Mode",
+            //       style: TextStyle(
+            //         color: Colors.blue,
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            //
+            // const SizedBox(height: 20),
+            //
+            // GestureDetector(
+            //   onTap: () => Get.offAll(() => const Homepage()), // switch mode
+            //   child: Container(
+            //     width: double.infinity,
+            //     padding: const EdgeInsets.symmetric(vertical: 14),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(10),
+            //       border: Border.all(color: Colors.redAccent),
+            //     ),
+            //     child: const Center(
+            //       child: Text(
+            //         "Switch",
+            //         style: TextStyle(
+            //           color: Color(0xff000000),
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             const SizedBox(height: 30),
           ],
         ),
-
       ),
-
-
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
-
     );
   }
 
@@ -299,8 +265,11 @@ class ProviderProfilePage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(img, height: 40, width: 40,),
-
+          Image.asset(
+            img,
+            height: 40,
+            width: 40,
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Text(title,
@@ -324,14 +293,17 @@ class ProviderProfilePage extends StatelessWidget {
 
   Widget faqItem() {
     return Container(
-      margin:  EdgeInsets.only(top: 12, bottom: 12),
-      padding:  EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      margin: EdgeInsets.only(top: 12, bottom: 12),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-          color:  Color(0xffF5F9FB),
-          borderRadius: BorderRadius.circular(12)),
-      child:  Row(
+          color: Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
+      child: Row(
         children: [
-        Image.asset(AppImg.FAQ, height: 40, width: 40,),
+          Image.asset(
+            AppImg.FAQ,
+            height: 40,
+            width: 40,
+          ),
           SizedBox(width: 14),
           Expanded(
             child: Text(
@@ -347,16 +319,17 @@ class ProviderProfilePage extends StatelessWidget {
 
   Widget logoutItem() {
     return Container(
-      margin:  EdgeInsets.only(bottom: 12),
-      padding:  EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-          color:  Color(0xffF5F9FB),
-          borderRadius: BorderRadius.circular(12)),
-      child:  Row(
+          color: Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
+      child: Row(
         children: [
-
-         Image.asset(AppImg.Logout, height: 40, width: 40,),
-
+          Image.asset(
+            AppImg.Logout,
+            height: 40,
+            width: 40,
+          ),
           SizedBox(width: 14),
           Text("Logout",
               style: TextStyle(
