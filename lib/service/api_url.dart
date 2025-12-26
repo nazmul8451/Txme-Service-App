@@ -39,6 +39,10 @@ class ApiConstant {
   ///===================== Home (user) =========================///
 
 
+  /// GET → Provider calendar slots
+  /// usage: /provider/{id}/calendar?date=yyyy-MM-dd
+  static const String providerCalendar = "$apiVersion/provider";
+
   static const String serviceGet  = "$apiVersion/service/get-services";
 
 

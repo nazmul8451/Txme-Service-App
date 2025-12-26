@@ -1,140 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-import '../../../../../Utils/AppColors/app_colors.dart';
+import 'BookingScheduleController.dart';
 
-class BookingSchedulePage extends StatefulWidget {
+class BookingSchedulePage extends GetView<BookingScheduleController> {
   const BookingSchedulePage({super.key});
 
   @override
-  State<BookingSchedulePage> createState() => _BookingSchedulePageState();
-}
-
-class _BookingSchedulePageState extends State<BookingSchedulePage> {
-  int selectedIndex = 2; // today index
-
-  /// --------- JSON DATA (Replace with API) ----------
-  List<Map<String, dynamic>> dates = [
-    {"day": 18, "week": "Mo"},
-    {"day": 19, "week": "Tu"},
-    {"day": 20, "week": "We"},
-    {"day": 21, "week": "Th"},
-    {"day": 22, "week": "Fr"},
-    {"day": 23, "week": "Sa"},
-    {"day": 24, "week": "Su"},
-  ];
-
-  /// SCHEDULE
-  Map<String, dynamic> scheduleJson = {
-    "21": [
-      {"time": 8, "status": "Booked"},
-      {"time": 9, "status": "Booked"},
-      {"time": 11, "status": "Not available"},
-      {"time": 14, "status": "Not available"},
-    ],
-    "20": [
-      {"time": 10, "status": "Booking request"},
-    ],
-    "18": [],
-  };
-
-  Color getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case "booked":
-        return const Color(0xFFFF5A36);
-      case "not available":
-        return const Color(0xFF1A2434);
-      case "booking request":
-        return const Color(0xFFFFC107);
-      default:
-        return Colors.grey;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    int selectedDay = dates[selectedIndex]["day"];
-    List daySchedules = scheduleJson["$selectedDay"] ?? [];
-
     return Scaffold(
       backgroundColor: Colors.white,
 
       appBar: AppBar(
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.FFFFFF,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 18.sp),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Get.back(),
         ),
-        title: Text(
-          " ",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        centerTitle: true,
       ),
 
-      body: SafeArea(
-        child: Column(
+      body: Obx(() {
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            SizedBox(height: 16.h),
+            /// -------- GREETING --------
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "Good Morning, Sady",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
 
-            /// ------------------ DATE SCROLLER ------------------
+            const SizedBox(height: 12),
+
+            /// -------- DATE SCROLLER --------
             SizedBox(
-              height: 80.h,
+              height: 80,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
-                itemCount: dates.length,
-                itemBuilder: (context, index) {
-                  bool isSelected = index == selectedIndex;
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: controller.dates.length,
+                itemBuilder: (_, index) {
+                  final item = controller.dates[index];
+                  final isSelected =
+                      controller.selectedIndex.value == index;
 
                   return GestureDetector(
-                    onTap: () => setState(() => selectedIndex = index),
+                    onTap: () => controller.onDateTap(index),
                     child: Container(
-                      width: 55.w,
-                      margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      padding: EdgeInsets.all(10.w),
+                      width: 55,
+                      margin: const EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFFFF5A36) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12.r),
+                        color: isSelected
+                            ? const Color(0xFFFF5A36)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            dates[index]["day"].toString(),
+                            item["day"].toString(),
                             style: TextStyle(
-                              fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : Colors.black,
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                           ),
-                          SizedBox(height: 4.h),
+                          const SizedBox(height: 4),
                           Text(
-                            dates[index]["week"],
+                            item["week"],
                             style: TextStyle(
-                              fontSize: 14.sp,
-                              color: isSelected ? Colors.white : Colors.black87,
+                              fontSize: 12,
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.grey,
                             ),
                           ),
-                          SizedBox(height: 4.h),
-
-                          /// DOT INDICATOR
-                          if (isSelected)
-                            Container(
-                              width: 6.w,
-                              height: 6.h,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
                         ],
                       ),
                     ),
@@ -143,115 +93,146 @@ class _BookingSchedulePageState extends State<BookingSchedulePage> {
               ),
             ),
 
-            SizedBox(height: 16.h),
+            const SizedBox(height: 12),
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                "Schedule Today",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            SizedBox(height: 16.h),
-
-            /// ------------------ SCHEDULE AREA ------------------
+            /// -------- SCHEDULE AREA --------
             Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Row(
+              child: controller.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                child: SizedBox(
+                  height: 520,
+                  child: Stack(
                     children: [
 
-                      /// Hours Column
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(
-                          9,
-                              (i) {
-                            int hour = 8 + i;
+                      /// TIME COLUMN
+                      Positioned(
+                        left: 16,
+                        top: 0,
+                        bottom: 0,
+                        child: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: List.generate(5, (i) {
+                            final hour = 8 + (i * 2);
                             return Padding(
-                              padding: EdgeInsets.symmetric(vertical: 18.h),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 28),
                               child: Text(
                                 "${hour.toString().padLeft(2, '0')}.00",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 13.sp,
+                                  fontSize: 13,
                                 ),
                               ),
                             );
-                          },
+                          }),
                         ),
                       ),
 
-                      SizedBox(width: 20.w),
+                      /// SLOTS
+                      ...controller.slots.asMap().entries.map((e) {
+                        final index = e.key;
+                        final slot = e.value;
 
-                      /// ---- Bookings Column ----
-                      SizedBox(
-                        width: 250.w,
-                        child: Stack(
-                          children: daySchedules.map((item) {
-                            double top = (item["time"] - 8) * 55.h;
+                        final isSelected =
+                            controller.selectedSlotIndex.value ==
+                                index;
 
-                            return Positioned(
-                              top: top,
-                              left: 0.w,
-                              child: Container(
-                                width: 160.w,
-                                padding: EdgeInsets.all(12.w),
-                                margin: EdgeInsets.only(bottom: 12.h),
-                                decoration: BoxDecoration(
-                                  color: getStatusColor(item["status"]),
-                                  borderRadius: BorderRadius.circular(14.r),
-                                ),
-                                child: Text(
-                                  item["status"],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold,
+                        Color bgColor;
+                        String label;
+
+                        if (!slot.available) {
+                          bgColor = const Color(0xFF1F2937);
+                          label = "Not Available";
+                        } else if (isSelected) {
+                          bgColor = Colors.grey.shade400;
+                          label = "Booking";
+                        } else {
+                          bgColor = const Color(0xFFFF5A36);
+                          label = "Available";
+                        }
+
+                        return Positioned(
+                          top: controller
+                              .getTopPosition(slot.startTime),
+                          left: 80,
+                          child: GestureDetector(
+                            onTap: slot.available
+                                ? () =>
+                                controller.onSlotTap(index)
+                                : null,
+                            child: Container(
+                              width: 130,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: bgColor,
+                                borderRadius:
+                                BorderRadius.circular(14),
+                              ),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    label,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    "${slot.startTime} - ${slot.endTime}",
+                                    style: const TextStyle(
+                                        color: Colors.white),
+                                  ),
+                                ],
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ],
                   ),
                 ),
               ),
             ),
 
-            SizedBox(height: 16.h),
-
-            /// ------------------ CONFIRM BUTTON ------------------
+            /// -------- CONFIRM BUTTON --------
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
+                height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF5A36),
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    backgroundColor:
+                    const Color(0xFFFF5A36),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius:
+                      BorderRadius.circular(14),
                     ),
                   ),
-                  onPressed: () {},
-                  child: Text(
+                  onPressed: controller.selectedSlotIndex.value == -1
+                      ? null
+                      : () {
+                    ///  booking API later
+                  },
+                  child: const Text(
                     "Confirm Booking",
-                    style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-
-            SizedBox(height: 20.h),
+            SizedBox(height: 50,)
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 }

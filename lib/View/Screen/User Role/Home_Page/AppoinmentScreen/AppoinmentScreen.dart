@@ -25,7 +25,7 @@ class AppointmentsPage extends StatelessWidget {
 
   Widget buildCard(appointment, BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => BookingSchedulePage()),
+     // onTap: () => Get.to(() => BookingSchedulePage()),
       child: Container(
         margin: EdgeInsets.only(bottom: 14.h),
         padding: EdgeInsets.all(12.w),

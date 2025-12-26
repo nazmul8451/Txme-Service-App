@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'RequestBookingController.dart';
 
 class RequestBookingPage extends GetView<RequestBookingController> {
-  const RequestBookingPage({super.key});
+   RequestBookingPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,25 +60,6 @@ class RequestBookingPage extends GetView<RequestBookingController> {
                 ),
 
                 const SizedBox(height: 12),
-                //
-                // /// ---------- SELECTED DATE ----------
-                // if (controller.selectedDate.value != null)
-                //   Container(
-                //     padding: const EdgeInsets.symmetric(
-                //         horizontal: 12, vertical: 8),
-                //     decoration: BoxDecoration(
-                //       color: Colors.red.withOpacity(0.1),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //     child: Text(
-                //       DateFormat("dd MMMM yyyy")
-                //           .format(controller.selectedDate.value!),
-                //       style: const TextStyle(
-                //         color: Colors.red,
-                //         fontWeight: FontWeight.w600,
-                //       ),
-                //     ),
-                //   ),
               ],
             );
           }),

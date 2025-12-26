@@ -1,3 +1,4 @@
+import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:txme_app/View/Screen/Service%20Provider%20Role/MyBooking/MyBookingPage/ProviderBookingsPage.dart';
 import '../../View/Screen/Chats/view/chat_home_page.dart';
@@ -41,6 +42,8 @@ import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/Pay
 import '../../View/Screen/User Role/BookingsViewClient/TotalDuration/TotalDuration.dart';
 import '../../View/Screen/User Role/Home_Page/AllReviews/AllReviews.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
+import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/BookingScheduleBinding.dart';
+import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/ScheduleBookingPage.dart';
 import '../../View/Screen/User Role/Home_Page/DetailsPage/RequestBooking/RequestBooking.dart';
 import '../../View/Screen/User Role/Home_Page/DetailsPage/RequestBooking/RequestBookingBinding.dart';
 import '../../View/Screen/User Role/Home_Page/ElectricianProviders/ElectricianProviders.dart';
@@ -123,6 +126,7 @@ class AppRoute {
   static const String profession = "/profession";
   static const String popularprovider = "/popularprovider";
   static const String requestBooking = "/requestBooking";
+  static const String bookingSchedule = "/bookingSchedule";
 
 
 
@@ -192,9 +196,16 @@ class AppRoute {
     GetPage(name: popularprovider, page: () =>  Popularprovider()),
     GetPage(
       name: requestBooking,
-      page: () => const RequestBookingPage(),
+      page: () =>  RequestBookingPage(),
       binding: RequestBookingBinding(),
     ),
+    GetPage(
+      name: bookingSchedule,
+      page: () => BookingSchedulePage(),
+      binding: BookingScheduleBinding(),
+
+    ),
+
 
 
 

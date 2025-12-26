@@ -52,14 +52,15 @@ class EditProfilePage extends GetView<EditProfileController> {
                     children: [
                       CircleAvatar(
                         radius: 45.r,
-                        backgroundImage:
-                        user.profileImageUrl != null &&
+                        backgroundImage: controller.profileImage.value != null
+                            ? FileImage(controller.profileImage.value!)
+                            : (user.profileImageUrl != null &&
                             user.profileImageUrl!.isNotEmpty
                             ? NetworkImage(user.profileImageUrl!)
-                            : const AssetImage(
-                            AppImg.editProfile)
+                            : const AssetImage(AppImg.editProfile))
                         as ImageProvider,
                       ),
+
                       Positioned(
                         bottom: 0,
                         right: 4,
