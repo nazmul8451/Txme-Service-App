@@ -41,8 +41,11 @@ import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/Pay
 import '../../View/Screen/User Role/BookingsViewClient/TotalDuration/TotalDuration.dart';
 import '../../View/Screen/User Role/Home_Page/AllReviews/AllReviews.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
+import '../../View/Screen/User Role/Home_Page/DetailsPage/RequestBooking/RequestBooking.dart';
+import '../../View/Screen/User Role/Home_Page/DetailsPage/RequestBooking/RequestBookingBinding.dart';
 import '../../View/Screen/User Role/Home_Page/ElectricianProviders/ElectricianProviders.dart';
 import '../../View/Screen/User Role/Home_Page/NotificationPage/NotificationPage.dart';
+import '../../View/Screen/User Role/Home_Page/PopularProvider/PopularProvider.dart';
 import '../../View/Screen/User Role/Home_Page/Popularservices/Popularservices.dart';
 import '../../View/Screen/User Role/Home_Page/SearchFilter/SearchFilter.dart';
 import '../../View/Screen/User Role/Home_Page/homePage.dart';
@@ -118,6 +121,9 @@ class AppRoute {
   static const String withdrawpage = "/withdrawpage";
   static const String allreviews = "/allreviews";
   static const String profession = "/profession";
+  static const String popularprovider = "/popularprovider";
+  static const String requestBooking = "/requestBooking";
+
 
 
 
@@ -183,6 +189,13 @@ class AppRoute {
     GetPage(name: withdrawpage, page: () =>  Withdrawpage()),
     GetPage(name: allreviews, page: () =>  Allreviews()),
     GetPage(name: profession, page: () =>  Editprofileprofession()),
+    GetPage(name: popularprovider, page: () =>  Popularprovider()),
+    GetPage(
+      name: requestBooking,
+      page: () => const RequestBookingPage(),
+      binding: RequestBookingBinding(),
+    ),
+
 
 
 

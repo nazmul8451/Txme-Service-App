@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:country_picker/country_picker.dart';
-
 import '../../../../../service/api_url.dart';
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../Model/UserModel.dart';
@@ -31,13 +29,26 @@ class EditProfileController extends GetxController {
   double? longitude;
 
   /// ================= COUNTRY =================
-  RxString selectedCountryName = "Netherlands".obs;
-  RxString phoneCode = "+31".obs;
-  RxString selectedFlag = "🇳🇱".obs;
+  RxString selectedCountryName = "".obs;
+  RxString phoneCode = "".obs;
+  RxString selectedFlag = "".obs;
 
   /// ================= STATE =================
   final isLoading = false.obs;
   final user = Rxn<UserModel>();
+
+  /// ================= COUNTRY HELPER =================
+  Country? _findCountryByName(String name) {
+    try {
+      return CountryService()
+          .getAll()
+          .firstWhere(
+            (c) => c.name.toLowerCase() == name.toLowerCase(),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// ================= FETCH USER =================
   Future<void> fetchUserHeader() async {
@@ -58,20 +69,34 @@ class EditProfileController extends GetxController {
 
         user.value = data;
 
-        /// 🔥 SET FORM VALUES
+        /// ================= SET FORM VALUES =================
         nameController.text = data.fullName;
-        addressController.text = data.residentialAddress?.address ?? "";
+        addressController.text =
+            data.residentialAddress?.address ?? "";
         postalController.text = data.postalAddress;
         residenceController.text = data.countryOfResidence;
+        bioController.text = data.bio ?? "";
 
-        /// 🔥 Nationality UI
-        selectedCountryName.value = data.nationality;
+        /// ================= AUTO COUNTRY + FLAG =================
+        final country = _findCountryByName(data.nationality);
+
+        if (country != null) {
+          selectedCountryName.value = country.name;
+          selectedFlag.value = country.flagEmoji;
+          phoneCode.value = "+${country.phoneCode}";
+        } else {
+          /// fallback (unknown country name)
+          selectedCountryName.value = data.nationality;
+          selectedFlag.value = "🏳️";
+          phoneCode.value = "";
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to load profile");
     } finally {
       isLoading(false);
     }
   }
-
 
   @override
   void onInit() {
@@ -95,7 +120,7 @@ class EditProfileController extends GetxController {
   /// ================= PICK IMAGE =================
   Future<void> pickProfileImage() async {
     final XFile? image =
-        await _picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+    await _picker.pickImage(source: ImageSource.camera, imageQuality: 85);
     if (image != null) {
       profileImage.value = File(image.path);
     }
@@ -104,7 +129,8 @@ class EditProfileController extends GetxController {
   /// ================= LOCATION =================
   Future<void> getLocation() async {
     final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
     latitude = position.latitude;
     longitude = position.longitude;
   }
@@ -115,10 +141,10 @@ class EditProfileController extends GetxController {
       await getLocation();
 
       final token =
-          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
       final uri =
-          Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
+      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
 
       final request = http.MultipartRequest("PATCH", uri);
 
@@ -127,30 +153,22 @@ class EditProfileController extends GetxController {
         "Accept": "application/json",
       });
 
-      /// 🔥 EXACT API STRUCTURE
       final Map<String, dynamic> data = {
         "fullName": nameController.text.trim(),
         "nationality": selectedCountryName.value,
         "countryOfResidence": residenceController.text.trim(),
         "postalAddress": postalController.text.trim(),
-
-        // ❌ phone আপাতত লাগবে না
-        // "phone": "${phoneCode.value}${phoneController.text.trim()}",
-
         "residentialAddress": {
           "address": addressController.text.trim(),
           "latitude": latitude,
           "longitude": longitude,
         },
-
-        /// 🔥 providerProfile এর ভিতরে bio যাবে
-
         "bio": bioController.text.trim(),
       };
 
       request.fields["data"] = jsonEncode(data);
 
-      /// 🔥 IMAGE (OPTIONAL)
+      /// IMAGE OPTIONAL
       if (profileImage.value != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -166,12 +184,23 @@ class EditProfileController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Profile updated successfully");
-        fetchUserHeader(); // 🔄 refresh data
+        fetchUserHeader();
       } else {
         Get.snackbar("Error", body);
       }
     } catch (e) {
       Get.snackbar("Error", "Profile update failed");
     }
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    addressController.dispose();
+    postalController.dispose();
+    residenceController.dispose();
+    phoneController.dispose();
+    bioController.dispose();
+    super.onClose();
   }
 }

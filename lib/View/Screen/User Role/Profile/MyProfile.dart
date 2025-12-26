@@ -5,11 +5,9 @@ import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/profile_controller.dart';
-import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
-import '../../Sign _up/FaceIDSetupScreen/FaceIDSetupScreen.dart';
 import 'EditProfile/EditProfile.dart';
 import 'NotificationPage/NotificationSettingsPage.dart';
 import 'VerificationPage/VerificationPage.dart';
@@ -17,7 +15,7 @@ import 'VerificationPage/VerificationPage.dart';
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
-  final ProfileController controller = Get.put(ProfileController());
+  final controller = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -34,53 +32,63 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
       ),
-
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// ================= PROFILE HEADER =================
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 45.r,
-                  backgroundImage: const NetworkImage("https://i.pravatar.cc/300"),
-                ),
-                SizedBox(width: 16.w),
 
-                Obx(() => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 12.h),
-                    Text(
-                      controller.userName.value,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 18.sp, color: Colors.orange),
-                        SizedBox(width: 5.w),
-                        Text(
-                          controller.rating.value.toString(),
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.orange,
-                            fontWeight: FontWeight.w500,
+            Obx(() {
+              if (controller.isLoading.value) {
+                return const CircularProgressIndicator();
+              }
+
+              final user = controller.user.value;
+              if (user == null) return const SizedBox();
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundImage: NetworkImage(user.profileImageUrl),
+                  ),
+                  SizedBox(width: 16.w),
+                   Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          SizedBox(height: 12.h),
+                          Text(
+                            user.fullName,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-              ],
-            ),
+
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Icon(Icons.star,
+                                  size: 18.sp, color: Colors.orange),
+                              SizedBox(width: 5.w),
+                              Text(
+                                user.review.toString(),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                ],
+              );
+            }),
 
             SizedBox(height: 22.h),
 
@@ -96,23 +104,22 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 12.h),
 
             profileMenu(
-            onTap: () => Get.to(() =>  EditProfilePage()),
+              onTap: () => Get.to(() => EditProfilePage()),
               img: AppImg.editProfile,
               title: "Edit Profile",
             ),
             profileMenu(
-              onTap: () => Get.to(() =>  VerificationPage()),
-
+              onTap: () => Get.to(() => VerificationPage()),
               img: AppImg.verification,
               title: "Verification",
             ),
+            // profileMenu(
+            //   onTap: () => Get.to(() =>  FaceIDSetupScreen()),
+            //   img: AppImg.faceIdImg,
+            //   title: "Setup FaceID",
+            // ),
             profileMenu(
-              onTap: () => Get.to(() =>  FaceIDSetupScreen()),
-              img: AppImg.faceIdImg,
-              title: "Setup FaceID",
-            ),
-            profileMenu(
-              onTap: (){
+              onTap: () {
                 Get.toNamed(AppRoute.walletpage);
               },
               img: AppImg.wallet,
@@ -132,13 +139,13 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 12.h),
 
             profileMenu(
-              onTap: () => Get.to(() =>   NotificationSettings()),
+              onTap: () => Get.to(() => NotificationSettings()),
               img: AppImg.notification,
-
               title: "Notification",
             ),
             profileMenu(
-              onTap: () => Get.to(() => InvoiceListPage()), // pass the page, not the controller
+              onTap: () => Get.to(
+                  () => InvoiceListPage()), // pass the page, not the controller
               img: AppImg.pastInvoices,
               title: "Past Invoices",
             ),
@@ -149,49 +156,48 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 20.h),
 
             /// ================= SWITCH TO PROVIDER MODE =================
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppImg.Change, height: 40.h, width: 40.w),
-                SizedBox(width: 6.w),
-                Text(
-                  "Change to Service Provider Mode",
-                  style: TextStyle(
-                    color: AppColors.gray,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 20.h),
-
-            CustomButton(
-              height: 56.h,
-              width: 353.w,
-              BoxDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: AppColors.red601),
-              ),
-              child: Center(
-                child: Text(
-                  "Switch",
-                  style: TextStyle(
-                    color: AppColors.black700,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ),
-              onTap: () {},
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Image.asset(AppImg.Change, height: 40.h, width: 40.w),
+            //     SizedBox(width: 6.w),
+            //     Text(
+            //       "Change to Service Provider Mode",
+            //       style: TextStyle(
+            //         color: AppColors.gray,
+            //         fontWeight: FontWeight.w500,
+            //         fontSize: 16.sp,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            //
+            // SizedBox(height: 20.h),
+            //
+            // CustomButton(
+            //   height: 56.h,
+            //   width: 353.w,
+            //   BoxDecoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10.r),
+            //     border: Border.all(color: AppColors.red601),
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       "Switch",
+            //       style: TextStyle(
+            //         color: AppColors.black700,
+            //         fontWeight: FontWeight.w700,
+            //         fontSize: 16.sp,
+            //       ),
+            //     ),
+            //   ),
+            //   onTap: () {},
+            // ),
 
             SizedBox(height: 30.h),
           ],
         ),
       ),
-
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
     );
   }
@@ -220,9 +226,7 @@ class ProfilePage extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(img, height: 44.h, width: 44.w),
-
             SizedBox(width: 14.w),
-
             Expanded(
               child: Text(
                 title,
@@ -233,7 +237,6 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-
             Container(
               height: 44.h,
               width: 44.w,
@@ -318,5 +321,4 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
 }

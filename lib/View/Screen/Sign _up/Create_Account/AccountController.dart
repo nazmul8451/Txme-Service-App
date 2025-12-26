@@ -40,6 +40,8 @@ class AccountController extends GetxController {
   double? latitude;
   double? longitude;
 
+  final isLoading = false.obs;
+
 
   /// ================= CAMERA =================
   Future<void> openCamera() async {
@@ -172,7 +174,10 @@ class AccountController extends GetxController {
 
   /// ================= COMPLETE PROFILE API =================
   Future<void> submitCompleteProfile() async {
+    if (isLoading.value) return; // 🔒 prevent double click
+
     try {
+      isLoading(true);
 
       await getCurrentLocation();
 
@@ -203,16 +208,14 @@ class AccountController extends GetxController {
       /// JSON DATA
       final Map<String, dynamic> data = {
         "fullName": nameController.text.trim(),
-        "dateOfBirth": selectedDate.value
-            ?.toIso8601String()
-            .split("T")
-            .first,
+        "dateOfBirth":
+        selectedDate.value?.toIso8601String().split("T").first,
         "gender": selectedGender.value,
         "nationality": nationalityController.text.trim(),
         "countryOfResidence": residenceController.text.trim(),
         "residentialAddress": {
           "address": addressController.text.trim(),
-          "latitude": latitude ?? 23.8103,     // fallback (Dhaka)
+          "latitude": latitude ?? 23.8103,
           "longitude": longitude ?? 90.4125,
         },
         "postalAddress": postalController.text.trim(),
@@ -223,17 +226,13 @@ class AccountController extends GetxController {
         "maritalStatus": selectedMarital.value,
       };
 
-      /// IMPORTANT ❗
       request.fields["data"] = jsonEncode(data);
 
       /// IMAGE FILE
       final imageFile = profileImage.value!;
       final extension = imageFile.path.split('.').last.toLowerCase();
 
-      String mimeType = "image/jpeg";
-      if (extension == "png") {
-        mimeType = "image/png";
-      }
+      String mimeType = extension == "png" ? "image/png" : "image/jpeg";
 
       request.files.add(
         await http.MultipartFile.fromPath(
@@ -244,14 +243,8 @@ class AccountController extends GetxController {
         ),
       );
 
-      debugPrint("📤 DATA => ${request.fields}");
-      debugPrint("📤 FILE => ${profileImage.value!.path}");
-
       final response = await request.send();
       final body = await response.stream.bytesToString();
-
-      debugPrint("📥 STATUS => ${response.statusCode}");
-      debugPrint("📥 BODY => $body");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Profile completed successfully");
@@ -262,8 +255,11 @@ class AccountController extends GetxController {
     } catch (e) {
       debugPrint("❌ COMPLETE PROFILE ERROR => $e");
       Get.snackbar("Error", "Server error, try again");
+    } finally {
+      isLoading(false); // ✅ always stop loader
     }
   }
+
 
 
 

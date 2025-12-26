@@ -11,6 +11,7 @@ import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../models/provider_model.dart';
+import 'ProvidersDetailsController.dart';
 
 class DetailsPage extends StatefulWidget {
   final ProviderModel provider;
@@ -22,6 +23,9 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+
+  final controller = Get.put(Providersdetailscontroller());
+
   bool isUserSelected = true;
   bool showAll = false;
 
@@ -104,7 +108,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       _infoColumn(
                           AppImg.star, widget.provider.rating, "Rating"),
                       _infoColumn(
-                          AppImg.completed, widget.provider.orders, "Orders"),
+                          AppImg.completed, widget.provider.experience, "Orders"),
                       _infoColumn(AppImg.experience, widget.provider.experience,
                           "Years"),
                     ],
@@ -278,7 +282,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                           child: Center(
                             child: Text(
-                              "\$${widget.provider.rate} (Hourly)",
+                              "\$${widget.provider.hourlyRate} (Hourly)",
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -318,100 +322,100 @@ class _DetailsPageState extends State<DetailsPage> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Review",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp,
-                              color: Color(0xff4C545F)),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-
-
-                            Get.toNamed(AppRoute.allreviews);
-
-                          },
-                          child: Text(
-                             "Show all",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.sp,
-                                color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Column(
-                      children: (showAll
-                              ? widget.provider.reviews
-                              : widget.provider.reviews.take(2).toList())
-                          .map((review) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 10.h),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    child: review.profile.startsWith("http")
-                                        ? Image.network(
-                                            review.profile,
-                                            width: 24.w,
-                                            height: 24.h,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.asset(
-                                            review.profile,
-                                            width: 24.w,
-                                            height: 24.h,
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Text(
-                                    review.name,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.sp),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    review.date,
-                                    style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.grey[600]),
-                                  ),
-                                ],
-                              ),
-
-                              // ⭐ Rating stars added here
-                              SizedBox(height: 4.h),
-                              buildStarRating(review
-                                  .rating), // <-- review.rating অনুযায়ী star
-
-                              SizedBox(height: 4.h),
-                              Text(
-                                review.comment,
-                                style: TextStyle(
-                                    fontSize: 12.sp, color: Colors.grey[700]),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  ],
-                ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Text(
+                //           "Review",
+                //           style: TextStyle(
+                //               fontWeight: FontWeight.w600,
+                //               fontSize: 16.sp,
+                //               color: Color(0xff4C545F)),
+                //         ),
+                //         GestureDetector(
+                //           onTap: () {
+                //
+                //
+                //             Get.toNamed(AppRoute.allreviews);
+                //
+                //           },
+                //           child: Text(
+                //              "Show all",
+                //             style: TextStyle(
+                //                 fontWeight: FontWeight.w600,
+                //                 fontSize: 16.sp,
+                //                 color: Colors.blue),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //     const SizedBox(height: 10),
+                //     Column(
+                //       children: (showAll
+                //               ? widget.provider.rating
+                //               : widget.provider.totalReviews  .toList())
+                //           .map((review) {
+                //         return Padding(
+                //           padding: EdgeInsets.only(bottom: 10.h),
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Row(
+                //                 children: [
+                //                   ClipRRect(
+                //                     borderRadius: BorderRadius.circular(12.r),
+                //                     child: review.profile.startsWith("http")
+                //                         ? Image.network(
+                //                             review.profile,
+                //                             width: 24.w,
+                //                             height: 24.h,
+                //                             fit: BoxFit.cover,
+                //                           )
+                //                         : Image.asset(
+                //                             review.profile,
+                //                             width: 24.w,
+                //                             height: 24.h,
+                //                             fit: BoxFit.cover,
+                //                           ),
+                //                   ),
+                //                   SizedBox(width: 8.w),
+                //                   Text(
+                //                     review.name,
+                //                     style: TextStyle(
+                //                         fontWeight: FontWeight.bold,
+                //                         fontSize: 14.sp),
+                //                   ),
+                //                   Spacer(),
+                //                   Text(
+                //                     review.date,
+                //                     style: TextStyle(
+                //                         fontSize: 12.sp,
+                //                         color: Colors.grey[600]),
+                //                   ),
+                //                 ],
+                //               ),
+                //
+                //               // ⭐ Rating stars added here
+                //               SizedBox(height: 4.h),
+                //               buildStarRating(review
+                //                   .rating), // <-- review.rating অনুযায়ী star
+                //
+                //               SizedBox(height: 4.h),
+                //               Text(
+                //                 review.comment,
+                //                 style: TextStyle(
+                //                     fontSize: 12.sp, color: Colors.grey[700]),
+                //               ),
+                //             ],
+                //           ),
+                //         );
+                //       }).toList(),
+                //     )
+                //   ],
+                // ),
 
                 SizedBox(
                   height: 20.h,
@@ -438,6 +442,12 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                     )),
                     onTap: () {
+
+                      Get.toNamed(
+                        AppRoute.requestBooking,
+                        arguments:  widget.provider.id,
+                      );
+
                       setState(() {
                         isUserSelected = true;
                       });
@@ -446,32 +456,38 @@ class _DetailsPageState extends State<DetailsPage> {
                   height: 20.h,
                 ),
 
-                CustomButton(
-                    height: 56.h,
-                    width: 353.w,
-                    BoxDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      color: !isUserSelected
-                          ? AppColors.red601
-                          : Color(0xffFFEFEB),
-                      border: Border.all(color: AppColors.red601, width: 1.w),
-                    ),
-                    child: Center(
-                        child: Text(
+                Obx(() => CustomButton(
+                  height: 56,
+                  width: double.infinity,
+                  BoxDecoration: BoxDecoration(
+                    color: !controller.isUserSelected.value
+                        ? AppColors.red601
+                        :  Color(0xffFFEFEB),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.red601),
+                  ),
+                  child: Center(
+                    child: controller.isLoading.value
+                        ?  CircularProgressIndicator(color: Colors.white)
+                        : Text(
                       "Message",
                       style: TextStyle(
-                        fontSize: 16,
+                        color: !controller.isUserSelected.value
+                            ? AppColors.FFFFFF
+                            : AppColors.black900,
                         fontWeight: FontWeight.w700,
-                        color: isUserSelected
-                            ? AppColors.black900
-                            : AppColors.FFFFFF,
                       ),
-                    )),
-                    onTap: () {
-                      setState(() {
-                        isUserSelected = false;
-                      });
-                    }),
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      isUserSelected = false;
+                    });
+                    controller.selectMessage(
+                      participantId: widget.provider.id, // 👈 VERY IMPORTANT
+                    );
+                  },
+                )),
               ],
             ),
           ),
@@ -523,3 +539,4 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 }
+

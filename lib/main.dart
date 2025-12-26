@@ -24,9 +24,10 @@ void main() async {
   await GetStorage.init();
 
   /// ✅ Stripe init
+   //  তোমার Stripe publishable key
   Stripe.publishableKey =
-  "pk_test_51S4W0lGhgUPSwjlABGmNej51c3D22QxSkMG6k4RC3rsR8lZcdLRGMzmSWmYEIhF5vT70ps9pzwcbVAmXGledP6pz00vlcvZLcV"; // 👉 তোমার Stripe publishable key
-  await Stripe.instance.applySettings();
+  "pk_test_51S4W0lGhgUPSwjlABGmNej51c3D22QxSkMG6k4RC3rsR8lZcdLRGMzmSWmYEIhF5vT70ps9pzwcbVAmXGledP6pz00vlcvZLcV";
+   await Stripe.instance.applySettings();
 
   Get.put<ApiClient>(ApiClient(), permanent: true);
 

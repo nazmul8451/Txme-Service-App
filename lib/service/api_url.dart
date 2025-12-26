@@ -39,8 +39,11 @@ class ApiConstant {
   ///===================== Home (user) =========================///
 
 
-  static const String serviceGet  =
-      "$apiVersion/service/get-services";
+  static const String serviceGet  = "$apiVersion/service/get-services";
+
+
+
+  static const String popularProviders  = "$apiVersion/user/popular-providers";
 
 
 
@@ -67,6 +70,8 @@ class ApiConstant {
   /// ====================== Get Api ======================= ///
 
   static const String  getChat = "$apiVersion/chat";  ///
+
+
   static const String  getAdminSupportAll = "$apiVersion/chat/admin-support/all";
   static const String  deleteChat = "$apiVersion/api/chat/"; //+id caicce
 
@@ -93,6 +98,8 @@ class ApiConstant {
 
 
   static const String userMe = "$apiVersion/user/me";
+
+  static const String allProviderUser = "$apiVersion/user";
 
 
 

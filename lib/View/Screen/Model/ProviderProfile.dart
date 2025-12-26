@@ -41,7 +41,7 @@ class ProviderProfile {
       certifications:
       List<String>.from(json['certifications'] ?? []),
 
-      skills:                                   // ✅ FIXED
+      skills:                                   //  FIXED
       List<String>.from(json['skills'] ?? []),
 
       languages:

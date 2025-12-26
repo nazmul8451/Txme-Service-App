@@ -15,6 +15,7 @@ class UserModel {
   final bool isStripeConnected;
 
   final String status;
+  final String bio;
   final String fullName;
   final String gender;
   final String maritalStatus;
@@ -37,6 +38,7 @@ class UserModel {
   final ProviderProfile? providerProfile;
 
   UserModel({
+    required this.bio,
     required this.id,
     required this.email,
     required this.role,
@@ -65,6 +67,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+      bio: json['_bio']?? '',
       id: json['_id'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? '',
@@ -112,9 +115,9 @@ class UserModel {
     );
   }
 
-  // ===================== 🔥 ADDED GETTERS 🔥 =====================
+  // =====================  ADDED GETTERS  =====================
 
-  /// ✅ FULL PROFILE IMAGE URL
+  ///  FULL PROFILE IMAGE URL
   String get profileImageUrl {
     if (profilePicture.isEmpty) {
       return 'http://10.10.7.26:5002';
@@ -127,17 +130,17 @@ class UserModel {
     return '${ApiConstant.baseUrl}$profilePicture';
   }
 
-  /// ✅ DESIGNATION (safe)
+  ///  DESIGNATION (safe)
   String get designation {
     return providerProfile?.designation ?? '';
   }
 
-  /// ✅ AVERAGE REVIEW
+  ///  AVERAGE REVIEW
   double get averageRating {
     return review?.averageRating ?? 0.0;
   }
 
-  /// ✅ SKILLS (comma joined)
+  ///  SKILLS (comma joined)
   String get skillsText {
     return providerProfile?.skills.join(', ') ?? '';
   }

@@ -28,11 +28,22 @@ class Walletpage extends StatelessWidget {
         backgroundColor: AppColors.FFFFFF,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Get.back();
+          onPressed: () async {
+            final role = await SharePrefsHelper.getString(
+              SharePrefsHelper.userRole,
+            );
+
+            if (role == "PROVIDER") {
+              Get.offAllNamed(AppRoute.providerHomeScreen);
+            } else if (role == "CUSTOMER") {
+              Get.offAllNamed(AppRoute.homepage);
+            } else {
+              Get.back(); // fallback
+            }
           },
           icon: SvgPicture.asset(AppIcons.chevronleft),
         ),
+
         title: Text(
           "Wallet",
           style: TextStyle(

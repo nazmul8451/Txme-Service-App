@@ -12,10 +12,13 @@ class SocketApi {
   io.Socket? socket;
   bool _initialized = false;
 
+  final _messageCallbacks = <Function(dynamic)>[];
+
   Future<void> init() async {
     if (_initialized) return;
 
-    final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
+    final token =
+    await SharePrefsHelper.getString(ApiConstant.bearerToken);
 
     socket = io.io(
       ApiConstant.socketUrl,
@@ -27,15 +30,25 @@ class SocketApi {
     );
 
     socket!.onConnect((_) {
-      debugPrint('🟢 SOCKET CONNECTED ${socket!.id}');
+      debugPrint("🟢 SOCKET CONNECTED");
     });
 
     socket!.onDisconnect((_) {
-      debugPrint('🔴 SOCKET DISCONNECTED');
+      debugPrint("🔴 SOCKET DISCONNECTED");
+    });
+
+    socket!.on("message", (data) {
+      for (final cb in _messageCallbacks) {
+        cb(data);
+      }
     });
 
     socket!.connect();
     _initialized = true;
+  }
+
+  void onMessage(Function(dynamic) callback) {
+    _messageCallbacks.add(callback);
   }
 
   void joinChat(String chatId) {
@@ -55,11 +68,6 @@ class SocketApi {
       "text": text,
       "type": "TEXT",
     });
-  }
-
-  void onMessage(Function(dynamic data) callback) {
-    socket?.off("message");
-    socket?.on("message", callback);
   }
 }
 

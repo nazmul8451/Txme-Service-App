@@ -39,16 +39,15 @@ class MessageController extends GetxController {
     socketApi.onMessage((data) {
       if (data['chatId'] != chatId) return;
 
-      final msg = MessageModel.fromJson(
-        data['message'] ?? data,
-        myUserId,
-      );
+      final raw = data['message'] ?? data;
 
-      /// ✅ DUPLICATE PREVENT
+      final msg = MessageModel.fromJson(raw, myUserId);
+
       if (messages.any((m) => m.id == msg.id)) return;
 
       messages.add(msg);
     });
+
   }
 
   /// ================= GET OLD MESSAGES =================
@@ -75,6 +74,7 @@ class MessageController extends GetxController {
       messages.value = list
           .map<MessageModel>((e) => MessageModel.fromJson(e, myUserId))
           .toList();
+      update();
     }
   }
 
@@ -95,6 +95,7 @@ class MessageController extends GetxController {
         time: "now",
       ),
     );
+    update();
 
     messageController.clear();
 
@@ -127,10 +128,11 @@ class MessageController extends GetxController {
         final savedMsg =
         MessageModel.fromJson(decoded['data'], myUserId);
 
-        /// 🔄 REPLACE TEMP MESSAGE WITH REAL ONE
+        ///  REPLACE TEMP MESSAGE WITH REAL ONE
         final index = messages.indexWhere((m) => m.id == tempId);
         if (index != -1) {
           messages[index] = savedMsg;
+          update();
         }
       } else {
         debugPrint("❌ Message save failed: ${response.body}");
@@ -144,6 +146,7 @@ class MessageController extends GetxController {
   void onClose() {
     socketApi.leaveChat(chatId);
     messageController.dispose();
+    update();
     super.onClose();
   }
 }

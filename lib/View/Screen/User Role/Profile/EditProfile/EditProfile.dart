@@ -18,6 +18,7 @@ class EditProfilePage extends GetView<EditProfileController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.FFFFFF,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, size: 18.sp),

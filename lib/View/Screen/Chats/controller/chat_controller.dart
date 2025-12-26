@@ -29,7 +29,9 @@ class ChatController extends GetxController {
     initSocket();
   }
 
+
   void initSocket() async {
+
     await socketApi.init();
 
     socketApi.onMessage((data) {
@@ -37,14 +39,20 @@ class ChatController extends GetxController {
       final index = chatList.indexWhere((c) => c.id == chatId);
       if (index == -1) return;
 
+      final raw = data['message'] ?? data;
+
+      update();
+
       final old = chatList[index];
 
       chatList[index] = old.copyWith(
-        lastMessage: data['text'],
+        lastMessage: raw['text'] ?? '',
         time: "Now",
         unreadCount: old.unreadCount + 1,
       );
+      update();
     });
+
   }
 
   Future<void> getChats() async {
@@ -66,6 +74,7 @@ class ChatController extends GetxController {
         chatList.value = (decoded['data'] as List)
             .map((e) => ChatModel.fromJson(e, myUserId))
             .toList();
+        update();
       }
     } finally {
       isLoading.value = false;

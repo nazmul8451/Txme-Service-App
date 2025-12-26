@@ -331,35 +331,49 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             SizedBox(width: 15.w),
 
             /// NEXT BUTTON
-            CustomButton(
-              height: 56.h,
-              width: 160.w,
-              BoxDecoration: BoxDecoration(
-                color: !isUserSelected
-                    ? AppColors.red601
-                    : Colors.transparent,
-                border: Border.all(color: AppColors.red601, width: 1.w),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Center(
-                child: Text(
-                  AppString.next.tr,
-                  style: TextStyle(
-                    color: !isUserSelected
-                        ? AppColors.FFFFFF
-                        : AppColors.black900,
-                  ),
+        Obx(
+              () => CustomButton(
+            height: 56.h,
+            width: 160.w,
+            BoxDecoration: BoxDecoration(
+              color: !isUserSelected
+                  ? AppColors.red601
+                  : Colors.transparent,
+              border: Border.all(color: AppColors.red601, width: 1.w),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Center(
+              child: c.isLoading.value
+                  ? SizedBox(
+                height: 22.h,
+                width: 22.w,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+                  : Text(
+                AppString.next.tr,
+                style: TextStyle(
+                  color: !isUserSelected
+                      ? AppColors.FFFFFF
+                      : AppColors.black900,
                 ),
               ),
-              onTap: () async {
-                setState(() {
-                  isUserSelected = false;
-                });
-
-                await c.submitCompleteProfile();
-              },
             ),
-          ],
+            onTap: c.isLoading.value
+                ? null
+                : () async {
+              setState(() {
+                isUserSelected = false;
+              });
+
+              await c.submitCompleteProfile();
+            },
+          ),
+        ),
+
+        ],
         )
 
 

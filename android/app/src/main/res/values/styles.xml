@@ -1,13 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme -->
+    <!-- App main theme -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 
-    <!-- Splash theme -->
+    <!-- Splash / Launch theme -->
     <style name="LaunchTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+
+    <!-- ✅ REQUIRED for Flutter + Stripe -->
+    <style name="NormalTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
 </resources>

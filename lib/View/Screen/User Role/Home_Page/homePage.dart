@@ -11,7 +11,11 @@ import '../../../../Utils/AppColors/app_colors.dart';
 
 import '../../../../service/api_url.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
+import '../../../Widgegt/Custom_Button/custom_button.dart';
 import 'ChildService/ChildServiceScreen.dart';
+import 'PopularProvider/Model/PopularProviderModel.dart';
+import 'PopularProvider/ProviderProfileDetailsPage.dart';
+import 'PopularProvider/PopularProviderController.dart';
 import 'Popularservices/ServiceController.dart';
 
 class Homepage extends StatefulWidget {
@@ -23,6 +27,9 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final serviceController = Get.find<ServiceController>();
+
+  final popularProviderController =
+  Get.put(PopularProviderController());
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +179,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoute.electricianproviders);
+                      Get.toNamed(AppRoute.popularprovider);
                     },
                     child: Text(
                       AppString.viewAll.tr,
@@ -187,15 +194,27 @@ class _HomepageState extends State<Homepage> {
               SizedBox(
                 height: 20.h,
               ),
-              Customfavoriteproviderscontainer(),
-              SizedBox(
-                height: 20.h,
-              ),
-              Customfavoriteproviderscontainer(),
-              SizedBox(
-                height: 20.h,
-              ),
-              Customfavoriteproviderscontainer(),
+              Obx(() {
+                if (popularProviderController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final providers = popularProviderController.homeProviders;
+
+                if (providers.isEmpty) {
+                  return const SizedBox();
+                }
+
+                return Column(
+                  children: List.generate(
+                    providers.length,
+                        (index) {
+                      final provider = providers[index];
+                      return _homePopularProviderCard(provider);
+                    },
+                  ),
+                );
+              }),
               SizedBox(
                 height: 40.h,
               ),
@@ -304,4 +323,129 @@ class _HomepageState extends State<Homepage> {
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
   }
+
+  Widget _homePopularProviderCard(PopularProviderModel provider) {
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      width: 353.w,
+      height: 186.h,
+      decoration: BoxDecoration(
+        color: const Color(0xffF7F7F7),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 20.h, left: 20.w),
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundImage: const AssetImage(AppImg.ellipse),
+                  foregroundImage: provider.profileImageUrl.isNotEmpty
+                      ? NetworkImage(provider.profileImageUrl)
+                      : null,
+                ),
+
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.h, left: 8.w),
+                    child: Text(
+                      provider.fullName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                        color: const Color(0xff1F2937),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Color(0xFFFFC107), size: 18),
+                      SizedBox(width: 4.w),
+                      Text(
+                        provider.review.averageRating.toString(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        "(${provider.review.totalReviews} reviews)",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 20.w),
+            child: Row(
+              children: [
+                CustomButton(
+                  height: 47.h,
+                  width: 153.w,
+                  BoxDecoration: BoxDecoration(
+                    color: AppColors.red601,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      AppString.bookNow.tr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.sp,
+                        color: AppColors.FFFFFF,
+                      ),
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+                SizedBox(width: 8.w),
+                CustomButton(
+                  height: 47.h,
+                  width: 153.w,
+                  BoxDecoration: BoxDecoration(
+                    border: Border.all(color: AppColors.red601),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      AppString.viewProfile.tr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    ///  FULL MODEL PASS
+                    Get.to(
+                          () => ProviderProfileDetailsPage(
+                        provider: provider,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 }

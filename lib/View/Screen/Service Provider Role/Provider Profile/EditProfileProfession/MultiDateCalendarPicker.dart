@@ -15,7 +15,6 @@ class UnavailableDateField extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// TEXT FIELD LOOK
           GestureDetector(
             onTap: c.toggleCalendar,
@@ -32,7 +31,7 @@ class UnavailableDateField extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      c.unavailableDatesText, // ✅ RxString
+                      c.unavailableDatesText, //  RxString
                       style: const TextStyle(fontSize: 14),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -45,7 +44,7 @@ class UnavailableDateField extends StatelessWidget {
           ),
 
           /// CALENDAR
-          if (c.isCalendarOpen.value) // ✅ RxBool
+          if (c.isCalendarOpen.value) //  RxBool
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Container(
