@@ -10,7 +10,6 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
@@ -20,12 +19,10 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
           onPressed: () => Get.back(),
         ),
       ),
-
       body: Obx(() {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// -------- GREETING --------
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -49,8 +46,7 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
                 itemCount: controller.dates.length,
                 itemBuilder: (_, index) {
                   final item = controller.dates[index];
-                  final isSelected =
-                      controller.selectedIndex.value == index;
+                  final isSelected = controller.selectedIndex.value == index;
 
                   return GestureDetector(
                     onTap: () => controller.onDateTap(index),
@@ -70,9 +66,7 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
                             item["day"].toString(),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: isSelected ? Colors.white : Colors.black,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -80,9 +74,7 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
                             item["week"],
                             style: TextStyle(
                               fontSize: 12,
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.grey,
+                              color: isSelected ? Colors.white : Colors.grey,
                             ),
                           ),
                         ],
@@ -93,110 +85,102 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
               ),
             ),
 
-            const SizedBox(height: 12),
-
             /// -------- SCHEDULE AREA --------
             Expanded(
               child: controller.isLoading.value
                   ? const Center(child: CircularProgressIndicator())
                   : SingleChildScrollView(
-                child: SizedBox(
-                  height: 520,
-                  child: Stack(
-                    children: [
-
-                      /// TIME COLUMN
-                      Positioned(
-                        left: 16,
-                        top: 0,
-                        bottom: 0,
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: List.generate(5, (i) {
-                            final hour = 8 + (i * 2);
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 28),
-                              child: Text(
-                                "${hour.toString().padLeft(2, '0')}.00",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-
-                      /// SLOTS
-                      ...controller.slots.asMap().entries.map((e) {
-                        final index = e.key;
-                        final slot = e.value;
-
-                        final isSelected =
-                            controller.selectedSlotIndex.value ==
-                                index;
-
-                        Color bgColor;
-                        String label;
-
-                        if (!slot.available) {
-                          bgColor = const Color(0xFF1F2937);
-                          label = "Not Available";
-                        } else if (isSelected) {
-                          bgColor = Colors.grey.shade400;
-                          label = "Booking";
-                        } else {
-                          bgColor = const Color(0xFFFF5A36);
-                          label = "Available";
-                        }
-
-                        return Positioned(
-                          top: controller
-                              .getTopPosition(slot.startTime),
-                          left: 80,
-                          child: GestureDetector(
-                            onTap: slot.available
-                                ? () =>
-                                controller.onSlotTap(index)
-                                : null,
-                            child: Container(
-                              width: 130,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: bgColor,
-                                borderRadius:
-                                BorderRadius.circular(14),
-                              ),
+                      child: SizedBox(
+                        height: 520,
+                        child: Stack(
+                          children: [
+                            /// TIME COLUMN
+                            Positioned(
+                              left: 16,
+                              top: 10,
+                              bottom: 0,
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    label,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: List.generate(6, (i) {
+                                  final hour = 8 + (i * 2);
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 28),
+                                    child: Text(
+                                      "${hour.toString().padLeft(2, '0')}.00",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    "${slot.startTime} - ${slot.endTime}",
-                                    style: const TextStyle(
-                                        color: Colors.white),
-                                  ),
-                                ],
+                                  );
+                                }),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ],
-                  ),
-                ),
-              ),
+
+                            /// SLOTS
+                            ...controller.slots.asMap().entries.map((e) {
+                              final index = e.key;
+                              final slot = e.value;
+
+                              final isSelected =
+                                  controller.selectedSlotIndex.value == index;
+
+                              Color bgColor;
+                              String label;
+
+                              if (!slot.available) {
+                                bgColor = const Color(0xFF1F2937);
+                                label = "Booked";
+                              } else if (isSelected) {
+                                bgColor = Colors.grey.shade400;
+                                label = "Available";
+                              } else {
+                                bgColor = const Color(0xFFFF5A36);
+                                label = "Available";
+                              }
+
+                              return Positioned(
+                                top: controller.getTopPosition(slot.startTime),
+                                left: 80,
+                                child: GestureDetector(
+                                  onTap: slot.available
+                                      ? () => controller.onSlotTap(index)
+                                      : null,
+                                  child: Container(
+                                    width: 130,
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: bgColor,
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          label,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          "${slot.startTime} - ${slot.endTime}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+                    ),
             ),
 
             /// -------- CONFIRM BUTTON --------
@@ -207,21 +191,27 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    const Color(0xFFFF5A36),
+                    backgroundColor: const Color(0xFFFF5A36),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
                   onPressed: controller.selectedSlotIndex.value == -1
                       ? null
                       : () {
-                    ///  booking API later
+                    controller.confirmBooking();
+                    // final index = controller.selectedSlotIndex.value;
+                    // final selectedSlot = controller.slots[index];
+                    //
+                    // print("✅ Selected Slot:");
+                    // print("startTime: ${selectedSlot.startTime}");
+                    // print("endTime: ${selectedSlot.endTime}");
                   },
-                  child: const Text(
+
+                  child:  Text(
                     "Confirm Booking",
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -229,7 +219,9 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
                 ),
               ),
             ),
-            SizedBox(height: 50,)
+            SizedBox(
+              height: 50,
+            )
           ],
         );
       }),

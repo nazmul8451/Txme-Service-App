@@ -23,7 +23,6 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-
   final controller = Get.put(Providersdetailscontroller());
 
   bool isUserSelected = true;
@@ -63,7 +62,7 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
 
           Padding(
-            padding:  EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -107,8 +106,8 @@ class _DetailsPageState extends State<DetailsPage> {
                     children: [
                       _infoColumn(
                           AppImg.star, widget.provider.rating, "Rating"),
-                      _infoColumn(
-                          AppImg.completed, widget.provider.experience, "Orders"),
+                      _infoColumn(AppImg.completed, widget.provider.experience,
+                          "Orders"),
                       _infoColumn(AppImg.experience, widget.provider.experience,
                           "Years"),
                     ],
@@ -442,10 +441,12 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                     )),
                     onTap: () {
-
                       Get.toNamed(
                         AppRoute.requestBooking,
-                        arguments:  widget.provider.id,
+                        arguments: {
+                          "providerId": widget.provider.id,
+                          "service": widget.provider.service,
+                        },
                       );
 
                       setState(() {
@@ -457,37 +458,37 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
 
                 Obx(() => CustomButton(
-                  height: 56,
-                  width: double.infinity,
-                  BoxDecoration: BoxDecoration(
-                    color: !controller.isUserSelected.value
-                        ? AppColors.red601
-                        :  Color(0xffFFEFEB),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.red601),
-                  ),
-                  child: Center(
-                    child: controller.isLoading.value
-                        ?  CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                      "Message",
-                      style: TextStyle(
+                      height: 56,
+                      width: double.infinity,
+                      BoxDecoration: BoxDecoration(
                         color: !controller.isUserSelected.value
-                            ? AppColors.FFFFFF
-                            : AppColors.black900,
-                        fontWeight: FontWeight.w700,
+                            ? AppColors.red601
+                            : Color(0xffFFEFEB),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.red601),
                       ),
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      isUserSelected = false;
-                    });
-                    controller.selectMessage(
-                      participantId: widget.provider.id, // 👈 VERY IMPORTANT
-                    );
-                  },
-                )),
+                      child: Center(
+                        child: controller.isLoading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text(
+                                "Message",
+                                style: TextStyle(
+                                  color: !controller.isUserSelected.value
+                                      ? AppColors.FFFFFF
+                                      : AppColors.black900,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          isUserSelected = false;
+                        });
+                        controller.selectMessage(
+                          participantId: widget.provider.id,
+                        );
+                      },
+                    )),
               ],
             ),
           ),
@@ -539,4 +540,3 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 }
-

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
@@ -12,6 +13,7 @@ class BookingScheduleController extends GetxController {
 
   late String providerId;
   late DateTime selectedDate;
+  late String service;
 
   final dates = <Map<String, dynamic>>[].obs;
   final selectedIndex = 2.obs;
@@ -33,6 +35,7 @@ class BookingScheduleController extends GetxController {
 
     providerId = args["providerId"] ?? "";
     selectedDate = args["selectedDate"] ?? DateTime.now();
+    service = args["service"] ?? "";
 
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     print("🆔 providerId = $providerId");
@@ -115,22 +118,75 @@ class BookingScheduleController extends GetxController {
           print("⚠️ success=false OR data=null");
         }
       } else {
-        print("❌ API FAILED => ${res.statusCode}");
+        print(" API FAILED => ${res.statusCode}");
       }
     } catch (e, s) {
-      print("🔥 EXCEPTION => $e");
-      print("🧵 STACKTRACE => $s");
+      print(" EXCEPTION => $e");
+      print(" STACKTRACE => $s");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> confirmBooking() async {
+    try {
+      isLoading.value = true;
+
+      final index = selectedSlotIndex.value;
+      if (index == -1) return;
+
+      final slot = slots[index];
+
+      final token =
+      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+      print(ApiConstant.baseUrl);
+
+      final formattedDate =
+      DateFormat('yyyy-MM-dd').format(selectedDate);
+
+      final body = {
+        "provider": providerId,
+        "service": service,
+        "date": formattedDate,
+        "startTime": slot.startTime,
+        "endTime": slot.endTime,
+      };
+
+      print("📤 CONFIRM BOOKING BODY => $body");
+
+      final res = await http.post(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.appointmentCreate}"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
+
+      Get.offAllNamed(AppRoute.appointmentsPage);
+
+      print("📡 StatusCode => ${res.statusCode}");
+      print("📦 Response => ${res.body}");
+
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        Get.snackbar("Success", "Booking Confirmed ✅");
+      } else {
+        Get.snackbar("Error", "Booking Failed");
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
 
+
   /// -------- tap date --------
   void onDateTap(int index) {
     selectedIndex.value = index;
     selectedDate = dates[index]["date"];
-    selectedSlotIndex.value = -1; // 🔥 reset slot
+    selectedSlotIndex.value = -1; //  reset slot
     fetchSlots(selectedDate);
   }
 

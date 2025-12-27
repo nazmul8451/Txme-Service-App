@@ -7,8 +7,6 @@ import '../../../../Utils/AppImg/app_img.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
-import '../../User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
 import '../../User Role/Home_Page/NotificationPage/NotificationPage.dart';
 import 'ProviderHomeController.dart';
 

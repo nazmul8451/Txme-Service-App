@@ -1,25 +1,36 @@
-class AppointmentModel {
-  final String name;
-  final String image;
-  final String date;
-  final String description;
+import 'User.dart';
+
+class Appointment {
+  final String id;
+  final User customer;
+  final User provider;
+  final String service;
+  final DateTime date;
+  final String startTime;
+  final String endTime;
   final String status;
 
-  AppointmentModel({
-    required this.name,
-    required this.image,
+  Appointment({
+    required this.id,
+    required this.customer,
+    required this.provider,
+    required this.service,
     required this.date,
-    required this.description,
+    required this.startTime,
+    required this.endTime,
     required this.status,
   });
 
-  factory AppointmentModel.fromJson(Map<String, dynamic> json) {
-    return AppointmentModel(
-      name: json["name"],
-      image: json["image"],
-      date: json["date"],
-      description: json["description"],
-      status: json["status"],
+  factory Appointment.fromJson(Map<String, dynamic> json) {
+    return Appointment(
+      id: json['_id'],
+      customer: User.fromJson(json['customer']),
+      provider: User.fromJson(json['provider']),
+      service: json['service'],
+      date: DateTime.parse(json['date']),
+      startTime: json['startTime'],
+      endTime: json['endTime'],
+      status: json['status'],
     );
   }
 }

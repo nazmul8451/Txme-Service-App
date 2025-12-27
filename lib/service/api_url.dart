@@ -43,11 +43,14 @@ class ApiConstant {
   /// usage: /provider/{id}/calendar?date=yyyy-MM-dd
   static const String providerCalendar = "$apiVersion/provider";
 
+  static const String appointmentCreate = "$apiVersion/appointment/create";
+
+  static const String appointmentMyAppointments = "$apiVersion/appointment/my-appointments/";
+
+
   static const String serviceGet  = "$apiVersion/service/get-services";
 
-
-
-  static const String popularProviders  = "$apiVersion/user/popular-providers";
+  static const String popularProviders  = "$apiVersion/provider/popular";
 
 
 

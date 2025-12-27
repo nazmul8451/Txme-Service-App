@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'RequestBookingController.dart';
 
 class RequestBookingPage extends GetView<RequestBookingController> {
-   RequestBookingPage({super.key});
-
+  const RequestBookingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class RequestBookingPage extends GetView<RequestBookingController> {
 
                 /// ---------- CALENDAR ----------
                 CalendarDatePicker(
-                  initialDate: DateTime.now(),
+                  initialDate: controller.initialDate, // ✅ SAFE
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2035),
                   selectableDayPredicate: controller.isDaySelectable,

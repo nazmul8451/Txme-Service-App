@@ -1,43 +1,75 @@
+import 'dart:convert';
 import 'package:get/get.dart';
-import 'AppointmentModel/AppointmentModel.dart';
+import 'package:http/http.dart' as http;
+import '../../../../../helper/Shared_prefe/shared_prefe.dart';
+import '../../../../../service/api_url.dart';
+import 'AppointmentModel/AppointmentModel2.dart';
 
 class AppointmentsController extends GetxController {
-  RxList<AppointmentModel> appointments = <AppointmentModel>[].obs;
+  final appointments = <AppointmentModel2>[].obs;
+  final isLoading = false.obs;
+
+  /// USER ROLE (CUSTOMER / PROVIDER)
+  final userRole = "".obs;
 
   @override
   void onInit() {
-    loadData();
     super.onInit();
+    _loadRole();
+    loadData();
   }
 
-  void loadData() {
-    final data = [
-      {
-        "name": "John Doe",
-        "image": "https://i.pravatar.cc/150?img=1",
-        "date": "8 Feb 2025",
-        "description": "Consultation appointment.",
-        "status": "pending",
-      },
-      {
-        "name": "Sarah Parker",
-        "image": "https://i.pravatar.cc/150?img=3",
-        "date": "12 Feb 2025",
-        "description": "Follow-up discussion.",
-        "status": "confirmed",
-      },
-      {
-        "name": "Michael Smith",
-        "image": "https://i.pravatar.cc/150?img=4",
-        "date": "5 Feb 2025",
-        "description": "User cancelled the appointment.",
-        "status": "cancelled",
-      },
-    ];
-
-    appointments.value = data.map((e) => AppointmentModel.fromJson(e)).toList();
+  /// ================== LOAD ROLE ==================
+  Future<void> _loadRole() async {
+    userRole.value =
+        await SharePrefsHelper.getString(SharePrefsHelper.userRole) ?? "";
   }
 
-  List<AppointmentModel> filter(String s) =>
-      appointments.where((e) => e.status == s).toList();
+  /// ================== LOAD APPOINTMENTS ==================
+  Future<void> loadData() async {
+    try {
+      isLoading.value = true;
+
+      final token =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      final uri = Uri.parse(
+        "${ApiConstant.baseUrl}${ApiConstant.appointmentMyAppointments}",
+      );
+
+      final res = await http.get(
+        uri,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (res.statusCode == 200) {
+        final body = jsonDecode(res.body);
+
+        if (body['success'] == true &&
+            body['data'] != null &&
+            body['data']['result'] is List) {
+          appointments.assignAll(
+            (body['data']['result'] as List)
+                .map((e) => AppointmentModel2.fromJson(e))
+                .toList(),
+          );
+        }
+      }
+    } catch (e) {
+      print("❌ ERROR => $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// ================== FILTER ==================
+  List<AppointmentModel2> filter(String status) {
+    return appointments
+        .where((e) => e.status.toLowerCase() == status)
+        .toList();
+  }
 }
+

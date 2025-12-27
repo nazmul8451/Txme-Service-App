@@ -16,6 +16,8 @@ class Providersdetailscontroller extends GetxController {
     isUserSelected.value = true;
   }
 
+
+
   /// 🔹 MESSAGE BUTTON CLICK
   Future<void> selectMessage({
     required String participantId,

@@ -23,7 +23,14 @@ class Popularprovider extends StatefulWidget {
 }
 
 class _PopularproviderState extends State<Popularprovider> {
-  final controller = Get.put(PopularProviderController());
+  late PopularProviderController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(PopularProviderController());
+  }
+
 
   bool isUserSelected = true;
 
@@ -52,15 +59,61 @@ class _PopularproviderState extends State<Popularprovider> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return ListView.builder(
-          padding: EdgeInsets.all(16.w),
-          itemCount: controller.providers.length,
-          itemBuilder: (context, index) {
-            final provider = controller.providers[index];
-            return _providerCard(provider);
-          },
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.all(16.w),
+                itemCount: controller.providers.length,
+                itemBuilder: (context, index) {
+                  final provider = controller.providers[index];
+                  return _providerCard(provider);
+                },
+              ),
+            ),
+
+            /// NEXT BUTTON
+            Obx(() {
+              if (controller.isMoreLoading.value) {
+                return Padding(
+                  padding: EdgeInsets.all(16.h),
+                  child: const CircularProgressIndicator(),
+                );
+              }
+
+              if (controller.page >= controller.totalPage) {
+                return const SizedBox();
+              }
+
+              return Padding(
+                padding: EdgeInsets.all(16.h),
+                child: CustomButton(
+                  height: 48.h,
+                  width: double.infinity,
+                  BoxDecoration: BoxDecoration(
+                    color: AppColors.red601,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    controller.fetchPopularProviders();
+                  },
+                ),
+              );
+            }),
+          ],
         );
       }),
+
     );
   }
 

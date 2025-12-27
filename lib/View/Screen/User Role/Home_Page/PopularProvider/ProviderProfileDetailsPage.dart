@@ -413,7 +413,19 @@ class ProviderProfileDetailsPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    onTap: controller.selectRequest,
+                    onTap:(){
+                      controller.selectRequest();
+
+                      Get.toNamed(
+                        AppRoute.requestBooking,
+                        arguments: {
+                          "providerId": provider.id,
+                          "service": provider.service,
+                        },
+                      );
+
+                    }
+
                   )),
 
                   const SizedBox(height: 20),
@@ -443,6 +455,7 @@ class ProviderProfileDetailsPage extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+
                       controller.selectMessage(
                         participantId: provider.id, // 👈 VERY IMPORTANT
                       );

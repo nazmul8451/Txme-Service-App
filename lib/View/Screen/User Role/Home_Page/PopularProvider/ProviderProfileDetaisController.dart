@@ -13,28 +13,23 @@ class ProviderProfileDetailsController extends GetxController {
   final isLoading = false.obs;
 
   void selectRequest() {
-    print("🔹 selectRequest() called");
     isUserSelected.value = true;
   }
 
-  /// 🔹 MESSAGE BUTTON CLICK
   Future<void> selectMessage({
     required String participantId,
   }) async {
-    print("🟢 selectMessage() called");
-    print("👤 participantId => $participantId");
-
     isUserSelected.value = false;
     await _createChat(participantId);
   }
 
-  /// 🔹 CREATE CHAT API
   Future<void> _createChat(String participantId) async {
     try {
       isLoading.value = true;
 
-      final token =
-      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+      final token = await SharePrefsHelper.getString(
+        SharePrefsHelper.bearerToken,
+      );
 
       final response = await http.post(
         Uri.parse("${ApiConstant.baseUrl}${ApiConstant.CeatsChat}"),
@@ -49,7 +44,6 @@ class ProviderProfileDetailsController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final decoded = jsonDecode(response.body);
-
         final myUserId =
         await SharePrefsHelper.getString("userId");
 
@@ -68,5 +62,5 @@ class ProviderProfileDetailsController extends GetxController {
       isLoading.value = false;
     }
   }
-
 }
+

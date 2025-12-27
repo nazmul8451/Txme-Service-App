@@ -12,6 +12,8 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../service/api_url.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import 'AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import 'AppoinmentScreen/AppointmentsController.dart';
 import 'ChildService/ChildServiceScreen.dart';
 import 'PopularProvider/Model/PopularProviderModel.dart';
 import 'PopularProvider/ProviderProfileDetailsPage.dart';
@@ -27,6 +29,9 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final serviceController = Get.find<ServiceController>();
+
+  final appointmentController = Get.put(AppointmentsController());
+
 
   final popularProviderController =
   Get.put(PopularProviderController());
@@ -199,7 +204,9 @@ class _HomepageState extends State<Homepage> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final providers = popularProviderController.homeProviders;
+                final providers = popularProviderController.providers.length > 2
+                    ? popularProviderController.providers.take(2).toList()
+                    : popularProviderController.providers;
 
                 if (providers.isEmpty) {
                   return const SizedBox();
@@ -215,6 +222,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 );
               }),
+
               SizedBox(
                 height: 40.h,
               ),
@@ -245,74 +253,27 @@ class _HomepageState extends State<Homepage> {
               SizedBox(
                 height: 20.h,
               ),
-              Container(
-                width: 353.w,
-                height: 144.h,
-                decoration: BoxDecoration(
-                  color: Color(0xffF7F7F7),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  children: [
-                    /// LEFT TEXT AREA
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 20.h, left: 20.w),
-                            child: Text(
-                              "Tomorrow, 10:00 AM",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Color(0xff7C7D7E),
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 6),
-                          Padding(
-                            padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                            child: Text(
-                              "Home Cleaning",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Color(0xff1D1D1D),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Padding(
-                            padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                            child: Text(
-                              "With Sarah Miller",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff7C7D7E),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+              Obx(() {
+                if (appointmentController.isLoading.value) {
+                  return const CircularProgressIndicator();
+                }
 
-                    /// RIGHT IMAGE
-                    Padding(
-                      padding: EdgeInsets.only(right: 20.w),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            AppImg.ellipse,
-                            height: 80.h,
-                            width: 80.w,
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                  ],
-                ),
-              ),
+                final pendingAppointments = appointmentController.appointments
+                    .where((e) => e.status == "pending")
+                    .take(3)
+                    .toList();
+
+                if (pendingAppointments.isEmpty) {
+                  return const SizedBox();
+                }
+
+                return Column(
+                  children: pendingAppointments
+                      .map((appointment) => _buildCard(appointment))
+                      .toList(),
+                );
+              }),
+
               SizedBox(
                 height: 100,
               )
@@ -411,7 +372,16 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(
+                      AppRoute.requestBooking,
+                      arguments: {
+                        "providerId": provider.id,
+                        "service": provider.service,
+
+                      },
+                    );
+                  },
                 ),
                 SizedBox(width: 8.w),
                 CustomButton(
@@ -446,6 +416,82 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
+
+  Widget _buildCard(AppointmentModel2 appointment) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 14.h),
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// IMAGE
+          CircleAvatar(
+            radius: 25,
+            backgroundImage: appointment.image.isNotEmpty
+                ? NetworkImage(appointment.image)
+                : const AssetImage(AppImg.ellipse) as ImageProvider,
+          ),
+
+          SizedBox(width: 12.w),
+
+          /// TEXT
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+            appointment.displayName,
+            style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "Booking Date: ${appointment.date}",
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.black54,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  appointment.description,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          /// STATUS
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: Colors.indigoAccent,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Text(
+              appointment.status.toUpperCase(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 
 
 }

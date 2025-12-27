@@ -9,7 +9,8 @@ import '../../AppoinmentScreen/BookingScheduleBinding.dart';
 import '../../AppoinmentScreen/ScheduleBookingPage.dart';
 
 class RequestBookingController extends GetxController {
-  /// loading
+  /// ================= STATE =================
+
   final isLoading = false.obs;
 
   /// api data
@@ -19,18 +20,33 @@ class RequestBookingController extends GetxController {
   /// selected date
   final selectedDate = Rxn<DateTime>();
 
+  /// calendar initial date (⚠️ must be selectable)
+  late DateTime initialDate;
+
   /// provider id
   late final String providerId;
+  late final String service;
+
+  /// ================= LIFECYCLE =================
 
   @override
   void onInit() {
     super.onInit();
-    providerId = Get.arguments;
+
+    final args = Get.arguments ?? {};
+
+    providerId = args["providerId"] ?? "";
+    service = args["service"] ?? "";
+
+    print("🆔 providerId => $providerId");
+    print("🛠 service => $service");
+
     fetchProviderAvailability();
   }
 
 
   /// ================= API =================
+
   Future<void> fetchProviderAvailability() async {
     try {
       isLoading.value = true;
@@ -53,14 +69,14 @@ class RequestBookingController extends GetxController {
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         final provider = body['data'];
-        final profile = provider['providerProfile']; //  FIX
+        final profile = provider['providerProfile'];
 
         /// -------- working days --------
         final List<dynamic>? days = profile?['workingDays'];
         if (days != null && days.isNotEmpty) {
           workingDays.assignAll(days.cast<String>());
         } else {
-          workingDays.clear(); // null = all allowed
+          workingDays.clear(); // empty = all days allowed
         }
 
         /// -------- unavailable dates --------
@@ -72,6 +88,9 @@ class RequestBookingController extends GetxController {
         } else {
           unavailableDates.clear();
         }
+
+        /// 🔥 SAFE INITIAL DATE (IMPORTANT)
+        initialDate = _getValidInitialDate();
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());
@@ -80,10 +99,16 @@ class RequestBookingController extends GetxController {
     }
   }
 
+  /// ================= DATE LOGIC =================
 
+  DateTime _getValidInitialDate() {
+    DateTime date = DateTime.now();
 
-
-  /// ================= LOGIC =================
+    while (!isDaySelectable(date)) {
+      date = date.add(const Duration(days: 1));
+    }
+    return date;
+  }
 
   bool isWorkingDay(DateTime date) {
     if (workingDays.isEmpty) return true;
@@ -107,26 +132,26 @@ class RequestBookingController extends GetxController {
     return true;
   }
 
+  /// ================= ACTION =================
+
   void selectDate(DateTime date) {
     if (!isDaySelectable(date)) return;
 
     selectedDate.value = date;
 
-    /// 🔥 CLOSE MODAL FIRST
     Get.back();
 
-    /// 🔥 NAVIGATE AFTER FRAME
     Future.microtask(() {
       Get.to(
             () => BookingSchedulePage(),
         binding: BookingScheduleBinding(),
         arguments: {
           "providerId": providerId,
+          "service": service, // 🔥 service pass
           "selectedDate": date,
         },
       );
     });
   }
-
 
 }
