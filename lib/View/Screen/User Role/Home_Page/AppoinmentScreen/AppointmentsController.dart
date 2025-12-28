@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
@@ -8,30 +9,32 @@ import 'AppointmentModel/AppointmentModel2.dart';
 class AppointmentsController extends GetxController {
   final appointments = <AppointmentModel2>[].obs;
   final isLoading = false.obs;
-
-  /// USER ROLE (CUSTOMER / PROVIDER)
   final userRole = "".obs;
 
   @override
   void onInit() {
     super.onInit();
-    _loadRole();
-    loadData();
+    loadAll();
   }
 
-  /// ================== LOAD ROLE ==================
+  /// 🔁 CALL THIS AFTER LOGIN / PAGE OPEN
+  Future<void> loadAll() async {
+    await _loadRole();
+    await loadData();
+  }
+
   Future<void> _loadRole() async {
     userRole.value =
         await SharePrefsHelper.getString(SharePrefsHelper.userRole) ?? "";
   }
 
-  /// ================== LOAD APPOINTMENTS ==================
   Future<void> loadData() async {
     try {
       isLoading.value = true;
 
-      final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final token = await SharePrefsHelper.getString(
+        SharePrefsHelper.bearerToken,
+      );
 
       final uri = Uri.parse(
         "${ApiConstant.baseUrl}${ApiConstant.appointmentMyAppointments}",
@@ -49,27 +52,35 @@ class AppointmentsController extends GetxController {
         final body = jsonDecode(res.body);
 
         if (body['success'] == true &&
-            body['data'] != null &&
-            body['data']['result'] is List) {
+            body['data']?['result'] is List) {
           appointments.assignAll(
             (body['data']['result'] as List)
-                .map((e) => AppointmentModel2.fromJson(e))
+                .map((e) => AppointmentModel2.fromJson(
+              e,
+              userRole: userRole.value,
+            ))
                 .toList(),
           );
+
+          /// 🔥 SORT: Pending → Confirmed → Cancelled
+          appointments.sort((a, b) {
+            const order = {
+              "pending": 0,
+              "confirmed": 1,
+              "cancelled": 2,
+            };
+            return order[a.status]! - order[b.status]!;
+          });
         }
       }
     } catch (e) {
-      print("❌ ERROR => $e");
+      debugPrint("❌ Appointment Error: $e");
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// ================== FILTER ==================
-  List<AppointmentModel2> filter(String status) {
-    return appointments
-        .where((e) => e.status.toLowerCase() == status)
-        .toList();
-  }
 }
+
+
 

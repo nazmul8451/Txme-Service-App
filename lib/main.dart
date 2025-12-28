@@ -35,7 +35,7 @@ void main() async {
   await socketApi.init();
 
   /// GetX dependencies initialized here
-  dependencies.init();
+  Dependencies.init();
 
   runApp(const MyApp());
 }

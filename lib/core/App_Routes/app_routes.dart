@@ -167,7 +167,7 @@ class AppRoute {
     GetPage(name: providerHomeScreen, page: () =>  ProviderHomeScreen()),
     GetPage(name: myBookingsPage, page: () =>  MyBookingsPage()),
     GetPage(name: jobPage, page: () =>  JobPage()),
-    GetPage(name: totalduration, page: () =>  Totalduration()),
+    // GetPage(name: totalduration, page: () =>  Totalduration()),
     GetPage(name: paymentpage, page: () =>  Paymentpage()),
     GetPage(name: onlinepayment, page: () =>  Onlinepayment()),
     GetPage(name: paymentsuccessful, page: () =>  Paymentsuccessful()),

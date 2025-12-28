@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
-
-import '../../../../Utils/AppImg/app_img.dart';
 import '../../../../Utils/StaticString/static_string.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
+import '../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import '../../User Role/Home_Page/AppoinmentScreen/AppointmentsController.dart';
 import '../../User Role/Home_Page/NotificationPage/NotificationPage.dart';
+import '../../Wallet/Availablebalance/Availablebalance.dart';
+import '../MyBooking/CancelBooking/CancelBooking.dart';
+import '../MyBooking/NewBookingRequest/NewBookingRequest.dart';
 import 'ProviderHomeController.dart';
 
 
@@ -15,6 +18,21 @@ import 'ProviderHomeController.dart';
 
 class ProviderHomeScreen extends StatelessWidget {
   final ProviderHomeController controller = Get.put(ProviderHomeController());
+
+  final appointmentController = Get.put(AppointmentsController());
+
+  Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return AppColors.A7DFF;
+      case "confirmed":
+        return Colors.green;
+      case "cancelled":
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
 
   ProviderHomeScreen({super.key});
 
@@ -89,7 +107,7 @@ class ProviderHomeScreen extends StatelessWidget {
             /// 1. Offer a Service Button
             GestureDetector(
               onTap: () {
-                // এখানে আপনার Logic লিখতে পারবেন
+               Get.toNamed(AppRoute.profession);
               },
               child: Container(
                 width: double.infinity,
@@ -113,38 +131,7 @@ class ProviderHomeScreen extends StatelessWidget {
              SizedBox(height: 21.h),
 
             /// 2. Balance Card
-            Container(
-              width: 353.w,
-              height: 148.h,
-              padding:  EdgeInsets.all(20.0.w),
-              decoration: BoxDecoration(
-                color: Color(0xffF7F7F7),
-                borderRadius: BorderRadius.circular(8.r),
-
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children:  [
-                  Text(
-                    "Earning This Week",
-                    style: TextStyle(
-                      fontSize: 20.0.sp,
-                      color: Color(0xff1F2937),
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  SizedBox(height: 16.0.h),
-                  Text(
-                    "€1,250.00",
-                    style: TextStyle(
-                      fontSize: 40.0.sp.clamp(40, 45),
-                      color: Color(0xff1F2937),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            Availablebalance(),
 
              SizedBox(height: 20.h),
 
@@ -247,143 +234,26 @@ class ProviderHomeScreen extends StatelessWidget {
              SizedBox(height: 20.h),
 
             /// ------------------ UPCOMING APPOINTMENTS ------------------
-            Container(
-              width: 353.w,
-              height: 144.h,
-              decoration: BoxDecoration(
-                color: Color(0xffF7F7F7),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                children: [
-                  /// LEFT TEXT AREA
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.h, left: 20.w),
-                          child: Text(
-                            "Tomorrow, 10:00 AM",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xff7C7D7E),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                          child: Text(
-                            "Home Cleaning",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xff1D1D1D),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                          child: Text(
-                            "With Sarah Miller",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff7C7D7E),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            Obx(() {
+              if (appointmentController.isLoading.value) {
+                return const CircularProgressIndicator();
+              }
 
-                  /// RIGHT IMAGE
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.w),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          AppImg.ellipse,
-                          height: 80.h,
-                          width: 80.w,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ],
-              ),
-            ),
-             SizedBox(height: 12.h),
-            Container(
-              width: 353.w,
-              height: 144.h,
-              decoration: BoxDecoration(
-                color: Color(0xffF7F7F7),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                children: [
-                  /// LEFT TEXT AREA
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.h, left: 20.w),
-                          child: Text(
-                            "Tomorrow, 10:00 AM",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xff7C7D7E),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                          child: Text(
-                            "Home Cleaning",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xff1D1D1D),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Padding(
-                          padding: EdgeInsets.only(top: 12.h, left: 20.w),
-                          child: Text(
-                            "With Sarah Miller",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff7C7D7E),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              final pendingAppointments = appointmentController.appointments
+                  .where((e) => e.status == "pending")
+                  .take(3)
+                  .toList();
 
-                  /// RIGHT IMAGE
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.w),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          AppImg.ellipse,
-                          height: 80.h,
-                          width: 80.w,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ],
-              ),
-            ),
+              if (pendingAppointments.isEmpty) {
+                return const SizedBox();
+              }
+
+              return Column(
+                children: pendingAppointments
+                    .map((appointment) => _buildCard(appointment))
+                    .toList(),
+              );
+            }),
 
           ],
         ),
@@ -391,4 +261,160 @@ class ProviderHomeScreen extends StatelessWidget {
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
   }
+
+  Widget _buildCard(AppointmentModel2 appointment) {
+    final isCustomer = appointmentController.userRole.value == "CUSTOMER";
+    final isProvider = appointmentController.userRole.value == "PROVIDER";
+    final isPending = appointment.status.toLowerCase() == "pending";
+
+    return GestureDetector(
+      onTap: () {
+        if (isProvider) {
+          Get.to(() => Newbookingrequest(), arguments: appointment);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 14.h),
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Column(
+          children: [
+            /// ================= TOP ROW =================
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 25.r,
+                  backgroundImage: appointment.image.isNotEmpty
+                      ? NetworkImage(appointment.image)
+                      : null,
+                  child: appointment.image.isEmpty
+                      ? Icon(Icons.person)
+                      : null,
+                ),
+
+                SizedBox(width: 12.w),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// NAME
+                      Text(
+                        appointment.displayName,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      /// DATE
+                      Text(
+                        appointment.date,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.black54,
+                        ),
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      /// DESCRIPTION
+                      Text(
+                        appointment.description,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+                /// STATUS BADGE
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color:getStatusColor(appointment.status),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    appointment.status.toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            /// ================= CUSTOMER BUTTONS =================
+            if (isCustomer && isPending)
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    /// Pending Badge
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.A7DFF,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text(
+                        appointment.status.toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 8.w),
+
+                    /// Cancel Button
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(
+                              () => Cancelbooking(),
+                          arguments: appointment,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

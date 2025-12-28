@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart' show AppColors;
 import '../../../../../Utils/AppIcons/app_icons.dart' show AppIcons;
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart' show CustomButton;
-
-
+import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import '../CancelBooking/CancelBooking.dart';
+import 'NewBookingRequestController.dart';
 
 class Newbookingrequest extends StatefulWidget {
   const Newbookingrequest({super.key});
@@ -21,6 +23,17 @@ class Newbookingrequest extends StatefulWidget {
 }
 
 class _NewbookingrequestState extends State<Newbookingrequest> {
+  final NewBookingRequestController controller =
+      Get.put(NewBookingRequestController());
+
+  late AppointmentModel2 appointment;
+
+  @override
+  void initState() {
+    super.initState();
+    appointment = Get.arguments as AppointmentModel2;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +43,11 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
         backgroundColor: AppColors.FFFFFF,
         leading: IconButton(
             onPressed: () => Get.back(),
-            icon: SvgPicture.asset(AppIcons.chevronleft, height: 80.h, width: 80.w,)),
+            icon: SvgPicture.asset(
+              AppIcons.chevronleft,
+              height: 80.h,
+              width: 80.w,
+            )),
         title: GestureDetector(
           onTap: () {},
           child: Text("New Booking Request",
@@ -58,12 +75,15 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
                   color: Color(0xff1F2937)),
             ),
             Text(
-              "from Michelle Handyman Services",
+              "from ${appointment.description} Services",
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
                 color: Color(0xff4C545F),
               ),
+            ),
+            SizedBox(
+              height: 5.h,
             ),
             Container(
               width: 353.w,
@@ -97,7 +117,7 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
                                   color: Color(0xff333333)),
                             ),
                             Text(
-                              "Tuesday, 23 July at 10:00 AM",
+                              appointment.date,
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18.sp,
@@ -118,11 +138,10 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 18.sp,
-                    color: Color(0xff4C545F)
-                )
+                    color: Color(0xff4C545F))),
+            SizedBox(
+              height: 20.h,
             ),
-            SizedBox(height: 20.h,),
-
             CustomButton(
                 height: 56.h,
                 width: 353.w,
@@ -132,16 +151,30 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
                 ),
                 child: Center(
                     child: Text(
-                      "Confirm",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Color(0xffFFFFFF)),
-                    )),
-                onTap: () {
-                  Get.toNamed(AppRoute.providerjobprogresspage);
-                }),
-            SizedBox(height: 20,),
+                  "Confirm",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Color(0xffFFFFFF)),
+                )),
+              onTap: () async {
+                final success =
+                await controller.acceptBooking(appointment.id);
+
+                if (success) {
+                  Get.offNamed(AppRoute.providerjobprogresspage);
+                } else {
+                  Get.snackbar(
+                    "Failed",
+                    "Booking accept Failed",
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              },),
+            SizedBox(
+              height: 20,
+            ),
             CustomButton(
                 height: 56.h,
                 width: 353.w,
@@ -152,19 +185,23 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
                 ),
                 child: Center(
                     child: Text(
-                      "Decline Request",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Color(0xffDA0808)),
-                    )),
+                  "Decline Request",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Color(0xffDA0808)),
+                )),
                 onTap: () {
-                  Get.toNamed(AppRoute.cancelbooking);
+                  Get.to(
+                        () => Cancelbooking(),
+                    arguments: appointment.id,
+                  );
+
                 }),
           ],
         ),
       ),
-     // bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
+      // bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }

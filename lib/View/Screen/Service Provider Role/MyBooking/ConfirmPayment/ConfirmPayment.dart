@@ -294,50 +294,50 @@ class ConfirmPaymentpage extends StatelessWidget {
                   ],
                 ),
               ),
+              // SizedBox(
+              //   height: 40.h,
+              // ),
+              // CustomButton(
+              //     height: 56.h,
+              //     width: 353.w,
+              //     BoxDecoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(12.r),
+              //       color: Color(0xffFF5A36),
+              //     ),
+              //     child: Center(
+              //         child: Text(
+              //       "Yes, I received",
+              //       style: TextStyle(
+              //           fontWeight: FontWeight.w600,
+              //           fontSize: 18,
+              //           color: Color(0xffFFFFFF)),
+              //     )),
+              //     onTap: () {
+              //       Get.toNamed(AppRoute.providerpaymentsuccessful);
+              //     }),
+              // SizedBox(
+              //   height: 22.h,
+              // ),
+              // CustomButton(
+              //     height: 56.h,
+              //     width: 353.w,
+              //     BoxDecoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(12.r),
+              //       color: Color(0xff7CA7FC),
+              //     ),
+              //     child: Center(
+              //         child: Text(
+              //       "No, payment is pending",
+              //       style: TextStyle(
+              //           fontWeight: FontWeight.w600,
+              //           fontSize: 18,
+              //           color: Color(0xffFFFFFF)),
+              //     )),
+              //     onTap: () {
+              //       //Get.toNamed(AppRoute.onlinepayment);
+              //     }),
               SizedBox(
-                height: 40.h,
-              ),
-              CustomButton(
-                  height: 56.h,
-                  width: 353.w,
-                  BoxDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    color: Color(0xffFF5A36),
-                  ),
-                  child: Center(
-                      child: Text(
-                    "Yes, I received",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Color(0xffFFFFFF)),
-                  )),
-                  onTap: () {
-                    Get.toNamed(AppRoute.providerpaymentsuccessful);
-                  }),
-              SizedBox(
-                height: 22.h,
-              ),
-              CustomButton(
-                  height: 56.h,
-                  width: 353.w,
-                  BoxDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    color: Color(0xff7CA7FC),
-                  ),
-                  child: Center(
-                      child: Text(
-                    "No, payment is pending",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Color(0xffFFFFFF)),
-                  )),
-                  onTap: () {
-                    //Get.toNamed(AppRoute.onlinepayment);
-                  }),
-              SizedBox(
-                height: 8.h,
+                height: 28.h,
               ),
               
               GestureDetector(

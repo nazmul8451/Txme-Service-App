@@ -7,16 +7,13 @@ import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../../Utils/StaticString/static_string.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
-import '../../../../Widgegt/JobProgressTime/TimeProgressBarWidget.dart';
 
 
 class Providerjobprogresspage extends StatelessWidget {
   Providerjobprogresspage({super.key});
 
-  final Duration jobDuration = const Duration(hours: 2);
 
  // 2 hours
   @override
@@ -51,7 +48,7 @@ class Providerjobprogresspage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CountdownTimerWidget(totalDuration: jobDuration),
+              JobTimerCard(),
               SizedBox(height: 36.h),
               Container(
                 width: 353.w,

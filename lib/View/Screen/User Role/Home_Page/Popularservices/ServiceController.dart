@@ -33,6 +33,10 @@ class ServiceController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+
+    Future<void> refresh() async {
+      await getParentServices();
+    }
   }
 
 

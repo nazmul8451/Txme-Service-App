@@ -4,7 +4,14 @@ import 'package:get/get.dart';
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Service Provider Role/MyBooking/CancelBooking/CancelBooking.dart';
+import '../../../Service Provider Role/MyBooking/ConfirmPayment/ConfirmPayment.dart';
 import '../../../Service Provider Role/MyBooking/NewBookingRequest/NewBookingRequest.dart';
+import '../../../Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
+import '../../../Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
+import '../../BookingsViewClient/JobStartedPage/JobProgressPage/JobProgressPage.dart';
+import '../../BookingsViewClient/Payment/PayWithCash/PayWithCash.dart';
+import '../../BookingsViewClient/Payment/PaymentPage.dart';
+import 'AppointmentModel/AppointmentModel2.dart';
 import 'AppointmentsController.dart';
 
 
@@ -25,16 +32,91 @@ class AppointmentsPage extends StatelessWidget {
     }
   }
 
-  Widget buildCard(appointment) {
+  Widget buildCard(AppointmentModel2 appointment) {
     final isCustomer = controller.userRole.value == "CUSTOMER";
-    final isProvider = controller.userRole.value == "PROVIDER";
     final isPending = appointment.status.toLowerCase() == "pending";
 
     return GestureDetector(
       onTap: () {
-        if (isProvider) {
-          Get.to(() => Newbookingrequest(), arguments: appointment);
+        final role = controller.userRole.value.toUpperCase();
+        final status = appointment.status.toLowerCase();
+
+        /// 🔹 PROVIDER + PENDING
+        if (role == "PROVIDER" && status == "pending") {
+          Get.to(
+                () => Newbookingrequest(),
+            arguments: appointment,
+          );
+          return;
         }
+
+        /// 🔹 BOTH + ACCEPTED
+        if (status == "accepted") {
+          Get.to(
+                () => JobPage(),
+            arguments: appointment,
+          );
+          return;
+        }
+
+        if (status == "cashReceived") {
+          Get.to(
+                () => Providerpaymentsuccessful(),
+            arguments: appointment,
+          );
+          return;
+        }
+
+        if (role == "CUSTOMER" && status == "cashPayment") {
+          Get.to(
+                () => Paywithcash(),
+            arguments: appointment,
+          );
+          return;
+        }
+
+        /// 🔹 BOTH + IN_PROGRESS
+        if (status == "in_progress") {
+          /// 👤 CUSTOMER → JobPage
+          if (role == "CUSTOMER") {
+            Get.to(
+                  () => JobPage(),
+              arguments: appointment,
+            );
+          }
+
+          /// 🧑‍🔧 PROVIDER → Providertotalduration
+          else if (role == "PROVIDER") {
+            Get.to(
+                  () => Providertotalduration(),
+              arguments: appointment,
+            );
+          }
+
+          return;
+        }
+        if (status == "work_completed") {
+          /// 👤 CUSTOMER → JobPage
+          if (role == "CUSTOMER") {
+            Get.to(
+                  () => Paymentpage(),
+              arguments: appointment,
+            );
+          }
+
+          /// 🧑‍🔧 PROVIDER → Providertotalduration
+          else if (role == "PROVIDER") {
+            Get.to(
+                  () => ConfirmPaymentpage(),
+              arguments: appointment,
+            );
+          }
+
+          return;
+        }
+
+
+        ///  otherwise do nothing
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 14.h),
@@ -45,7 +127,7 @@ class AppointmentsPage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            /// ================= TOP ROW =================
+            /// TOP ROW
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -54,9 +136,8 @@ class AppointmentsPage extends StatelessWidget {
                   backgroundImage: appointment.image.isNotEmpty
                       ? NetworkImage(appointment.image)
                       : null,
-                  child: appointment.image.isEmpty
-                      ? Icon(Icons.person)
-                      : null,
+                  child:
+                  appointment.image.isEmpty ? const Icon(Icons.person) : null,
                 ),
 
                 SizedBox(width: 12.w),
@@ -65,44 +146,31 @@ class AppointmentsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /// NAME
                       Text(
-                  appointment.displayName,
-                  style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        appointment.displayName,
+                        style: TextStyle(
+                            fontSize: 14.sp, fontWeight: FontWeight.bold),
                       ),
-
                       SizedBox(height: 4.h),
-
-                      /// DATE
                       Text(
                         appointment.date,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.black54,
-                        ),
+                        style:
+                        TextStyle(fontSize: 12.sp, color: Colors.black54),
                       ),
-
                       SizedBox(height: 4.h),
-
-                      /// DESCRIPTION
                       Text(
                         appointment.description,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.black87,
-                        ),
+                        style:
+                        TextStyle(fontSize: 12.sp, color: Colors.black87),
                       ),
                     ],
                   ),
                 ),
 
-                /// STATUS BADGE
+                /// STATUS
                 Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 10.w, vertical: 6.h),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                   decoration: BoxDecoration(
                     color: getStatusColor(appointment.status),
                     borderRadius: BorderRadius.circular(12.r),
@@ -119,58 +187,36 @@ class AppointmentsPage extends StatelessWidget {
               ],
             ),
 
-            /// ================= CUSTOMER BUTTONS =================
+            /// CUSTOMER CANCEL BUTTON
             if (isCustomer && isPending)
-              Padding(
-                padding: EdgeInsets.only(top: 10.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    /// Pending Badge
-                    Container(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10.h),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(
+                            () => Cancelbooking(),
+                        arguments: appointment.id,
+                      );
+                    },
+                    child: Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 14.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: AppColors.A7DFF,
+                        border: Border.all(color: Colors.red),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        "Pending",
+                        "Cancel",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.red,
                           fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-
-                    SizedBox(width: 8.w),
-
-                    /// Cancel Button
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(
-                              () => Cancelbooking(),
-                          arguments: appointment,
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 14.w, vertical: 6.h),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
           ],
@@ -181,29 +227,34 @@ class AppointmentsPage extends StatelessWidget {
 
 
 
+
   Widget buildSection(String title, String type) {
     return Obx(() {
-      final items = controller.filter(type);
-      if (items.isEmpty) return SizedBox();
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (controller.appointments.isEmpty) {
+        return const Center(child: Text("No appointments found"));
+      }
 
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title,
-              style:
-              TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10.h),
-          ...items.map(buildCard),
-          SizedBox(height: 20.h),
-        ],
+        children: controller.appointments
+            .map((appointment) => buildCard(appointment))
+            .toList(),
       );
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Appointments")),
+      backgroundColor: AppColors.FFFFFF,
+      appBar: AppBar(
+          backgroundColor: AppColors.FFFFFF,
+          surfaceTintColor: AppColors.FFFFFF,
+          title: Text("Appointments")),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.w),
         child: Column(

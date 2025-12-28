@@ -10,6 +10,7 @@ import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../Utils/AppImg/app_img.dart';
 import '../../../../../Utils/StaticString/static_string.dart';
+import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import 'Model/PopularProviderModel.dart';
 import 'ProviderProfileDetailsPage.dart';
@@ -206,7 +207,15 @@ class _PopularproviderState extends State<Popularprovider> {
                       ),
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(
+                      AppRoute.requestBooking,
+                      arguments: {
+                        "providerId": provider.id,
+                        "service": provider.service,
+                      },
+                    );
+                  },
                 ),
                 SizedBox(width: 8.w),
                 CustomButton(

@@ -12,6 +12,8 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../service/api_url.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import '../../Service Provider Role/MyBooking/CancelBooking/CancelBooking.dart';
+import '../../Service Provider Role/MyBooking/NewBookingRequest/NewBookingRequest.dart';
 import 'AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import 'AppoinmentScreen/AppointmentsController.dart';
 import 'ChildService/ChildServiceScreen.dart';
@@ -32,11 +34,52 @@ class _HomepageState extends State<Homepage> {
 
   final appointmentController = Get.put(AppointmentsController());
 
+  Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return AppColors.A7DFF;
+      case "confirmed":
+        return Colors.green;
+      case "cancelled":
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
 
   final popularProviderController =
   Get.put(PopularProviderController());
 
   @override
+  void initState() {
+    super.initState();
+
+    /// 🔥 Whenever route changes
+    ever(Get.routing.obs, (routing) {
+      if (routing.current == AppRoute.homepage) {
+        _refreshHome();
+      }
+    });
+  }
+
+
+  Future<void> _refreshHome() async {
+    await Future.wait([
+      serviceController.getParentServices(),
+      popularProviderController.fetchPopularProviders(),
+      appointmentController.loadData(),
+    ]);
+  }
+
+
+  Future<void> _onRefresh() async {
+    await _refreshHome();
+  }
+
+
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.FFFFFF,
@@ -417,76 +460,142 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+
   Widget _buildCard(AppointmentModel2 appointment) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 14.h),
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// IMAGE
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: appointment.image.isNotEmpty
-                ? NetworkImage(appointment.image)
-                : const AssetImage(AppImg.ellipse) as ImageProvider,
-          ),
+    final isCustomer = appointmentController.userRole.value == "CUSTOMER";
+    final isProvider = appointmentController.userRole.value == "PROVIDER";
+    final isPending = appointment.status.toLowerCase() == "pending";
 
-          SizedBox(width: 12.w),
-
-          /// TEXT
-          Expanded(
-            child: Column(
+    return GestureDetector(
+      onTap: () {
+        if (isProvider) {
+          Get.to(() => Newbookingrequest(), arguments: appointment);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 14.h),
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Column(
+          children: [
+            /// ================= TOP ROW =================
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-            appointment.displayName,
-            style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
+                CircleAvatar(
+                  radius: 25.r,
+                  backgroundImage: appointment.image.isNotEmpty
+                      ? NetworkImage(appointment.image)
+                      : null,
+                  child: appointment.image.isEmpty
+                      ? Icon(Icons.person)
+                      : null,
+                ),
+
+                SizedBox(width: 12.w),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// NAME
+                      Text(
+                        appointment.displayName,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      /// DATE
+                      Text(
+                        appointment.date,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.black54,
+                        ),
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      /// DESCRIPTION
+                      Text(
+                        appointment.description,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  "Booking Date: ${appointment.date}",
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.black54,
+
+
+                /// STATUS BADGE
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color:getStatusColor(appointment.status),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  appointment.description,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.black87,
+                  child: Text(
+                    appointment.status.toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
 
-          /// STATUS
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: Colors.indigoAccent,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Text(
-              appointment.status.toUpperCase(),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
+            /// ================= CUSTOMER BUTTONS =================
+            if (isCustomer && isPending)
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+
+                    SizedBox(width: 8.w),
+
+                    /// Cancel Button
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(
+                              () => Cancelbooking(),
+                          arguments: appointment,
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

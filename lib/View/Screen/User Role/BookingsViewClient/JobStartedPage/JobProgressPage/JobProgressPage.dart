@@ -7,13 +7,36 @@ import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../../Utils/StaticString/static_string.dart';
 import '../../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
+import '../../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
-import '../../../../../Widgegt/JobProgressTime/TimeProgressBarWidget.dart';
+import '../../../../../Widgegt/JobProgressTime/JobTimerController.dart';
+import '../../../Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import '../../../Home_Page/AppoinmentScreen/AppointmentsController.dart';
+import 'JobProgressPageController.dart';
 
-class JobPage extends StatelessWidget {
+class JobPage extends StatefulWidget {
   JobPage({super.key});
 
-  final Duration jobDuration = const Duration(hours: 2); // 2 hours
+  @override
+  State<JobPage> createState() => _JobPageState();
+}
+
+class _JobPageState extends State<JobPage> {
+  final Jobprogresspagecontroller controller =
+  Get.put(Jobprogresspagecontroller());
+
+  final timer = Get.find<JobTimerController>();
+
+  final String userRole =
+      Get.find<AppointmentsController>().userRole.value;
+
+  final AppointmentModel2 appointment = Get.arguments as AppointmentModel2;
+
+  @override
+  void initState() {
+    super.initState();
+    timer.initFromAppointment(appointment);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +56,12 @@ class JobPage extends StatelessWidget {
             )),
         title: Padding(
           padding: EdgeInsets.only(left: 70.w),
-          child: GestureDetector(
-            onTap: (){
-              Get.toNamed(AppRoute.totalduration);
-            },
-            child: Text(
-              "Job Started",
-              style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xff1F2937)),
-            ),
+          child: Text(
+            "Job Started",
+            style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff1F2937)),
           ),
         ),
       ),
@@ -52,12 +70,18 @@ class JobPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CountdownTimerWidget(totalDuration: jobDuration),
+              JobTimerCard(),
               SizedBox(height: 28.h),
-              TimeProgressBarWidget(totalDuration: jobDuration),
-              SizedBox(height: 28.h),
+              Text(
+                appointment.description,
+                style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff1F2937)),
+              ),
+              SizedBox(height: 15.h),
               Container(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(12.r),
@@ -87,7 +111,8 @@ class JobPage extends StatelessWidget {
                           width: 4.w,
                         ),
                         Text(
-                          "123 Maple Street",
+                          appointment.residentialAddress?.address ??
+                              "No address found",
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
@@ -110,7 +135,7 @@ class JobPage extends StatelessWidget {
                           width: 4.w,
                         ),
                         Text(
-                          "Tuesday, 28th May",
+                          appointment.date,
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
@@ -133,7 +158,7 @@ class JobPage extends StatelessWidget {
                           width: 4.w,
                         ),
                         Text(
-                          "Michelle R.",
+                          appointment.displayName,
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
@@ -146,20 +171,11 @@ class JobPage extends StatelessWidget {
               ),
               SizedBox(height: 28.h),
               Container(
-
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   color: Color(0xffF7F7F7),
                   border: Border.all(color: Color(0xffFF5A36), width: 1.w),
                   borderRadius: BorderRadius.circular(8.r),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black.withOpacity(0.2),
-                  //     blurRadius: 8,
-                  //     spreadRadius: 2,
-                  //     offset: Offset(0, 3),
-                  //   ),
-                  // ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,6 +197,49 @@ class JobPage extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 50.h,
+              ),
+
+              if (userRole == "PROVIDER")
+                CustomButton(
+                  height: 56.h,
+                  width: 353.w,
+                  BoxDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    color: AppColors.red601,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Start",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Color(0xffFFFFFF),
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    final success =
+                    await controller.acceptBooking(appointment.id);
+
+                    if (success) {
+                      Get.offNamed(AppRoute.providertotalduration);
+                    } else {
+                      Get.snackbar(
+                        "Failed",
+                        "Booking accept Failed",
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+                ),
+              SizedBox(
+                height: 50.h,
+              ),
+
+
             ],
           ),
         ),

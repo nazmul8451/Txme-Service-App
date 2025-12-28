@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart';
@@ -11,7 +12,10 @@ import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
+import '../../../../Widgegt/JobProgressTime/JobTimerController.dart';
 import '../../../../Widgegt/JobProgressTime/ProviderCountdownTimerWidget.dart';
+import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import 'ProviderToralDurationController.dart';
 
 
 
@@ -23,7 +27,20 @@ class Providertotalduration extends StatefulWidget {
 }
 
 class _ProvidertotaldurationState extends State<Providertotalduration> {
-  final Duration jobDuration = const Duration(hours: 2); // 2 hours
+  final timer = Get.find<JobTimerController>();
+
+  final Providertoraldurationcontroller controller =
+  Get.put(Providertoraldurationcontroller());
+
+  final AppointmentModel2 appointment = Get.arguments as AppointmentModel2;
+
+  @override
+  void initState() {
+    super.initState();
+    timer.initFromAppointment(appointment);
+  }
+
+ // 2 hours
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +82,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                 height: 20.h,
               ),
               Text(
-                "Your job has been compleated",
+                "Job Started",
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -74,100 +91,97 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
               SizedBox(
                 height: 40.h,
               ),
-              Providercountdowntimerwidget(totalDuration: jobDuration),
+              JobTimerCard(),
               SizedBox(
                 height: 20.h,
               ),
               Container(
-                width: 353.w,
-                height: 175.h,
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(color: Color(0xffFF5A36), width: 1.w)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20.h, left: 23.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Lawn Mowing & Edging",
-                        style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.location,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "123 Maple Street",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.date,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Tuesday, 28th May",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12.h,
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.prof,
-                            height: 18.h,
-                            width: 16.w,
-                            color: Color(0xff4C545F),
-                          ),
-                          SizedBox(
-                            width: 4.w,
-                          ),
-                          Text(
-                            "Michelle R.",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Lawn Mowing & Edging",
+                      style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff1F2937)),
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.location,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          appointment.residentialAddress?.address ??
+                              "No address found",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.date,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          appointment.date,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.prof,
+                          height: 18.h,
+                          width: 16.w,
+                          color: Color(0xff4C545F),
+                        ),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          appointment.displayName,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 28.h),
@@ -178,14 +192,6 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                   color: Color(0xffF7F7F7),
                   border: Border.all(color: Color(0xffFF5A36), width: 1.w),
                   borderRadius: BorderRadius.circular(8.r),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black.withOpacity(0.2),
-                  //     blurRadius: 8,
-                  //     spreadRadius: 2,
-                  //     offset: Offset(0, 3),
-                  //   ),
-                  // ],
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(top: 8.h, left: 9.w, right: 20.w),
@@ -232,9 +238,24 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                         fontSize: 18,
                         color: Color(0xffFFFFFF)),
                   )),
-                  onTap: () {
-                    Get.toNamed(AppRoute.confirmPaymentpage);
-                  }),
+
+
+                    onTap: () async {
+                      final success =
+                          await controller.acceptBooking(appointment.id);
+
+                      if (success) {
+                        Get.offNamed(AppRoute.confirmPaymentpage);
+                      } else {
+                        Get.snackbar(
+                          "Failed",
+                          "Booking accept Failed",
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
+                    },
+              ),
             ],
           ),
         ),

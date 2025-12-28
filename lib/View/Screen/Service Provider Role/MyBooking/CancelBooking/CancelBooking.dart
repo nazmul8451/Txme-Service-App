@@ -7,7 +7,6 @@ import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import 'CancelBookingController.dart';
 
@@ -19,6 +18,9 @@ class Cancelbooking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final String appointmentId = Get.arguments as String;
+
     return Scaffold(
       backgroundColor: AppColors.FFFFFF,
       appBar: AppBar(
@@ -68,17 +70,6 @@ class Cancelbooking extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20.h),
-
-              Text(
-                "This will cancel Handyman service with Sarah",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w300,
-                  color: const Color(0xff4C545F),
-                ),
-              ),
-
               SizedBox(height: 40.h),
 
               /// Reason Section
@@ -96,7 +87,7 @@ class Cancelbooking extends StatelessWidget {
 
                   SizedBox(height: 10.h),
 
-                  /// Radio Buttons (Gap reduced)
+                  /// Radio Buttons
                   Obx(() => Column(
                     children: controller.reasons.map((reason) {
                       return RadioListTile<String>(
@@ -106,14 +97,11 @@ class Cancelbooking extends StatelessWidget {
                             controller.selectReason(value!),
                         activeColor: Colors.blue,
                         dense: true,
-                        visualDensity:
-                        const VisualDensity(vertical: -2),
                         contentPadding: EdgeInsets.zero,
                         title: Text(
                           reason,
                           style: TextStyle(
                             fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
                             color: const Color(0xff4C545F),
                           ),
                         ),
@@ -131,25 +119,8 @@ class Cancelbooking extends StatelessWidget {
                     maxLines: 4,
                     decoration: InputDecoration(
                       hintText: "Please specify",
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.all(10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: controller.selectedReason.value ==
-                              "Other"
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                        const BorderSide(color: Colors.blue),
                       ),
                     ),
                   )),
@@ -158,36 +129,54 @@ class Cancelbooking extends StatelessWidget {
 
               SizedBox(height: 40.h),
 
-              /// Confirm Button
-              CustomButton(
+              Obx(() =>  controller.isLoading.value
+                  ? const CircularProgressIndicator(color: Colors.white)
+
+                  : CustomButton(
                 height: 56.h,
                 width: 353.w,
                 BoxDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   color: const Color(0xffDA0808),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
                     "Confirm Cancellation",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
-                      color: Color(0xffFFFFFF),
+                      color: Colors.white,
                     ),
                   ),
                 ),
-                onTap: () {
-                  controller.confirmCancellation();
-                  Get.toNamed(AppRoute.providerHomeScreen);
+                onTap: () async {
+                  if (controller.selectedReason.isEmpty) {
+                    Get.snackbar("Error", "Please select a reason");
+                    return;
+                  }
+
+                  if (controller.selectedReason.value == "Other" &&
+                      controller.noteController.text.trim().isEmpty) {
+                    Get.snackbar("Error", "Please write a reason");
+                    return;
+                  }
+
+                  final success =
+                  await controller.cancelBooking(appointmentId);
+
+                  if (success) {
+                    Get.offAllNamed(AppRoute.appointmentsPage);
+                  } else {
+                    Get.snackbar("Error", "Action failed");
+                  }
                 },
-              ),
+
+              )),
+
             ],
           ),
         ),
       ),
-
-      //bottomNavigationBar: const CustomProvidernavbar(selectedIndex: 1),
-
 
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );

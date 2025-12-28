@@ -51,6 +51,7 @@ class ApiConstant {
   static const String serviceGet  = "$apiVersion/service/get-services";
 
   static const String popularProviders  = "$apiVersion/provider/popular";
+  static const String appointmentUpdate  = "$apiVersion/appointment/update-status/";
 
 
 
@@ -99,21 +100,12 @@ class ApiConstant {
 
 
 
-
-
   static const String childServices = "$apiVersion/service/get-all-child-services";
 
 
   static const String userMe = "$apiVersion/user/me";
 
   static const String allProviderUser = "$apiVersion/user";
-
-
-
-
-
-
-  
 
 
   static const String bearerToken = "bearerToken";
