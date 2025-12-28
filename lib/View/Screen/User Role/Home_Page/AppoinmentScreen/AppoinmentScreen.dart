@@ -75,6 +75,14 @@ class AppointmentsPage extends StatelessWidget {
           return;
         }
 
+        if (role == "CUSTOMER" && status == "awaiting_payment") {
+          Get.to(
+                () => Paymentpage(),
+            arguments: appointment,
+          );
+          return;
+        }
+
         /// 🔹 BOTH + IN_PROGRESS
         if (status == "in_progress") {
           /// 👤 CUSTOMER → JobPage
@@ -95,6 +103,11 @@ class AppointmentsPage extends StatelessWidget {
 
           return;
         }
+
+
+
+
+
         if (status == "work_completed") {
           /// 👤 CUSTOMER → JobPage
           if (role == "CUSTOMER") {
