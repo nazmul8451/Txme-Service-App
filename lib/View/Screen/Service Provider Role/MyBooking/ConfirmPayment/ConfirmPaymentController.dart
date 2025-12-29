@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../../../helper/Shared_prefe/shared_prefe.dart';
+import '../../../../../service/api_url.dart';
 
 class Confirmpaymentcontroller extends GetxController {
   // Routing Number (Reactive)
@@ -9,17 +15,44 @@ class Confirmpaymentcontroller extends GetxController {
   // Note TextField Controller
   TextEditingController noteController = TextEditingController();
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Example: API থেকে বা অন্য জায়গা থেকে routing number set করা
+  final isLoading = false.obs;
 
-    totalAmount.value = "€87.00";
-  }
+  /// ================== ACCEPT BOOKING ==================
+  Future<bool> acceptBooking(String appointmentId) async {
+    try {
+      isLoading.value = true;
 
-  @override
-  void onClose() {
-    noteController.dispose(); // Memory leak এড়াতে dispose করা
-    super.onClose();
+      final token =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      final uri = Uri.parse(
+        "${ApiConstant.baseUrl}${ApiConstant.appointmentUpdate}$appointmentId",
+      );
+
+      debugPrint("🔗 FINAL URL => $uri");
+
+      final res = await http.patch(
+        uri,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"status": "cashReceived"}),
+      );
+
+      debugPrint("📡 STATUS => ${res.statusCode}");
+      debugPrint("📨 BODY => ${res.body}");
+
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        final body = jsonDecode(res.body);
+        return body['success'] == true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint("❌ ERROR => $e");
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

@@ -4,20 +4,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
-import '../../../../Widgegt/CustomContainer/TotalAmountDue.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
+import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import '../PaymentSuccessful/ProviderPaymentSuccessful.dart';
 import 'ConfirmPaymentController.dart';
 
 class ConfirmPaymentpage extends StatelessWidget {
    ConfirmPaymentpage({super.key});
 
   final Confirmpaymentcontroller controller = Get.put(Confirmpaymentcontroller());
+
+   final AppointmentModel2 appointment = Get.arguments as AppointmentModel2;
 
   @override
   Widget build(BuildContext context) {
@@ -73,31 +76,22 @@ class ConfirmPaymentpage extends StatelessWidget {
                     color: Color(0xff1F2937)),
               ),
 
-
-
               Center(
-                child: Obx(
-                      () => Text(
-                    controller.totalAmount.value,
-                    style: TextStyle(
-                      fontSize: 48.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xffFF5A36),
-                    ),
+                child: Text(
+                  "€ ${appointment.totalCost?.toStringAsFixed(2) ?? '0.00'}",
+                  style: TextStyle(
+                    fontSize: 48.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xffFF5A36),
                   ),
                 ),
               ),
-
-
-
-
 
               SizedBox(height: 8.h,),
 
 
               Container(
-                width: 353.w,
-                height: 175.h,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                     color: Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(8.r),
@@ -105,76 +99,72 @@ class ConfirmPaymentpage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 21.h, left: 12.w, right: 12.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Job Details",
-                            style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Service:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Date:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                          SizedBox(
-                            height: 12.h,
-                          ),
-                          Text(
-                            "Service Provider:",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff1F2937)),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Job Details",
+                          style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Service:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Date:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Text(
+                          "Name:",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff1F2937)),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 47.h, right: 12.w),
+                      padding:  EdgeInsets.only(top: 30.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           SizedBox(height: 12.h),
                           Text(
-                            "Garden Maintenance",
+                            appointment.description,
                             style: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff4C545F)),
                           ),
-                          SizedBox(height: 12.h),
+                          SizedBox(height: 20.h),
                           Text(
-                            "Tuesday, 28th May",
+                            appointment.date,
                             style: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff4C545F)),
                           ),
-                          SizedBox(height: 12.h),
+                          SizedBox(height: 20.h),
                           Text(
-                            "Michelle R.",
+                            appointment.displayName,
                             style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
@@ -224,12 +214,14 @@ class ConfirmPaymentpage extends StatelessWidget {
                                 color: Color(0xff4C545F)),
                           ),
                           Text(
-                            "2.5 hours",
+                            "${appointment.totalWorkedTime?.toStringAsFixed(1) ?? '0'} hrs",
                             style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937),
+                            ),
                           ),
+
                         ],
                       ),
                     ),
@@ -249,12 +241,14 @@ class ConfirmPaymentpage extends StatelessWidget {
                                 color: Color(0xff4C545F)),
                           ),
                           Text(
-                            "€35.00/ hour",
+                            "€ ${appointment.hourlyRate?.toStringAsFixed(2) ?? '0.00'}",
                             style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1F2937)),
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff1F2937),
+                            ),
                           ),
+
                         ],
                       ),
                     ),
@@ -282,7 +276,7 @@ class ConfirmPaymentpage extends StatelessWidget {
                                 color: Color(0xff1F2937)),
                           ),
                           Text(
-                            "€87.00",
+                            "€ ${appointment.totalCost?.toStringAsFixed(2) ?? '0.00'}",
                             style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
@@ -294,27 +288,56 @@ class ConfirmPaymentpage extends StatelessWidget {
                   ],
                 ),
               ),
-              // SizedBox(
-              //   height: 40.h,
-              // ),
-              // CustomButton(
-              //     height: 56.h,
-              //     width: 353.w,
-              //     BoxDecoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(12.r),
-              //       color: Color(0xffFF5A36),
-              //     ),
-              //     child: Center(
-              //         child: Text(
-              //       "Yes, I received",
-              //       style: TextStyle(
-              //           fontWeight: FontWeight.w600,
-              //           fontSize: 18,
-              //           color: Color(0xffFFFFFF)),
-              //     )),
-              //     onTap: () {
-              //       Get.toNamed(AppRoute.providerpaymentsuccessful);
-              //     }),
+              SizedBox(
+                height: 40.h,
+              ),
+
+              CustomButton(
+                  height: 56.h,
+                  width: 353.w,
+                  BoxDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    color: Color(0xffFF5A36),
+                  ),
+                  child: Center(
+                      child: Text(
+                    "Yes, I received",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Color(0xffFFFFFF)),
+                  )),
+
+                  onTap: () async {
+                    ///  prevent double tap
+                    if (controller.isLoading.value) return;
+
+                    final success =
+                    await controller.acceptBooking(appointment.id);
+
+                    ///  API SUCCESS → GO TO JOB PAGE
+                    if (success) {
+                      Get.off(
+                            () => Providerpaymentsuccessful(),
+                        arguments: appointment, //  FULL MODEL
+                      );
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Failed to accept booking",
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    }
+                  },
+                  // onTap: () {
+                  //   Get.toNamed(AppRoute.providerpaymentsuccessful);
+                  // }
+
+
+                  ),
+
+
+
               // SizedBox(
               //   height: 22.h,
               // ),

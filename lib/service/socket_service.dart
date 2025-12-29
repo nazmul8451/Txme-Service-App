@@ -34,7 +34,7 @@ class SocketApi {
     });
 
     socket!.onDisconnect((_) {
-      debugPrint("🔴 SOCKET DISCONNECTED");
+      debugPrint(" SOCKET DISCONNECTED");
     });
 
     socket!.on("message", (data) {

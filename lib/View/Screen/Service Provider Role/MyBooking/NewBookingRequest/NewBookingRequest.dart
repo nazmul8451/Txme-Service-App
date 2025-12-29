@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,12 +6,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart' show AppColors;
 import '../../../../../Utils/AppIcons/app_icons.dart' show AppIcons;
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart' show CustomButton;
+import '../../../User Role/BookingsViewClient/JobStartedPage/JobProgressPage/JobProgressPage.dart';
 import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import '../CancelBooking/CancelBooking.dart';
 import 'NewBookingRequestController.dart';
@@ -143,35 +146,47 @@ class _NewbookingrequestState extends State<Newbookingrequest> {
               height: 20.h,
             ),
             CustomButton(
-                height: 56.h,
-                width: 353.w,
-                BoxDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  color: Color(0xffFF5A36),
-                ),
-                child: Center(
-                    child: Text(
+              height: 56.h,
+              width: 353.w,
+              BoxDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.r),
+                color: const Color(0xffFF5A36),
+              ),
+              child: Obx(() => controller.isLoading.value
+                  ? const CupertinoActivityIndicator(color: Colors.white)
+                  : const Center(
+                child: Text(
                   "Confirm",
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Color(0xffFFFFFF)),
-                )),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: Color(0xffFFFFFF),
+                  ),
+                ),
+              )),
               onTap: () async {
+                ///  prevent double tap
+                if (controller.isLoading.value) return;
+
                 final success =
                 await controller.acceptBooking(appointment.id);
 
+                ///  API SUCCESS → GO TO JOB PAGE
                 if (success) {
-                  Get.offNamed(AppRoute.providerjobprogresspage);
+                  Get.off(
+                        () => JobPage(),
+                    arguments: appointment, // 🔥 FULL MODEL
+                  );
                 } else {
                   Get.snackbar(
-                    "Failed",
-                    "Booking accept Failed",
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
+                    "Error",
+                    "Failed to accept booking",
+                    snackPosition: SnackPosition.BOTTOM,
                   );
                 }
-              },),
+              },
+            ),
+
             SizedBox(
               height: 20,
             ),

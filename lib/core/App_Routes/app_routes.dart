@@ -170,7 +170,7 @@ class AppRoute {
     // GetPage(name: totalduration, page: () =>  Totalduration()),
     GetPage(name: paymentpage, page: () =>  Paymentpage()),
     GetPage(name: onlinepayment, page: () =>  Onlinepayment()),
-    GetPage(name: paymentsuccessful, page: () =>  Paymentsuccessful()),
+    //GetPage(name: paymentsuccessful, page: () =>  Paymentsuccessful()),
     GetPage(name: invoicePListPage, page: () =>  InvoicePListPage()),
     GetPage(name: paywithcash, page: () =>  Paywithcash()),
     GetPage(name: paywithwallet, page: () =>  Paywithwallet()),

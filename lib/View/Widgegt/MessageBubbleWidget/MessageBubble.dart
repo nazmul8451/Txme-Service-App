@@ -8,8 +8,12 @@ class MessageBubble extends StatelessWidget {
   final MessageModel message;
   const MessageBubble({super.key, required this.message});
 
+
   @override
   Widget build(BuildContext context) {
+
+
+
     return Align(
       alignment:
       message.isMe ? Alignment.centerRight : Alignment.centerLeft,

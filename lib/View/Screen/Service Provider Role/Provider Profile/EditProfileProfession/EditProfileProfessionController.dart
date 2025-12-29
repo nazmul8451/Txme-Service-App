@@ -152,7 +152,7 @@ class Editprofileprofessioncontroller extends GetxController {
 
   /// ================= TIME =================
   TimeOfDay fromTime = const TimeOfDay(hour: 9, minute: 0);
-  TimeOfDay toTime = const TimeOfDay(hour: 13, minute: 0);
+  TimeOfDay toTime = const TimeOfDay(hour: 18, minute: 0);
 
   Future<void> pickTime(BuildContext context, bool isFrom) async {
     final picked = await showTimePicker(
@@ -324,7 +324,7 @@ class Editprofileprofessioncontroller extends GetxController {
     debugPrint("🔥 submitProfile called");
 
     if (!validate()) {
-      Get.snackbar("Error", "Validation failed");
+      Get.snackbar("", "Validation failed");
       return;
     }
 
@@ -394,10 +394,10 @@ class Editprofileprofessioncontroller extends GetxController {
 
         Get.offAllNamed(AppRoute.providerHomeScreen);
       } else {
-        Get.snackbar("Error", decoded["message"] ?? "Failed");
+        Get.snackbar("", decoded["message"] ?? "Failed");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
       debugPrint("EXCEPTION => $e");
     }
   }

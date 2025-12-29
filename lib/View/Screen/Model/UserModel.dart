@@ -8,12 +8,10 @@ class UserModel {
   final String id;
   final String email;
   final String role;
-
   final bool isEmailVerified;
   final bool isPhoneVerified;
   final bool biometricEnabled;
   final bool isStripeConnected;
-
   final String status;
   final String bio;
   final String fullName;

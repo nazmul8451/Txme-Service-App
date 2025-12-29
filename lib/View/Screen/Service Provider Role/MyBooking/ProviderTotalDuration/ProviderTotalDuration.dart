@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
@@ -15,6 +16,7 @@ import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
 import '../../../../Widgegt/JobProgressTime/JobTimerController.dart';
 import '../../../../Widgegt/JobProgressTime/ProviderCountdownTimerWidget.dart';
 import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import '../ConfirmPayment/ConfirmPayment.dart';
 import 'ProviderToralDurationController.dart';
 
 
@@ -82,7 +84,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                 height: 20.h,
               ),
               Text(
-                "Job Started",
+                "Job Progress",
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -240,21 +242,27 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                   )),
 
 
-                    onTap: () async {
-                      final success =
-                          await controller.acceptBooking(appointment.id);
+                onTap: () async {
+                  ///  prevent double tap
+                  if (controller.isLoading.value) return;
 
-                      if (success) {
-                        Get.offNamed(AppRoute.confirmPaymentpage);
-                      } else {
-                        Get.snackbar(
-                          "Failed",
-                          "Booking accept Failed",
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    },
+                  final success =
+                  await controller.acceptBooking(appointment.id);
+
+                  ///  API SUCCESS → GO TO JOB PAGE
+                  if (success) {
+                    Get.off(
+                          () => ConfirmPaymentpage(),
+                      arguments: appointment, //  FULL MODEL
+                    );
+                  } else {
+                    Get.snackbar(
+                      "Error",
+                      "Failed to accept booking",
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  }
+                },
               ),
             ],
           ),

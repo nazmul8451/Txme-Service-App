@@ -10,6 +10,7 @@ import '../../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
 import '../../../../../Widgegt/JobProgressTime/JobTimerController.dart';
+import '../../../../Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
 import '../../../Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import '../../../Home_Page/AppoinmentScreen/AppointmentsController.dart';
 import 'JobProgressPageController.dart';
@@ -220,17 +221,23 @@ class _JobPageState extends State<JobPage> {
                     ),
                   ),
                   onTap: () async {
+                    ///  prevent double tap
+                    if (controller.isLoading.value) return;
+
                     final success =
                     await controller.acceptBooking(appointment.id);
 
+                    ///  API SUCCESS → GO TO JOB PAGE
                     if (success) {
-                      Get.offNamed(AppRoute.providertotalduration);
+                      Get.off(
+                            () => Providertotalduration(),
+                        arguments: appointment, //  FULL MODEL
+                      );
                     } else {
                       Get.snackbar(
-                        "Failed",
-                        "Booking accept Failed",
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
+                        "Error",
+                        "Failed to accept booking",
+                        snackPosition: SnackPosition.BOTTOM,
                       );
                     }
                   },

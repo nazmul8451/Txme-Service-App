@@ -21,16 +21,46 @@ class AppointmentsPage extends StatelessWidget {
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
+
+    /// ⏳ Waiting states
       case "pending":
-        return AppColors.A7DFF;
-      case "confirmed":
+        return AppColors.A7DFF; // light blue
+      case "accepted":
+        return Colors.blue;
+      case "in_progress":
+        return Colors.orange;
+
+    /// 💼 Work related
+      case "work_completed":
+        return Colors.deepOrange;
+      case "completed":
+        return Colors.green.shade700;
+
+    /// 💰 Payment related
+      case "awaiting_payment":
+        return Colors.purple;
+      case "cashpayment":
+        return Colors.indigo;
+      case "cashreceived":
         return Colors.green;
+
+    /// ⭐ Review related
+      case "review_pending":
+      case "provider_review_pending":
+      case "customer_review_pending":
+        return Colors.teal;
+
+    /// ❌ Negative states
       case "cancelled":
+      case "rejected":
         return Colors.red;
+
+    /// fallback
       default:
         return Colors.grey;
     }
   }
+
 
   Widget buildCard(AppointmentModel2 appointment) {
     final isCustomer = controller.userRole.value == "CUSTOMER";
@@ -50,7 +80,23 @@ class AppointmentsPage extends StatelessWidget {
           return;
         }
 
-        /// 🔹 BOTH + ACCEPTED
+        if (role == "PROVIDER" && status == "provider_review_pending") {
+          Get.to(
+                () => Providerpaymentsuccessful(),
+            arguments: appointment,
+          );
+          return;
+        }
+
+        if (role == "CUSTOMER" && status == "customer_review_pending") {
+          Get.to(
+                () => Providerpaymentsuccessful(),
+            arguments: appointment,
+          );
+          return;
+        }
+
+        ///  BOTH + ACCEPTED
         if (status == "accepted") {
           Get.to(
                 () => JobPage(),
@@ -59,7 +105,7 @@ class AppointmentsPage extends StatelessWidget {
           return;
         }
 
-        if (status == "cashReceived") {
+        if (status == "review_pending") {
           Get.to(
                 () => Providerpaymentsuccessful(),
             arguments: appointment,
@@ -83,9 +129,31 @@ class AppointmentsPage extends StatelessWidget {
           return;
         }
 
-        /// 🔹 BOTH + IN_PROGRESS
+
+        if (status == "awaiting_payment") {
+          ///  CUSTOMER → JobPage
+          if (role == "CUSTOMER") {
+            Get.to(
+                  () => Paymentpage(),
+              arguments: appointment,
+            );
+          }
+
+          /// 🧑‍🔧 PROVIDER → Providertotalduration
+          else if (role == "PROVIDER") {
+            Get.to(
+                  () => ConfirmPaymentpage(),
+              arguments: appointment,
+            );
+          }
+
+          return;
+        }
+
+
+        ///  BOTH + IN_PROGRESS
         if (status == "in_progress") {
-          /// 👤 CUSTOMER → JobPage
+          ///  CUSTOMER → JobPage
           if (role == "CUSTOMER") {
             Get.to(
                   () => JobPage(),
@@ -103,9 +171,6 @@ class AppointmentsPage extends StatelessWidget {
 
           return;
         }
-
-
-
 
 
         if (status == "work_completed") {
@@ -179,24 +244,23 @@ class AppointmentsPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 /// STATUS
                 Container(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                   decoration: BoxDecoration(
                     color: getStatusColor(appointment.status),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
-                    appointment.status.toUpperCase(),
+                    appointment.statusText, // ✅ USE UI TEXT
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 11.sp,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
+
               ],
             ),
 
@@ -241,24 +305,40 @@ class AppointmentsPage extends StatelessWidget {
 
 
 
-  Widget buildSection(String title, String type) {
+  Widget buildSection(String title, List<String> types) {
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (controller.appointments.isEmpty) {
-        return const Center(child: Text("No appointments found"));
+      final filteredAppointments = controller.appointments
+          .where((a) => types.contains(a.status.toLowerCase()))
+          .toList();
+
+      if (filteredAppointments.isEmpty) {
+        return const SizedBox();
       }
 
       return Column(
-        children: controller.appointments
-            .map((appointment) => buildCard(appointment))
-            .toList(),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ...filteredAppointments.map(buildCard).toList(),
+        ],
       );
     });
-
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -270,13 +350,34 @@ class AppointmentsPage extends StatelessWidget {
           title: Text("Appointments")),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.w),
-        child: Column(
+        child:Column(
           children: [
-            buildSection("Pending", "pending"),
-            buildSection("Confirmed", "confirmed"),
-            buildSection("Cancelled", "cancelled"),
+            /// ⏳ Pending
+            buildSection("Pending", ["pending"]),
+
+            /// ✅ Confirmed / Ongoing
+            buildSection("Confirmed", [
+              "accepted",
+              "in_progress",
+              "work_completed",
+              "awaiting_payment",
+            ]),
+
+            /// ⭐ Review Pending
+            buildSection("Review", [
+              "review_pending",
+              "provider_review_pending",
+              "customer_review_pending",
+            ]),
+
+            ///  Cancelled
+            buildSection("Cancelled", [
+              "cancelled",
+              "rejected",
+            ]),
           ],
         ),
+
       ),
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );

@@ -4,11 +4,8 @@ import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/CustomContainer/CustomContainer.dart';
-import 'package:txme_app/View/Widgegt/CustomFavoriteProvidersContainer/CustomFavoriteProvidersContainer.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
-
 import '../../../../Utils/AppColors/app_colors.dart';
-
 import '../../../../service/api_url.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
@@ -21,6 +18,7 @@ import 'PopularProvider/Model/PopularProviderModel.dart';
 import 'PopularProvider/ProviderProfileDetailsPage.dart';
 import 'PopularProvider/PopularProviderController.dart';
 import 'Popularservices/ServiceController.dart';
+import 'homeController.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -30,9 +28,29 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final serviceController = Get.find<ServiceController>();
 
+  final serviceController = Get.find<ServiceController>();
   final appointmentController = Get.put(AppointmentsController());
+  final popularProviderController = Get.put(PopularProviderController());
+
+  final HomeController homeController = Get.put(HomeController());
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshHome();
+  }
+
+  Future<void> _refreshHome() async {
+    await Future.wait([
+      serviceController.getParentServices(),
+      popularProviderController.fetchPopularProviders(),
+      appointmentController.loadData(),
+    ]);
+
+    ///  review check
+    homeController.checkAgain();
+  }
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
@@ -46,39 +64,6 @@ class _HomepageState extends State<Homepage> {
         return Colors.grey;
     }
   }
-
-
-  final popularProviderController =
-  Get.put(PopularProviderController());
-
-  @override
-  void initState() {
-    super.initState();
-
-    /// 🔥 Whenever route changes
-    ever(Get.routing.obs, (routing) {
-      if (routing.current == AppRoute.homepage) {
-        _refreshHome();
-      }
-    });
-  }
-
-
-  Future<void> _refreshHome() async {
-    await Future.wait([
-      serviceController.getParentServices(),
-      popularProviderController.fetchPopularProviders(),
-      appointmentController.loadData(),
-    ]);
-  }
-
-
-  Future<void> _onRefresh() async {
-    await _refreshHome();
-  }
-
-
-
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -599,8 +584,5 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
-
-
-
 
 }

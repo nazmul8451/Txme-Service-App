@@ -43,6 +43,11 @@ class ApiConstant {
   /// usage: /provider/{id}/calendar?date=yyyy-MM-dd
   static const String providerCalendar = "$apiVersion/provider";
 
+
+  static const String postReview = "$apiVersion/review";
+
+  static const String currentAppointment = "$apiVersion/appointment/current-appointment?status";
+
   static const String appointmentCreate = "$apiVersion/appointment/create";
 
   static const String appointmentMyAppointments = "$apiVersion/appointment/my-appointments/";
@@ -58,9 +63,15 @@ class ApiConstant {
   ///===================== Wallet =========================///
 
 
+  static const String walletPay  = "$apiVersion/appointment/pay-with-wallet/";
 
-  static const String myWalletAvailableBalance  =
-      "$apiVersion/wallet/my-wallet";
+
+
+
+  static const String myWalletAvailableBalance  = "$apiVersion/wallet/my-wallet";
+
+
+
   static const String createPaymentIntent  =
       "$apiVersion/wallet/create-payment-intent";
 

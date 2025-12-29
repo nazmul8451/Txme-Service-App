@@ -172,7 +172,7 @@ class EditProfileController extends GetxController {
       if (profileImage.value != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
-            "profilePicture",
+            "image",
             profileImage.value!.path,
             contentType: MediaType.parse("image/jpeg"),
           ),

@@ -1,3 +1,5 @@
+import '../../../../../service/api_url.dart';
+
 class ProviderModel {
   // ===== OLD (UNCHANGED) =====
   final String id;
@@ -16,7 +18,7 @@ class ProviderModel {
   final String address;
   final bool isVerified;
 
-  // ===== NEW (ADDED) =====
+  // ===== NEW =====
   final List<DateTime>? unavailableDates;
   final List<String> serviceCategories;
   final List<String> languages;
@@ -27,11 +29,10 @@ class ProviderModel {
   final int workingDuration;
 
   ProviderModel({
-    // OLD
     required this.id,
     required this.name,
     required this.service,
-    required this.image,
+    required this.image, // ❗ unchanged
     required this.rating,
     required this.totalReviews,
     required this.experience,
@@ -43,8 +44,6 @@ class ProviderModel {
     required this.bio,
     required this.address,
     required this.isVerified,
-
-    // NEW
     required this.unavailableDates,
     required this.serviceCategories,
     required this.languages,
@@ -55,6 +54,19 @@ class ProviderModel {
     required this.workingDuration,
   });
 
+  /// ================= IMAGE URL GUARD =================
+  String get imageUrl {
+    if (image.isEmpty) {
+      return "assets/images/user_placeholder.png";
+    }
+
+    if (image.startsWith('http')) {
+      return image;
+    }
+
+    return "${ApiConstant.baseUrl}$image";
+  }
+
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
     final providerProfile = json['providerProfile'] ?? {};
     final workingHours = providerProfile['workingHours'] ?? {};
@@ -62,7 +74,6 @@ class ProviderModel {
     final residential = json['residentialAddress'] ?? {};
 
     return ProviderModel(
-      // ===== OLD =====
       id: json['_id'] ?? '',
       name: json['fullName'] ?? 'Unknown',
 
@@ -72,9 +83,8 @@ class ProviderModel {
               ? providerProfile['serviceCategory'][0]
               : 'Service Provider'),
 
-      image: json['profilePicture'] != null
-          ? "http://10.10.7.26:5002${json['profilePicture']}"
-          : "assets/images/user_placeholder.png",
+      /// 🔥 backend যা দেয় সেটাই রাখছি
+      image: json['profilePicture'] ?? '',
 
       rating: (review['averageRating'] ?? 0).toDouble(),
       totalReviews: review['totalReviews'] ?? 0,
@@ -96,7 +106,6 @@ class ProviderModel {
       address: residential['address'] ?? 'Address not provided',
       isVerified: json['isEmailVerified'] ?? false,
 
-      // ===== NEW =====
       unavailableDates: providerProfile['unavailableDates'] != null
           ? (providerProfile['unavailableDates'] as List)
           .map((e) => DateTime.parse(e))
