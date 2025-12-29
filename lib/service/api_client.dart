@@ -22,6 +22,8 @@ class ApiClient extends GetxService {
       'Content-Type': 'application/json', //  MUST
     };
 
+
+
     if (needToken) {
       final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
       if (token.isNotEmpty) {
@@ -44,6 +46,7 @@ class ApiClient extends GetxService {
           .timeout(const Duration(seconds: timeoutInSeconds));
 
       return _handleResponse(response, uri);
+      print(response);
     } catch (_) {
       return const Response(statusCode: 0, statusText: noInternetMessage);
     }
