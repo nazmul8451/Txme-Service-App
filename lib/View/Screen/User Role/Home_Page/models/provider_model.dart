@@ -1,7 +1,9 @@
+import 'package:txme_app/Utils/AppImg/app_img.dart';
+
 import '../../../../../service/api_url.dart';
 
 class ProviderModel {
-  // ===== OLD (UNCHANGED) =====
+  // ===== OLD (UNCHANGED - UI DEPENDENT) =====
   final String id;
   final String name;
   final String service;
@@ -18,7 +20,7 @@ class ProviderModel {
   final String address;
   final bool isVerified;
 
-  // ===== NEW =====
+  // ===== NEW (API DRIVEN) =====
   final List<DateTime>? unavailableDates;
   final List<String> serviceCategories;
   final List<String> languages;
@@ -32,7 +34,7 @@ class ProviderModel {
     required this.id,
     required this.name,
     required this.service,
-    required this.image, // ❗ unchanged
+    required this.image,
     required this.rating,
     required this.totalReviews,
     required this.experience,
@@ -57,45 +59,54 @@ class ProviderModel {
   /// ================= IMAGE URL GUARD =================
   String get imageUrl {
     if (image.isEmpty) {
-      return "assets/images/user_placeholder.png";
+      return AppImg.editProfile;
     }
-
     if (image.startsWith('http')) {
       return image;
     }
-
     return "${ApiConstant.baseUrl}$image";
   }
 
+  /// ================= JSON PARSER =================
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
-    final providerProfile = json['providerProfile'] ?? {};
-    final workingHours = providerProfile['workingHours'] ?? {};
-    final review = json['review'] ?? {};
-    final residential = json['residentialAddress'] ?? {};
+    final providerProfile =
+        json['providerProfile'] as Map<String, dynamic>? ?? {};
+
+    final workingHours =
+        providerProfile['workingHours'] as Map<String, dynamic>? ?? {};
+
+    final review =
+        json['review'] as Map<String, dynamic>? ?? {};
+
+    final residential =
+        json['residentialAddress'] as Map<String, dynamic>? ?? {};
 
     return ProviderModel(
-      id: json['_id'] ?? '',
+      id: json['_id']?.toString() ?? '',
+
       name: json['fullName'] ?? 'Unknown',
 
+      /// designation > serviceCategory[0] > fallback
       service: providerProfile['designation'] ??
-          (providerProfile['serviceCategory'] != null &&
-              providerProfile['serviceCategory'].isNotEmpty
+          ((providerProfile['serviceCategory'] is List &&
+              providerProfile['serviceCategory'].isNotEmpty)
               ? providerProfile['serviceCategory'][0]
               : 'Service Provider'),
 
-      /// 🔥 backend যা দেয় সেটাই রাখছি
       image: json['profilePicture'] ?? '',
 
       rating: (review['averageRating'] ?? 0).toDouble(),
       totalReviews: review['totalReviews'] ?? 0,
+
       experience: providerProfile['experience'] ?? 0,
+
       hourlyRate: (providerProfile['hourlyRate'] ?? 0).toDouble(),
 
-      skills: providerProfile['skills'] != null
+      skills: providerProfile['skills'] is List
           ? List<String>.from(providerProfile['skills'])
           : [],
 
-      workingDays: providerProfile['workingDays'] != null
+      workingDays: providerProfile['workingDays'] is List
           ? List<String>.from(providerProfile['workingDays'])
           : [],
 
@@ -103,24 +114,29 @@ class ProviderModel {
       availableTo: workingHours['endTime'] ?? '--',
 
       bio: json['bio'] ?? 'No bio available',
-      address: residential['address'] ?? 'Address not provided',
+
+      /// address OR location fallback safe
+      address: residential['address'] ??
+          (residential['location'] != null ? 'Location available' : 'Address not provided'),
+
       isVerified: json['isEmailVerified'] ?? false,
 
-      unavailableDates: providerProfile['unavailableDates'] != null
+      unavailableDates: providerProfile['unavailableDates'] is List
           ? (providerProfile['unavailableDates'] as List)
-          .map((e) => DateTime.parse(e))
+          .map((e) => DateTime.tryParse(e.toString()))
+          .whereType<DateTime>()
           .toList()
           : null,
 
-      serviceCategories: providerProfile['serviceCategory'] != null
+      serviceCategories: providerProfile['serviceCategory'] is List
           ? List<String>.from(providerProfile['serviceCategory'])
           : [],
 
-      languages: providerProfile['languages'] != null
+      languages: providerProfile['languages'] is List
           ? List<String>.from(providerProfile['languages'])
           : [],
 
-      certifications: providerProfile['certifications'] != null
+      certifications: providerProfile['certifications'] is List
           ? List<String>.from(providerProfile['certifications'])
           : [],
 
@@ -130,6 +146,7 @@ class ProviderModel {
 
       gender: json['gender'] ?? '',
       nationality: json['nationality'] ?? '',
+
       workingDuration: workingHours['duration'] ?? 0,
     );
   }

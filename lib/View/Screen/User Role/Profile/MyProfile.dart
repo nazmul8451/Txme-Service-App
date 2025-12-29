@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
+import 'package:txme_app/Utils/AppIcons/app_icons.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/profile_controller.dart';
@@ -55,37 +57,34 @@ class ProfilePage extends StatelessWidget {
                     backgroundImage: NetworkImage(user.profileImageUrl),
                   ),
                   SizedBox(width: 16.w),
-                   Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 12.h),
+                      Text(
+                        user.fullName,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Row(
                         children: [
-
-                          SizedBox(height: 12.h),
+                          Icon(Icons.star, size: 18.sp, color: Colors.orange),
+                          SizedBox(width: 5.w),
                           Text(
-                            user.fullName,
+                            user.review.toString(),
                             style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-
-                          SizedBox(height: 4.h),
-                          Row(
-                            children: [
-                              Icon(Icons.star,
-                                  size: 18.sp, color: Colors.orange),
-                              SizedBox(width: 5.w),
-                              Text(
-                                user.review.toString(),
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
-                      )
+                      ),
+                    ],
+                  )
                 ],
               );
             }),
@@ -113,11 +112,6 @@ class ProfilePage extends StatelessWidget {
               img: AppImg.verification,
               title: "Verification",
             ),
-            // profileMenu(
-            //   onTap: () => Get.to(() =>  FaceIDSetupScreen()),
-            //   img: AppImg.faceIdImg,
-            //   title: "Setup FaceID",
-            // ),
             profileMenu(
               onTap: () {
                 Get.toNamed(AppRoute.walletpage);
@@ -126,7 +120,26 @@ class ProfilePage extends StatelessWidget {
               title: "Wallet",
             ),
 
-            SizedBox(height: 20.h),
+        Obx(() {
+          if (controller.isStripeLoading.value) {
+            return CircularProgressIndicator();
+          }
+
+          if (controller.isStripeConnected.value) {
+            return Text("Stripe Connected ✅");
+          }
+
+          return profileMenu(
+            onTap: controller.createStripeAccountSession,
+            img: AppImg.stripeImg,
+            title: "Connect Stripe",
+          );
+        }),
+
+
+
+
+        SizedBox(height: 20.h),
 
             /// ================= GENERAL PREFERENCES =================
             Text(

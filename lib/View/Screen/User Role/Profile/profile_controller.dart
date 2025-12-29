@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
 import '../../Model/UserModel.dart';
@@ -9,16 +12,21 @@ class ProfileController extends GetxController {
   final isLoading = false.obs;
   final user = Rxn<UserModel>();
 
+  final isStripeConnected = false.obs;
+  final isStripeLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     fetchUserHeader();
+    fetchStripeAccountStatus();
   }
+
+  // ================= USER =================
 
   Future<void> fetchUserHeader() async {
     try {
       isLoading(true);
-
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
@@ -31,16 +39,104 @@ class ProfileController extends GetxController {
       );
 
       if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-        user.value = UserModel.fromJson(decoded['data']);
-      } else {
-        Get.snackbar("Error", "Status: ${res.statusCode}");
+        user.value = UserModel.fromJson(jsonDecode(res.body)['data']);
       }
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
     } finally {
       isLoading(false);
     }
   }
-}
 
+  // ================= STRIPE STATUS =================
+
+  Future<void> fetchStripeAccountStatus() async {
+    try {
+      isStripeLoading(true);
+
+      final token =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      final res = await http.get(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccount),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      );
+
+      if (res.statusCode == 200) {
+        isStripeConnected.value =
+            jsonDecode(res.body)['data']?['isConnected'] ?? false;
+      } else {
+        isStripeConnected.value = false;
+      }
+    } finally {
+      isStripeLoading(false);
+    }
+  }
+
+  // ================= CREATE SESSION =================
+
+  Future<void> createStripeAccountSession() async {
+    try {
+      isStripeLoading(true);
+
+      final token =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      final res = await http.post(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccountSession),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      );
+
+      print("STATUS => ${res.statusCode}");
+      print("BODY => ${res.body}");
+
+      if (res.statusCode != 200) {
+        Get.snackbar("Error", "Stripe link create failed");
+        return;
+      }
+
+      final url = jsonDecode(res.body)['data']?['url'];
+      if (url == null) {
+        Get.snackbar("Error", "Stripe URL missing");
+        return;
+      }
+
+      await _openStripeLink(url);
+    } finally {
+      isStripeLoading(false);
+    }
+  }
+
+
+
+
+  Future<void> _openStripeLink(String url) async {
+    try {
+      final uri = Uri.parse(url);
+
+      final canLaunch = await canLaunchUrl(uri);
+      if (!canLaunch) {
+        Get.snackbar("Error", "Cannot open browser");
+        return;
+      }
+
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      Get.snackbar("Error", "Stripe open failed");
+      print("Launch error => $e");
+    }
+  }
+
+
+
+  // ================= ONBOARDING (APP MODE) =================
+
+
+}

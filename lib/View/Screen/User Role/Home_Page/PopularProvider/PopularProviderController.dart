@@ -10,12 +10,13 @@ import 'package:http/http.dart' as http;
 
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
+import '../models/provider_model.dart';
 import 'Model/PopularProviderModel.dart';
 
 class PopularProviderController extends GetxController {
   final isLoading = false.obs;
   final isMoreLoading = false.obs;
-  final providers = <PopularProviderModel>[].obs;
+  final providers = <ProviderModel>[].obs;
 
   int page = 1;
   final int limit = 10;
@@ -24,7 +25,6 @@ class PopularProviderController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    debugPrint("🔥 PopularProviderController onInit CALLED");
     fetchPopularProviders(isFirst: true);
   }
 
@@ -35,8 +35,8 @@ class PopularProviderController extends GetxController {
         providers.clear();
         isLoading(true);
       } else {
-        if (page >= totalPage) return;
-        page++;
+        if (page >= totalPage) return; // 🚫 last page
+        page++; // 👉 NEXT PAGE
         isMoreLoading(true);
       }
 
@@ -58,21 +58,22 @@ class PopularProviderController extends GetxController {
       if (res.statusCode == 200) {
         final decoded = jsonDecode(res.body);
 
-        final List list = decoded['data']?['data'] ?? [];
-        final meta = decoded['data']?['meta'];
+        /// 🔥 real response অনুযায়ী
+        final List list = decoded['data'] ?? [];
+        final pagination = decoded['pagination'];
 
-        totalPage = meta?['totalPage'] ?? 1;
+        totalPage = pagination?['totalPage'] ?? 1;
 
         final newProviders =
-        list.map((e) => PopularProviderModel.fromJson(e)).toList();
+        list.map((e) => ProviderModel.fromJson(e)).toList();
 
         providers.addAll(newProviders);
 
         debugPrint(
-            "✅ PAGE $page / $totalPage | TOTAL LOADED 👉 ${providers.length}");
+          "✅ PAGE $page / $totalPage | TOTAL LOADED: ${providers.length}",
+        );
       }
     } catch (e) {
-      debugPrint("❌ ERROR 👉 $e");
       Get.snackbar("Error", e.toString());
     } finally {
       isLoading(false);
@@ -80,4 +81,5 @@ class PopularProviderController extends GetxController {
     }
   }
 }
+
 

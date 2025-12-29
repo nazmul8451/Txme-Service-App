@@ -14,11 +14,13 @@ import '../../Service Provider Role/MyBooking/NewBookingRequest/NewBookingReques
 import 'AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import 'AppoinmentScreen/AppointmentsController.dart';
 import 'ChildService/ChildServiceScreen.dart';
+import 'DetailsPage/ProvidersDetailsPage.dart';
 import 'PopularProvider/Model/PopularProviderModel.dart';
 import 'PopularProvider/ProviderProfileDetailsPage.dart';
 import 'PopularProvider/PopularProviderController.dart';
 import 'Popularservices/ServiceController.dart';
 import 'homeController.dart';
+import 'models/provider_model.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -245,7 +247,7 @@ class _HomepageState extends State<Homepage> {
                     providers.length,
                         (index) {
                       final provider = providers[index];
-                      return _homePopularProviderCard(provider);
+                      return _providerCard(provider);
                     },
                   ),
                 );
@@ -313,8 +315,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Widget _homePopularProviderCard(PopularProviderModel provider) {
-
+  Widget _providerCard(ProviderModel provider) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       width: 353.w,
@@ -332,8 +333,8 @@ class _HomepageState extends State<Homepage> {
                 child: CircleAvatar(
                   radius: 28,
                   backgroundImage: const AssetImage(AppImg.ellipse),
-                  foregroundImage: provider.profileImageUrl.isNotEmpty
-                      ? NetworkImage(provider.profileImageUrl)
+                  foregroundImage: provider.imageUrl.isNotEmpty
+                      ? NetworkImage(provider.image)
                       : null,
                 ),
 
@@ -344,7 +345,7 @@ class _HomepageState extends State<Homepage> {
                   Padding(
                     padding: EdgeInsets.only(top: 20.h, left: 8.w),
                     child: Text(
-                      provider.fullName,
+                      provider.name,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20.sp,
@@ -358,7 +359,7 @@ class _HomepageState extends State<Homepage> {
                       const Icon(Icons.star, color: Color(0xFFFFC107), size: 18),
                       SizedBox(width: 4.w),
                       Text(
-                        provider.review.averageRating.toString(),
+                        provider.rating.toString(),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -366,7 +367,7 @@ class _HomepageState extends State<Homepage> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "(${provider.review.totalReviews} reviews)",
+                        "(${provider.totalReviews} reviews)",
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: Colors.grey.shade600,
@@ -406,7 +407,6 @@ class _HomepageState extends State<Homepage> {
                       arguments: {
                         "providerId": provider.id,
                         "service": provider.service,
-
                       },
                     );
                   },
@@ -431,7 +431,7 @@ class _HomepageState extends State<Homepage> {
                   onTap: () {
                     ///  FULL MODEL PASS
                     Get.to(
-                          () => ProviderProfileDetailsPage(
+                          () => DetailsPage(
                         provider: provider,
                       ),
                     );

@@ -172,6 +172,22 @@ class ProviderProfilePage extends StatelessWidget {
               },
               child: menuItem(img: AppImg.wallet, title: "Wallet"),
             ),
+
+
+
+
+
+            Obx(() {
+              if (!controller.isStripeConnected.value) {
+                return GestureDetector(
+                  onTap: controller.createStripeAccountSession,
+                  child: menuItem(img: AppImg.stripeImg, title: "Connect Stripe",),
+                );
+              }
+              return const SizedBox();
+            }),
+
+
             GestureDetector(
               onTap: () => Get.to(() => InvoiceListPage()),
               child: menuItem(img: AppImg.pastInvoices, title: "Past Invoices"),

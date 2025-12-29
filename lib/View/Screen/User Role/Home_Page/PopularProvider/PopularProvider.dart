@@ -12,6 +12,8 @@ import '../../../../../Utils/AppImg/app_img.dart';
 import '../../../../../Utils/StaticString/static_string.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
+import '../DetailsPage/ProvidersDetailsPage.dart';
+import '../models/provider_model.dart';
 import 'Model/PopularProviderModel.dart';
 import 'ProviderProfileDetailsPage.dart';
 import 'PopularProviderController.dart';
@@ -72,56 +74,105 @@ class _PopularproviderState extends State<Popularprovider> {
                 },
               ),
             ),
-
             /// NEXT BUTTON
-            Obx(() {
-              if (controller.isMoreLoading.value) {
-                return Padding(
-                  padding: EdgeInsets.all(16.h),
-                  child: const CircularProgressIndicator(),
-                );
-              }
-
-              if (controller.page >= controller.totalPage) {
-                return const SizedBox();
-              }
-
-              return Padding(
-                padding: EdgeInsets.all(16.h),
-                child: CustomButton(
-                  height: 48.h,
-                  width: double.infinity,
-                  BoxDecoration: BoxDecoration(
-                    color: AppColors.red601,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    controller.fetchPopularProviders();
-                  },
-                ),
-              );
-            }),
           ],
         );
       }),
 
+      bottomNavigationBar: Obx(() {
+        if (controller.isMoreLoading.value) {
+          return Padding(
+            padding: EdgeInsets.all(12.h),
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (controller.totalPage <= 1) {
+          return const SizedBox();
+        }
+
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: AppColors.FFFFFF,
+            border: Border(
+              top: BorderSide(color: Colors.grey.shade300),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+
+              /// ◀️ PREVIOUS
+              CustomButton(
+                height: 44.h,
+                width: 140.w,
+                BoxDecoration: BoxDecoration(
+                  border: Border.all(
+                    color: controller.page > 1
+                        ? AppColors.red601
+                        : Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Center(
+                  child: Text(
+                    "Previous",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: controller.page > 1
+                          ? AppColors.red601
+                          : Colors.grey,
+                    ),
+                  ),
+                ),
+                onTap: controller.page > 1
+                    ? () {
+                  controller.page--;
+                  controller.fetchPopularProviders();
+                }
+                    : null,
+              ),
+
+              /// NEXT ▶️
+              CustomButton(
+                height: 44.h,
+                width: 140.w,
+                BoxDecoration: BoxDecoration(
+                  color: controller.page < controller.totalPage
+                      ? AppColors.red601
+                      : Colors.grey,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Center(
+                  child: Text(
+                    "Next",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                onTap: controller.page < controller.totalPage
+                    ? () {
+                  controller.page++;
+                  controller.fetchPopularProviders();
+                }
+                    : null,
+              ),
+            ],
+          ),
+        );
+      }),
+
+
     );
+
   }
 
-  Widget _providerCard(PopularProviderModel provider) {
-
-
-
+  Widget _providerCard(ProviderModel provider) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       width: 353.w,
@@ -139,8 +190,8 @@ class _PopularproviderState extends State<Popularprovider> {
                 child: CircleAvatar(
                   radius: 28,
                   backgroundImage: const AssetImage(AppImg.ellipse),
-                  foregroundImage: provider.profileImageUrl.isNotEmpty
-                      ? NetworkImage(provider.profileImageUrl)
+                  foregroundImage: provider.imageUrl.isNotEmpty
+                      ? NetworkImage(provider.image)
                       : null,
                 ),
 
@@ -151,7 +202,7 @@ class _PopularproviderState extends State<Popularprovider> {
                   Padding(
                     padding: EdgeInsets.only(top: 20.h, left: 8.w),
                     child: Text(
-                      provider.fullName,
+                      provider.name,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20.sp,
@@ -165,7 +216,7 @@ class _PopularproviderState extends State<Popularprovider> {
                       const Icon(Icons.star, color: Color(0xFFFFC107), size: 18),
                       SizedBox(width: 4.w),
                       Text(
-                        provider.review.averageRating.toString(),
+                        provider.rating.toString(),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -173,7 +224,7 @@ class _PopularproviderState extends State<Popularprovider> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        "(${provider.review.totalReviews} reviews)",
+                        "(${provider.totalReviews} reviews)",
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: Colors.grey.shade600,
@@ -237,7 +288,7 @@ class _PopularproviderState extends State<Popularprovider> {
                   onTap: () {
                     ///  FULL MODEL PASS
                     Get.to(
-                          () => ProviderProfileDetailsPage(
+                          () => DetailsPage(
                         provider: provider,
                       ),
                     );

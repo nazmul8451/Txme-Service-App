@@ -65,10 +65,15 @@ class ApiConstant {
 
   static const String walletPay  = "$apiVersion/appointment/pay-with-wallet/";
 
+  static const String stripeAccount  = "$apiVersion/stripe/account-status";
+
+  static const String stripeAccountSession  = "$apiVersion/stripe/account-link";
+
 
 
 
   static const String myWalletAvailableBalance  = "$apiVersion/wallet/my-wallet";
+
 
 
 

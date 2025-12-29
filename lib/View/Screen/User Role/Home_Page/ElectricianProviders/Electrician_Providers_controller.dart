@@ -56,10 +56,10 @@ class ProviderController extends GetxController {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
 
-        final List list = decoded['data']['data'];
-        final meta = decoded['data']['meta'];
+        final List list = decoded['data'] ?? [];
+        final pagination = decoded['pagination'];
 
-        totalPage = meta['totalPage'] ?? 1;
+        totalPage = pagination?['totalPage'] ?? 1;
 
         final newProviders =
         list.map((e) => ProviderModel.fromJson(e)).toList();
