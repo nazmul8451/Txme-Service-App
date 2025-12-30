@@ -26,7 +26,7 @@ class ChatController extends GetxController {
   }
 
   Future<void> loadUser() async {
-    myUserId = await SharePrefsHelper.getString("userId");
+    myUserId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
     await getChats();
     initSocket();
   }
@@ -39,59 +39,64 @@ class ChatController extends GetxController {
     
     // Ensure userId is loaded before listening
     if (myUserId.isEmpty) {
-      myUserId = await SharePrefsHelper.getString("userId");
+      myUserId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
     }
 
     final eventName = "chatListUpdate::$myUserId";
     debugPrint("🎧 Listening to Chat List Event: $eventName");
 
     socketApi.on(eventName, (data) {
-      debugPrint("📩 CHAT LIST UPDATE: $data");
+      debugPrint("📩 CHAT LIST UPDATE RAW DATA: $data");
 
       if (data == null) return;
-      
+
       try {
-        final chatId = data['chatId'];
-        // It might be nested in 'data'
-        final finalChatId = chatId ?? data['data']?['chatId'];
+        final raw = data['message'] ?? data;
         
-        if (finalChatId == null) return;
+        // Handle different data structures
+        final chatId = raw['chatId'] ?? raw['room'] ?? data['chatId'];
         
-        final index = chatList.indexWhere((c) => c.id == finalChatId);
-        
+        if (chatId == null) {
+          debugPrint("❌ Chat List Update: ChatId is null");
+          return;
+        }
+
+        final index = chatList.indexWhere((c) => c.id == chatId);
+
         // If chat exists, update it
         if (index != -1) {
-          final raw = data['message'] ?? data;
-          final msgText = raw['text'] ?? 'Message';
+          final msgText = raw['text'] ?? raw['lastMessage'] ?? 'Message';
+          final createdAt = raw['createdAt'] ?? DateTime.now().toString();
           
           // Try to get sender info if available
           final sender = raw['sender'];
           String? newName;
           String? newAvatar;
-          
+
           if (sender is Map) {
-             // Only update if it's the OTHER user
+             // If sender is NOT me, it might be the other user
              if (sender['_id'] != myUserId) {
-                newName = sender['fullName'];
-                newAvatar = sender['avatar'];
+                // We typically don't change the chat name/avatar based on a message unless it's a group
+                // But if it's 1-on-1, the name/avatar is fixed to the other person.
+                // So we actually don't need to update name/avatar usually.
              }
-          } else if (sender is String) {
-            // Sender is just an ID
           }
-          
+
           final old = chatList[index];
           
           // Move to top
           chatList.removeAt(index);
+          
           chatList.insert(0, old.copyWith(
             lastMessage: msgText,
-            time: "Now",
+            time: createdAt, 
             unreadCount: old.unreadCount + 1,
-            name: newName,
-            avatar: newAvatar,
+            // Keep old name/avatar unless explicitly changed
           ));
+          debugPrint("✅ Updated Chat $chatId moved to top");
         } else {
              // Refresh list if new chat
+             debugPrint("🆕 New Chat detected, refreshing list...");
              getChats(); 
         }
       } catch (e) {
@@ -148,6 +153,20 @@ class ChatController extends GetxController {
           searchQuery.value.toLowerCase(),
         ))
         .toList();
+  }
+
+  /// 🔄 Call this from MessageController when sending a message
+  void updateLastMessage(String chatId, String message) {
+    final index = chatList.indexWhere((c) => c.id == chatId);
+    if (index != -1) {
+      final old = chatList[index];
+      chatList.removeAt(index);
+      chatList.insert(0, old.copyWith(
+        lastMessage: message,
+        time: "Now", // Or handle actual time
+      ));
+      update();
+    }
   }
 }
 

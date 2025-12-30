@@ -8,6 +8,7 @@ import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
 import '../../../../service/socket_service.dart';
 import '../model/message_model.dart';
+import 'chat_controller.dart';
 
 class MessageController extends GetxController {
   final String chatId;
@@ -31,7 +32,14 @@ class MessageController extends GetxController {
   }
 
   Future<void> _init() async {
-    myUserId = await SharePrefsHelper.getString("userId");
+    // Ensure userId is fetched
+    final fetchedId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
+    myUserId = fetchedId;
+    debugPrint("👤 My User ID loaded: $myUserId");
+
+    if (myUserId.isEmpty) {
+      debugPrint("❌ ERROR: User ID is empty! Cannot determine 'isMe'.");
+    }
 
     /// 🔥 JOIN CHAT ROOM
     socketApi.joinChat(chatId);
@@ -47,18 +55,35 @@ class MessageController extends GetxController {
     socketApi.on(eventName, (data) {
       debugPrint("📩 EVENT RECEIVED [$eventName]: $data");
       
+      if (data == null) return;
+
       final raw = data['message'] ?? data;
 
       try {
         final msg = MessageModel.fromJson(raw, myUserId);
+        debugPrint("🧩 Parsed Socket Message: ${msg.message} | isMe: ${msg.isMe}");
 
-        // Avoid duplicates if we already have this message ID
-        if (messages.any((m) => m.id == msg.id)) return;
-
-        messages.add(msg);
+        // ✅ Check if this message mimics my own optimistic message
+        if (messages.any((m) => m.id == msg.id)) {
+           debugPrint("⚠️ Duplicate Message ID ignored: ${msg.id}");
+           return;
+        }
+        
+        if (msg.isMe) {
+           // Check for temp message match
+           final tempIndex = messages.indexWhere((m) => m.id.startsWith("temp_") && m.message == msg.message);
+           
+           if (tempIndex != -1) {
+             debugPrint("🔄 Replacing Temp Message with Socket Message");
+             messages[tempIndex] = msg;
+             return; 
+           }
+        }
+        
+        messages.insert(0, msg);
         
       } catch (e) {
-        debugPrint("Message Parse Error: $e");
+        debugPrint("❌ Message Parse Error: $e");
       }
     });
 
@@ -87,7 +112,9 @@ class MessageController extends GetxController {
 
       messages.value = list
           .map<MessageModel>((e) => MessageModel.fromJson(e, myUserId))
-          .toList();
+          .toList()
+          .reversed
+          .toList(); // Reverse so Index 0 is Newest (Bottom)
       update();
     }
   }
@@ -101,7 +128,7 @@ class MessageController extends GetxController {
     final tempId = "temp_${DateTime.now().millisecondsSinceEpoch}";
 
     /// ✅ 1. OPTIMISTIC UI
-    messages.add(
+    messages.insert(0,
       MessageModel(
         id: tempId,
         message: text,
@@ -118,6 +145,15 @@ class MessageController extends GetxController {
       chatId: chatId,
       text: text,
     );
+
+    /// 🔄 Update Chat List Screen (Last Message)
+    try {
+      if (Get.isRegistered<ChatController>()) {
+        Get.find<ChatController>().updateLastMessage(chatId, text);
+      }
+    } catch (e) {
+      debugPrint("Error updating Chat List: $e");
+    }
 
     /// ✅ 3. API → SAVE DATABASE
     try {

@@ -78,6 +78,7 @@ class ChatDetailsPage extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 return ListView.builder(
+                  reverse: true, // ✅ START FROM BOTTOM
                   padding: EdgeInsets.all(16),
                   itemCount: controller.messages.length,
                   itemBuilder: (context, index) {
