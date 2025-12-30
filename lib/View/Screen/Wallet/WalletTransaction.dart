@@ -8,6 +8,7 @@ class WalletTransaction {
   final String to;
   final String createdAt;
   final String wallet;
+  final String fee;
 
   WalletTransaction({
     required this.wallet,
@@ -19,10 +20,12 @@ class WalletTransaction {
     required this.from,
     required this.to,
     required this.createdAt,
+    required this.fee,
   });
 
   factory WalletTransaction.fromJson(Map<String, dynamic> json) {
     return WalletTransaction(
+      fee: json["fee"],
       wallet: json['wallet'],
       id: json['_id'] ?? '',
       amount: (json['amount'] as num).toDouble(),

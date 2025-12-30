@@ -7,6 +7,7 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
 import '../Availablebalance/Availablebalance.dart';
+import '../PaymentDone/PaymentDone.dart';
 import 'WithdrawPageController.dart';
 
 
@@ -64,36 +65,42 @@ class _WithdrawpageState extends State<Withdrawpage> {
 
 
               // Add New Card Button
-          Obx(() => CustomButton(
-            height: 56.h,
-            width: 353.w,
-            BoxDecoration: BoxDecoration(
-              color: AppColors.red601,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Center(
-              child: controller.isLoading.value
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : Text(
-                "Withdraw",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.FFFFFF,
+              Obx(() => CustomButton(
+                height: 56.h,
+                width: 353.w,
+                BoxDecoration: BoxDecoration(
+                  color: AppColors.red601,
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
-              ),
-            ),
-            onTap: controller.isLoading.value
-                ? null
-                : () async {
-              await controller.withdrawMoney();
+                child: Center(
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                    "Withdraw",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.FFFFFF,
+                    ),
+                  ),
+                ),
+                onTap: controller.isLoading.value
+                    ? null
+                    : () async {
 
-              /// ✅ শুধু success হলে navigate
-              if (controller.isSuccess.value) {
-                Get.toNamed(AppRoute.paymentdone);
-              }
-            },
-          )),
+                  /// ✅ API call
+                  final transaction = await controller.withdrawMoney();
+
+                  /// ✅ শুধু success হলে navigate
+                  if (transaction != null) {
+                    Get.to(
+                          () => const Paymentdone(),
+                      arguments: transaction, //  transaction pass
+                    );
+                  }
+                },
+              ))
+
 
 
           ],

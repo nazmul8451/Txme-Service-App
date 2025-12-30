@@ -69,6 +69,8 @@ class Topupcontroller extends GetxController {
       if (response.statusCode == 200 && data["success"] == true) {
         final clientSecret = data["data"]["clientSecret"];
 
+        debugPrint("===================================>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<======================$clientSecret");
+
         await makeStripePayment(
           clientSecret: clientSecret,
           amount: amount,
