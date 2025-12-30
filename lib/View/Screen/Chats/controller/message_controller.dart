@@ -22,6 +22,10 @@ class MessageController extends GetxController {
   RxList<MessageModel> messages = <MessageModel>[].obs;
   final TextEditingController messageController = TextEditingController();
 
+  /// Header Info
+  RxString chatName = "".obs;
+  RxString chatAvatar = "".obs;
+
   late String myUserId;
 
   @override
@@ -109,6 +113,13 @@ class MessageController extends GetxController {
       final list = decoded['data'] is Map
           ? decoded['data']['messages']
           : decoded['data'];
+
+      // ✅ Parse Participant info if available to update Header
+      if (decoded['data'] is Map && decoded['data']['participant'] != null) {
+          final p = decoded['data']['participant'];
+          chatName.value = p['fullName'] ?? chatName.value;
+          chatAvatar.value = p['profilePicture'] ?? p['avatar'] ?? chatAvatar.value;
+      }
 
       messages.value = list
           .map<MessageModel>((e) => MessageModel.fromJson(e, myUserId))

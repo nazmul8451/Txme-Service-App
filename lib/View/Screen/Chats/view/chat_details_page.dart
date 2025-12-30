@@ -35,22 +35,30 @@ class ChatDetailsPage extends StatelessWidget {
             ),
           ),
         ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(chat.avatar),
-            ),
-            SizedBox(width: 10.w),
-            Text(
-              chat.name,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+        title: Obx(() {
+          // Initialize logic (dirty but efficient inline) or use controller onInit
+          if (controller.chatName.value.isEmpty) {
+             controller.chatName.value = chat.name;
+             controller.chatAvatar.value = chat.avatar;
+          }
+          
+          return Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(controller.chatAvatar.value),
               ),
-            ),
-          ],
-        ),
+              SizedBox(width: 10.w),
+              Text(
+                controller.chatName.value,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          );
+        }),
         actions: [
           InkWell(
             onTap: () {},

@@ -28,7 +28,7 @@ class ChatModel {
       other = {
         "_id": otherId,
         "fullName": "User",
-        "avatar": "https://i.pravatar.cc/150?img=12",
+        "avatar": "https://i.pravatar.cc/150?img=12", // Fallback for case 1
       };
     } else {
       /// 🔥 CASE 2: GET CHAT LIST RESPONSE (full user object)
@@ -38,14 +38,24 @@ class ChatModel {
       );
     }
 
+    String avatarUrl = other['avatar'] ?? 
+        other['image'] ?? 
+        other['profileImage'] ?? 
+        other['profilePicture'] ?? // ✅ User confirmed key
+        "";
+        
+    if (avatarUrl.isEmpty) {
+      avatarUrl = "https://i.pravatar.cc/150?img=12";
+    }
+    // Check if we need to prepend base url? (Assuming full url for now based on context)
+
     return ChatModel(
       id: json['_id'],
       name: other['fullName'] ?? "Unknown",
       lastMessage: json['lastMessage']?['text'] ?? "",
       time: json['lastMessage']?['createdAt'] ?? "",
       unreadCount: json['unreadCount'] ?? 0,
-      avatar: other['avatar'] ??
-          "https://i.pravatar.cc/150?img=12",
+      avatar: avatarUrl,
     );
   }
 
