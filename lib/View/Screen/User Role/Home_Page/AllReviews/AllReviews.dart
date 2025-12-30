@@ -257,7 +257,7 @@ class _AllreviewsState extends State<Allreviews> {
                                 /// Profile Image
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(20.r),
-                                  child: review.reviewerEmail.startsWith("http")
+                                  child: review.reviewerProfile.startsWith("http")
                                       ? Image.network(
                                     review.reviewerProfile,
                                     height: 40.h,
@@ -328,6 +328,7 @@ class _AllreviewsState extends State<Allreviews> {
                   },
                 );
               }),
+
 
             ],
           ),

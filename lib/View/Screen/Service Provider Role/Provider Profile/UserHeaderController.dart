@@ -32,6 +32,8 @@ class UserHeaderController extends GetxController {
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
+      print("========================>..............=====================");
+      print(token);
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.userMe),
         headers: {

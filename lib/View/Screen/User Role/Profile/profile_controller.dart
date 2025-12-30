@@ -19,16 +19,20 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserHeader();
+    update();
     fetchStripeAccountStatus();
   }
 
   // ================= USER =================
 
   Future<void> fetchUserHeader() async {
+    update();
     try {
       isLoading(true);
       final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      print(token);
 
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.userMe),
@@ -41,6 +45,7 @@ class ProfileController extends GetxController {
       if (res.statusCode == 200) {
         user.value = UserModel.fromJson(jsonDecode(res.body)['data']);
       }
+      update();
     } finally {
       isLoading(false);
     }
@@ -49,11 +54,12 @@ class ProfileController extends GetxController {
   // ================= STRIPE STATUS =================
 
   Future<void> fetchStripeAccountStatus() async {
+    update();
     try {
       isStripeLoading(true);
 
       final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccount),
@@ -69,6 +75,7 @@ class ProfileController extends GetxController {
       } else {
         isStripeConnected.value = false;
       }
+      update();
     } finally {
       isStripeLoading(false);
     }
@@ -77,11 +84,12 @@ class ProfileController extends GetxController {
   // ================= CREATE SESSION =================
 
   Future<void> createStripeAccountSession() async {
+    update();
     try {
       isStripeLoading(true);
 
       final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
       final res = await http.post(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccountSession),
@@ -108,9 +116,8 @@ class ProfileController extends GetxController {
         Get.snackbar("Error", "Stripe URL missing");
         return;
       }
-
+      update();
       await _openStripeLink(url);
-
     } catch (e) {
       print("❌ Stripe Error => $e");
       Get.snackbar("Error", "Stripe onboarding failed");
@@ -118,10 +125,6 @@ class ProfileController extends GetxController {
       isStripeLoading(false);
     }
   }
-
-
-
-
 
   Future<void> _openStripeLink(String url) async {
     try {
@@ -143,9 +146,5 @@ class ProfileController extends GetxController {
     }
   }
 
-
-
   // ================= ONBOARDING (APP MODE) =================
-
-
 }

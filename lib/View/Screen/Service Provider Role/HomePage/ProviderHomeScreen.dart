@@ -59,7 +59,7 @@ class ProviderHomeScreen extends StatelessWidget {
                   text: TextSpan(
                     style:  TextStyle(color: Colors.black, fontSize: 24.sp, fontWeight: FontWeight.w700),
                     children: [
-                      const TextSpan(text: 'Welcome, '),
+                      const TextSpan(text: 'Welcome '),
                       TextSpan(
                         text: controller.name.value,
                         style:  TextStyle( fontSize: 24.sp,  fontWeight: FontWeight.w400),

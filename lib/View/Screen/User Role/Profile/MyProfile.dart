@@ -43,6 +43,7 @@ class ProfilePage extends StatelessWidget {
 
             Obx(() {
               if (controller.isLoading.value) {
+
                 return const CircularProgressIndicator();
               }
 
@@ -74,7 +75,7 @@ class ProfilePage extends StatelessWidget {
                           Icon(Icons.star, size: 18.sp, color: Colors.orange),
                           SizedBox(width: 5.w),
                           Text(
-                            user.review.toString(),
+                          user.review?.averageRating.toString() ?? '0',
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.orange,

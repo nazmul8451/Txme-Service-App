@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
 import 'AllReviewModel.dart';
 
@@ -9,20 +10,35 @@ class AllReviewModelController extends GetxController {
   final reviewList = <AllReviewModel>[].obs;
   final isLoading = false.obs;
 
+  late String providerId;
+
   @override
   void onInit() {
     super.onInit();
-    fetchAllReviews();
+
+    ///  route থেকে ID receive
+    providerId = Get.arguments;
+
+    fetchAllReviews(providerId);
   }
 
-  Future<void> fetchAllReviews() async {
+  Future<void> fetchAllReviews(String providerId) async {
     try {
       isLoading.value = true;
 
+      final token =
+      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+
+      final url =
+          "${ApiConstant.baseUrl}${ApiConstant.postReview}/$providerId";
+
+      print("REVIEW API => $url");
+
       final response = await http.get(
-        Uri.parse(ApiConstant.baseUrl + ApiConstant.postReview),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
         },
       );
 
@@ -31,9 +47,10 @@ class AllReviewModelController extends GetxController {
 
         if (decoded['success'] == true) {
           final List data = decoded['data'];
-
           reviewList.value =
               data.map((e) => AllReviewModel.fromJson(e)).toList();
+        } else {
+          Get.snackbar("Error", decoded['message'] ?? "Failed");
         }
       } else {
         Get.snackbar("Error", "Failed to load reviews");
@@ -45,3 +62,4 @@ class AllReviewModelController extends GetxController {
     }
   }
 }
+

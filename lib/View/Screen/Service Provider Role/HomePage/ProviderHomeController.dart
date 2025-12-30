@@ -12,7 +12,7 @@ import '../MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
 class ProviderHomeController extends GetxController {
 
   var searchController = TextEditingController();
-  var name = "Sakil".obs;
+  var name = "".obs;
   var notificationCount = 3.obs;
 
   final isLoading = false.obs;

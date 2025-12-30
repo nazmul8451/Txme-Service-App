@@ -10,6 +10,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
 import '../Availablebalance/WalletController.dart';
+import '../Top_up/TopUpController.dart';
 import '../transaction/transaction_details_screen.dart';
 import '../transaction/transaction_type.dart';
 
@@ -26,16 +27,17 @@ class _PaymentdoneState extends State<Paymentdone> {
   late final double newBalance;
   late final String transactionId;
 
+
+
   @override
   void initState() {
     super.initState();
-
     final args = Get.arguments ?? {};
 
     amount = args["amount"] ?? 0;
     currency = args["currency"] ?? "EUR";
-    newBalance = (args["newBalance"] ?? 0).toDouble();
-    transactionId = args["transactionId"] ?? "N/A";
+    newBalance = (args["amount"] ?? 0).toDouble();
+    transactionId = args["wallet"] ?? "N/A";
   }
 
   @override
@@ -45,17 +47,6 @@ class _PaymentdoneState extends State<Paymentdone> {
       appBar: AppBar(
         backgroundColor: AppColors.FFFFFF,
         leading: const SizedBox(),
-        actions: [
-          IconButton(
-            onPressed: () => Get.back(),
-            icon: SvgPicture.asset(
-              AppIcons.xIcons,
-              height: 24.h,
-              width: 24.w,
-              color: AppColors.red601,
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -94,7 +85,7 @@ class _PaymentdoneState extends State<Paymentdone> {
 
               SizedBox(height: 20.h),
 
-              /// 💰 Amount (Dynamic)
+              ///  Amount (Dynamic)
               Text(
                 "€${amount.toStringAsFixed(2)}",
                 style: TextStyle(
@@ -121,7 +112,7 @@ class _PaymentdoneState extends State<Paymentdone> {
                 child: Column(
                   children: [
                     _infoRow(
-                      "New wallet balance:",
+                      "New balance:",
                       "€${newBalance.toStringAsFixed(2)}",
                     ),
                     SizedBox(height: 12.h),

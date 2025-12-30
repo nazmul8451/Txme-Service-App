@@ -29,6 +29,11 @@ class _DetailsPageState extends State<DetailsPage> {
   bool showAll = false;
 
   @override
+  void initState() {
+    super.initState();
+    controller.fetchAllReviews(widget.provider.id);
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -336,13 +341,13 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-
-
-                            Get.toNamed(AppRoute.allreviews);
-
+                            Get.toNamed(
+                              AppRoute.allreviews,
+                              arguments: widget.provider.id, // 🔥 providerId pass
+                            );
                           },
                           child: Text(
-                             "Show all",
+                            "Show all",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16.sp,
@@ -352,69 +357,82 @@ class _DetailsPageState extends State<DetailsPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    // Column(
-                    //   children: (showAll
-                    //           ? widget.provider.rating
-                    //           : widget.provider.totalReviews.toList())
-                    //       .map((review) {
-                    //     return Padding(
-                    //       padding: EdgeInsets.only(bottom: 10.h),
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Row(
-                    //             children: [
-                    //               ClipRRect(
-                    //                 borderRadius: BorderRadius.circular(12.r),
-                    //                 child: review.profile.startsWith("http")
-                    //                     ? Image.network(
-                    //                         review.profile,
-                    //                         width: 24.w,
-                    //                         height: 24.h,
-                    //                         fit: BoxFit.cover,
-                    //                       )
-                    //                     : Image.asset(
-                    //                         review.profile,
-                    //                         width: 24.w,
-                    //                         height: 24.h,
-                    //                         fit: BoxFit.cover,
-                    //                       ),
-                    //               ),
-                    //               SizedBox(width: 8.w),
-                    //               Text(
-                    //                 review.name,
-                    //                 style: TextStyle(
-                    //                     fontWeight: FontWeight.bold,
-                    //                     fontSize: 14.sp),
-                    //               ),
-                    //               Spacer(),
-                    //               Text(
-                    //                 review.date,
-                    //                 style: TextStyle(
-                    //                     fontSize: 12.sp,
-                    //                     color: Colors.grey[600]),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //
-                    //           // ⭐ Rating stars added here
-                    //           SizedBox(height: 4.h),
-                    //           buildStarRating(review
-                    //               .rating), // <-- review.rating অনুযায়ী star
-                    //
-                    //           SizedBox(height: 4.h),
-                    //           Text(
-                    //             review.comment,
-                    //             style: TextStyle(
-                    //                 fontSize: 12.sp, color: Colors.grey[700]),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     );
-                    //   }).toList(),
-                    // )
+
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      if (controller.reviewList.isEmpty) {
+                        return Text(
+                          "No reviews yet",
+                          style: TextStyle(color: Colors.grey),
+                        );
+                      }
+
+                      final reviews = showAll
+                          ? controller.reviewList
+                          : controller.reviewList.take(3).toList();
+
+                      return Column(
+                        children: reviews.map((review) {
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 10.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: review.reviewerProfile.startsWith("http")
+                                          ? Image.network(
+                                        review.reviewerProfile,
+                                        width: 24.w,
+                                        height: 24.h,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : Image.asset(
+                                        AppImg.editProfile,
+                                        width: 24.w,
+                                        height: 24.h,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      review.reviewerName,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.sp),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      review.createdAt, //  formatted date
+                                      style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height: 4.h),
+                                buildStarRating(review.rating),
+
+                                SizedBox(height: 4.h),
+                                Text(
+                                  review.comment,
+                                  style: TextStyle(
+                                      fontSize: 12.sp, color: Colors.grey[700]),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }),
                   ],
                 ),
+
 
                 SizedBox(
                   height: 20.h,

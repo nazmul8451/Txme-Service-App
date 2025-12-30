@@ -78,7 +78,7 @@ class ProviderProfilePage extends StatelessWidget {
                           const Icon(Icons.star,
                               size: 18, color: Colors.orange),
                           const SizedBox(width: 5),
-                          Text(user.review.toString()),
+                          Text(user.review?.averageRating.toString() ?? '0'),
                         ],
                       ),
                     ],

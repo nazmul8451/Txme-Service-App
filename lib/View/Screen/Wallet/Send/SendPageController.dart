@@ -19,7 +19,7 @@ class Sendpagecontroller extends GetxController {
   final isSending = false.obs;
 
   /// ================= SEND WALLET MONEY =================
-  Future<void> sendMoney() async {
+  Future<bool> sendMoney() async {
     try {
       isSending(true);
 
@@ -28,7 +28,7 @@ class Sendpagecontroller extends GetxController {
 
       if (token == null) {
         Get.snackbar("Error", "User not authenticated");
-        return;
+        return false;
       }
 
       final receiver = nameController.text.trim();
@@ -36,13 +36,13 @@ class Sendpagecontroller extends GetxController {
 
       if (receiver.isEmpty || amountText.isEmpty) {
         Get.snackbar("Error", "Receiver & amount required");
-        return;
+        return false;
       }
 
       final amount = double.tryParse(amountText);
       if (amount == null || amount <= 0) {
         Get.snackbar("Error", "Invalid amount");
-        return;
+        return false;
       }
 
       final res = await http.post(
@@ -58,33 +58,31 @@ class Sendpagecontroller extends GetxController {
         }),
       );
 
-      print("STATUS => ${res.statusCode}");
-      print("BODY => ${res.body}");
-
       final decoded = jsonDecode(res.body);
 
       if (res.statusCode == 200 && decoded['success'] == true) {
         Get.snackbar("Success", "Money sent successfully ✅");
 
-        // Clear inputs
         ammountController.clear();
         nameController.clear();
         messageController.clear();
 
-        // Optionally refresh balance
+        return true; // ✅ SUCCESS
       } else {
         Get.snackbar(
           "Error",
           decoded['message'] ?? "Transaction failed",
         );
+        return false;
       }
     } catch (e) {
-      print("❌ Wallet Send Error => $e");
       Get.snackbar("Error", "Something went wrong");
+      return false;
     } finally {
       isSending(false);
     }
   }
+
 
   /// ================= FETCH BALANCE (Dummy for now) =================
 

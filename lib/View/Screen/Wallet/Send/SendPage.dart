@@ -101,37 +101,36 @@ class _SendpageState extends State<Sendpage> {
 
 
               // Add New Card Button
-          Obx(() => CustomButton(
-            height: 56.h,
-            width: 353.w,
-            BoxDecoration: BoxDecoration(
-              color: AppColors.red601,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Center(
-              child: controller.isSending.value
-                  ? const CircularProgressIndicator(
-                color: Colors.white,
-              )
-                  : Text(
-                "Send",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.FFFFFF,
+              Obx(() => CustomButton(
+                height: 56.h,
+                width: 353.w,
+                BoxDecoration: BoxDecoration(
+                  color: AppColors.red601,
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
-              ),
-            ),
-            onTap: controller.isSending.value
-                ? null
-                : () async {
-              await controller.sendMoney();
+                child: Center(
+                  child: controller.isSending.value
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                    "Send",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.FFFFFF,
+                    ),
+                  ),
+                ),
+                onTap: controller.isSending.value
+                    ? null
+                    : () async {
+                  final success = await controller.sendMoney();
 
-              if (!controller.isSending.value) {
-                Get.toNamed(AppRoute.paymentdone);
-              }
-            },
-          )),
+                  if (success) {
+                    Get.toNamed(AppRoute.paymentdone); // ✅ ONLY IF 200
+                  }
+                },
+              )),
+
 
           ],
           )),

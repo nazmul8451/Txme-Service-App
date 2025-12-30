@@ -28,10 +28,6 @@ class _TransactionfailedState extends State<Transactionfailed> {
           padding: EdgeInsets.only(left: 40.w),
           child: Text("Transaction Details"),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Get.back(),
-        ),
       ),
       body: Column(
         children: [

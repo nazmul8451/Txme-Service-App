@@ -6,10 +6,12 @@ import '../../../../../../service/api_url.dart';
 import '../../../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../Chats/model/chat_model.dart';
 import '../../../Chats/view/chat_details_page.dart';
+import '../AllReviews/AllReviewModel.dart';
 
 class Providersdetailscontroller extends GetxController {
   final isUserSelected = true.obs;
   final isLoading = false.obs;
+  final reviewList = <AllReviewModel>[].obs;
 
   void selectRequest() {
     print("🔹 selectRequest() called");
@@ -62,6 +64,42 @@ class Providersdetailscontroller extends GetxController {
         Get.to(() => ChatDetailsPage(chat: chat));
       } else {
         Get.snackbar("Error", "Chat create failed");
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchAllReviews(String providerId) async {
+    try {
+      isLoading.value = true;
+
+      final token =
+      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+
+      final response = await http.get(
+        Uri.parse(
+          "${ApiConstant.baseUrl}${ApiConstant.postReview}/$providerId",
+        ),
+
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+
+        if (decoded['success'] == true) {
+          final List data = decoded['data'];
+          reviewList.value =
+              data.map((e) => AllReviewModel.fromJson(e)).toList();
+        }
+      } else {
+        Get.snackbar("Error", "Failed to load reviews");
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());

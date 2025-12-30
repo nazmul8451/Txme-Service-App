@@ -87,7 +87,7 @@ class _HomepageState extends State<Homepage> {
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 24.sp),
             ),
             Text(
-              AppString.Oliver,
+              "",
               style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700),
             )
           ],

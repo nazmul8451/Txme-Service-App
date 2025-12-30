@@ -11,7 +11,7 @@ class AllReviewModel {
   final String service;
   final double rating;
   final String comment;
-  final String createdAt;
+  final String createdAt; // ✅ formatted date only
 
   AllReviewModel({
     required this.id,
@@ -28,6 +28,14 @@ class AllReviewModel {
   factory AllReviewModel.fromJson(Map<String, dynamic> json) {
     final reviewer = json['reviewer'] ?? {};
 
+    /// ✅ Date formatting (YYYY-MM-DD)
+    String formattedDate = "";
+    if (json['createdAt'] != null) {
+      final dateTime = DateTime.parse(json['createdAt']);
+      formattedDate =
+      "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+    }
+
     return AllReviewModel(
       id: json['_id'] ?? '',
 
@@ -39,7 +47,7 @@ class AllReviewModel {
       service: json['service'] ?? '',
       rating: (json['rating'] ?? 0).toDouble(),
       comment: json['comment'] ?? '',
-      createdAt: json['createdAt'] ?? '',
+      createdAt: formattedDate, // ✅ only date
     );
   }
 }
