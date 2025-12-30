@@ -34,182 +34,193 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// ================= PROFILE HEADER =================
+      body: RefreshIndicator(
+        color: AppColors.red601,
+        backgroundColor: Colors.white,
+        onRefresh: () async {
+          await Future.wait([
+            controller.fetchUserHeader(),
+            controller.fetchStripeAccountStatus(),
+          ]);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// ================= PROFILE HEADER =================
 
-            Obx(() {
-              if (controller.isLoading.value) {
+              Obx(() {
+                if (controller.isLoading.value) {
 
-                return const CircularProgressIndicator();
-              }
+                  return const CircularProgressIndicator();
+                }
 
-              final user = controller.user.value;
-              if (user == null) return const SizedBox();
+                final user = controller.user.value;
+                if (user == null) return const SizedBox();
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundImage: NetworkImage(user.profileImageUrl),
-                  ),
-                  SizedBox(width: 16.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 12.h),
-                      Text(
-                        user.fullName,
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Row(
-                        children: [
-                          Icon(Icons.star, size: 18.sp, color: Colors.orange),
-                          SizedBox(width: 5.w),
-                          Text(
-                          user.review?.averageRating.toString() ?? '0',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.orange,
-                              fontWeight: FontWeight.w500,
-                            ),
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundImage: NetworkImage(user.profileImageUrl),
+                    ),
+                    SizedBox(width: 16.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 12.h),
+                        Text(
+                          user.fullName,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              );
-            }),
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Icon(Icons.star, size: 18.sp, color: Colors.orange),
+                            SizedBox(width: 5.w),
+                            Text(
+                            user.review?.averageRating.toString() ?? '0',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                );
+              }),
 
-            SizedBox(height: 22.h),
+              SizedBox(height: 22.h),
 
-            /// ================= PROFILE INFORMATION =================
-            Text(
-              "Profile information",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                color: const Color(0xff565656),
+              /// ================= PROFILE INFORMATION =================
+              Text(
+                "Profile information",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.sp,
+                  color: const Color(0xff565656),
+                ),
               ),
-            ),
-            SizedBox(height: 12.h),
+              SizedBox(height: 12.h),
 
-            profileMenu(
-              onTap: () => Get.to(() => EditProfilePage()),
-              img: AppImg.editProfile,
-              title: "Edit Profile",
-            ),
-            profileMenu(
-              onTap: () => Get.to(() => VerificationPage()),
-              img: AppImg.verification,
-              title: "Verification",
-            ),
-            profileMenu(
-              onTap: () {
-                Get.toNamed(AppRoute.walletpage);
-              },
-              img: AppImg.wallet,
-              title: "Wallet",
-            ),
+              profileMenu(
+                onTap: () => Get.to(() => EditProfilePage()),
+                img: AppImg.editProfile,
+                title: "Edit Profile",
+              ),
+              profileMenu(
+                onTap: () => Get.to(() => VerificationPage()),
+                img: AppImg.verification,
+                title: "Verification",
+              ),
+              profileMenu(
+                onTap: () {
+                  Get.toNamed(AppRoute.walletpage);
+                },
+                img: AppImg.wallet,
+                title: "Wallet",
+              ),
 
-        Obx(() {
-          if (controller.isStripeLoading.value) {
-            return CircularProgressIndicator();
-          }
+          Obx(() {
+            if (controller.isStripeLoading.value) {
+              return CircularProgressIndicator();
+            }
 
-          if (controller.isStripeConnected.value) {
-            return Text("Stripe Connected ✅");
-          }
+            if (controller.isStripeConnected.value) {
+              return Text("Stripe Connected ✅");
+            }
 
-          return profileMenu(
-            onTap: controller.createStripeAccountSession,
-            img: AppImg.stripeImg,
-            title: "Connect Stripe",
-          );
-        }),
-
+            return profileMenu(
+              onTap: controller.createStripeAccountSession,
+              img: AppImg.stripeImg,
+              title: "Connect Stripe",
+            );
+          }),
 
 
 
-        SizedBox(height: 20.h),
 
-            /// ================= GENERAL PREFERENCES =================
-            Text(
-              "General Preferences",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15.sp,
-                  color: Colors.black87),
-            ),
-            SizedBox(height: 12.h),
+          SizedBox(height: 20.h),
 
-            profileMenu(
-              onTap: () => Get.to(() => NotificationSettings()),
-              img: AppImg.notification,
-              title: "Notification",
-            ),
-            profileMenu(
-              onTap: () => Get.to(
-                  () => InvoiceListPage()), // pass the page, not the controller
-              img: AppImg.pastInvoices,
-              title: "Past Invoices",
-            ),
+              /// ================= GENERAL PREFERENCES =================
+              Text(
+                "General Preferences",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                    color: Colors.black87),
+              ),
+              SizedBox(height: 12.h),
 
-            faqItem(),
-            logoutItem(),
+              profileMenu(
+                onTap: () => Get.to(() => NotificationSettings()),
+                img: AppImg.notification,
+                title: "Notification",
+              ),
+              profileMenu(
+                onTap: () => Get.to(
+                    () => InvoiceListPage()), // pass the page, not the controller
+                img: AppImg.pastInvoices,
+                title: "Past Invoices",
+              ),
 
-            SizedBox(height: 20.h),
+              faqItem(),
+              logoutItem(),
 
-            /// ================= SWITCH TO PROVIDER MODE =================
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Image.asset(AppImg.Change, height: 40.h, width: 40.w),
-            //     SizedBox(width: 6.w),
-            //     Text(
-            //       "Change to Service Provider Mode",
-            //       style: TextStyle(
-            //         color: AppColors.gray,
-            //         fontWeight: FontWeight.w500,
-            //         fontSize: 16.sp,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            //
-            // SizedBox(height: 20.h),
-            //
-            // CustomButton(
-            //   height: 56.h,
-            //   width: 353.w,
-            //   BoxDecoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(10.r),
-            //     border: Border.all(color: AppColors.red601),
-            //   ),
-            //   child: Center(
-            //     child: Text(
-            //       "Switch",
-            //       style: TextStyle(
-            //         color: AppColors.black700,
-            //         fontWeight: FontWeight.w700,
-            //         fontSize: 16.sp,
-            //       ),
-            //     ),
-            //   ),
-            //   onTap: () {},
-            // ),
+              SizedBox(height: 20.h),
 
-            SizedBox(height: 30.h),
-          ],
+              /// ================= SWITCH TO PROVIDER MODE =================
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Image.asset(AppImg.Change, height: 40.h, width: 40.w),
+              //     SizedBox(width: 6.w),
+              //     Text(
+              //       "Change to Service Provider Mode",
+              //       style: TextStyle(
+              //         color: AppColors.gray,
+              //         fontWeight: FontWeight.w500,
+              //         fontSize: 16.sp,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              //
+              // SizedBox(height: 20.h),
+              //
+              // CustomButton(
+              //   height: 56.h,
+              //   width: 353.w,
+              //   BoxDecoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10.r),
+              //     border: Border.all(color: AppColors.red601),
+              //   ),
+              //   child: Center(
+              //     child: Text(
+              //       "Switch",
+              //       style: TextStyle(
+              //         color: AppColors.black700,
+              //         fontWeight: FontWeight.w700,
+              //         fontSize: 16.sp,
+              //       ),
+              //     ),
+              //   ),
+              //   onTap: () {},
+              // ),
+
+              SizedBox(height: 30.h),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),

@@ -32,238 +32,249 @@ class ProviderProfilePage extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// PROFILE HEADER
+      body: RefreshIndicator(
+        color: const Color(0xFFFF5A36), // AppColors.red601
+        backgroundColor: Colors.white,
+        onRefresh: () async {
+          await Future.wait([
+            controller.fetchUserHeader(),
+            controller.fetchStripeAccountStatus(),
+          ]);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// PROFILE HEADER
 
-            Obx(() {
-              if (controller.isLoading.value) {
-                return const CircularProgressIndicator();
-              }
-              final user = controller.user.value;
-              if (user == null) return const SizedBox();
+              Obx(() {
+                if (controller.isLoading.value) {
+                  return const CircularProgressIndicator();
+                }
+                final user = controller.user.value;
+                if (user == null) return const SizedBox();
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundImage: NetworkImage(user.profileImageUrl),
-                  ),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 12),
-                      Text(
-                        user.fullName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 45,
+                      backgroundImage: NetworkImage(user.profileImageUrl),
+                    ),
+                    const SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          user.fullName,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
+                        const SizedBox(height: 4),
 
-                      Text(
-                        user.providerProfile?.designation ?? '',
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                        Text(
+                          user.providerProfile?.designation ?? '',
+                          style: const TextStyle(fontSize: 14),
+                        ),
 
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(Icons.star,
-                              size: 18, color: Colors.orange),
-                          const SizedBox(width: 5),
-                          Text(user.review?.averageRating.toString() ?? '0'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            }),
-
-            const SizedBox(height: 22),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFFF5A36), width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _statItem(
-                    image: AppImg.earnings,
-                    value: "€355",
-                    label: "Rating",
-                  ),
-                  _statItem(
-                    image: AppImg.active,
-                    value: "2 Orders",
-                    label: "Completed",
-                  ),
-                  _statItem(
-                    image: AppImg.completed,
-                    value: "4 Years",
-                    label: "Experience",
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 22),
-
-            const Text(
-              "Profile information",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            GestureDetector(
-              onTap: () => Get.to(() => EditProfilePage()),
-              child: menuItem(img: AppImg.editProfile, title: "Edit Profile"),
-            ),
-
-            GestureDetector(
-              onTap: () => Get.to(() => Editprofileprofession()),
-              child: menuItem(img: AppImg.profession, title: "Profession"),
-            ),
-
-            GestureDetector(
-              onTap: () => Get.to(() => VerificationPage()),
-              child: menuItem(img: AppImg.verification, title: "Verification"),
-            ),
-
-            // menuItem(img: AppImg.faceIdImg, title: "Setup FaceID"),
-
-            const SizedBox(height: 20),
-            const Text(
-              "Wallet & Invoice",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: () {
-                Get.toNamed(AppRoute.walletpage);
-              },
-              child: menuItem(img: AppImg.wallet, title: "Wallet"),
-            ),
-
-
-            Obx(() {
-              if (controller.isStripeLoading.value) {
-                return CircularProgressIndicator();
-              }
-
-              if (controller.isStripeConnected.value) {
-                return Text("");
-              }
-
-
-
-                return GestureDetector(
-                  onTap: controller.createStripeAccountSession,
-                  child: menuItem(img: AppImg.stripeImg, title: "Connect Stripe",),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(Icons.star,
+                                size: 18, color: Colors.orange),
+                            const SizedBox(width: 5),
+                            Text(user.review?.averageRating.toString() ?? '0'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 );
-              return const SizedBox();
-            }),
+              }),
 
-            GestureDetector(
-              onTap: () => Get.to(() => InvoiceListPage()),
-              child: menuItem(img: AppImg.pastInvoices, title: "Past Invoices"),
-            ),
+              const SizedBox(height: 22),
 
-            const SizedBox(height: 20),
-            const Text(
-              "General Preferences",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Colors.black87,
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFFF5A36), width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _statItem(
+                      image: AppImg.earnings,
+                      value: "€355",
+                      label: "Rating",
+                    ),
+                    _statItem(
+                      image: AppImg.active,
+                      value: "2 Orders",
+                      label: "Completed",
+                    ),
+                    _statItem(
+                      image: AppImg.completed,
+                      value: "4 Years",
+                      label: "Experience",
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
 
-            GestureDetector(
-              onTap: () => Get.to(() => NotificationSettings()),
-              child: menuItem(img: AppImg.notification, title: "Notification"),
-            ),
+              const SizedBox(height: 22),
 
-            faqItem(),
+              const Text(
+                "Profile information",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
 
-            GestureDetector(
-              onTap: () => Get.dialog(const CustomLogoutPopup(),
-                  barrierDismissible: false),
-              child: logoutItem(),
-            ),
+              GestureDetector(
+                onTap: () => Get.to(() => EditProfilePage()),
+                child: menuItem(img: AppImg.editProfile, title: "Edit Profile"),
+              ),
 
-            const SizedBox(height: 20),
-            //
-            // /// SWITCH MODE
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Image.asset(
-            //       AppImg.Change,
-            //     ),
-            //     SizedBox(width: 6),
-            //     Text(
-            //       "Change to Service Provider Mode",
-            //       style: TextStyle(
-            //         color: Colors.blue,
-            //         fontWeight: FontWeight.w600,
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            //
-            // const SizedBox(height: 20),
-            //
-            // GestureDetector(
-            //   onTap: () => Get.offAll(() => const Homepage()), // switch mode
-            //   child: Container(
-            //     width: double.infinity,
-            //     padding: const EdgeInsets.symmetric(vertical: 14),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(10),
-            //       border: Border.all(color: Colors.redAccent),
-            //     ),
-            //     child: const Center(
-            //       child: Text(
-            //         "Switch",
-            //         style: TextStyle(
-            //           color: Color(0xff000000),
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+              GestureDetector(
+                onTap: () => Get.to(() => Editprofileprofession()),
+                child: menuItem(img: AppImg.profession, title: "Profession"),
+              ),
 
-            const SizedBox(height: 30),
-          ],
+              GestureDetector(
+                onTap: () => Get.to(() => VerificationPage()),
+                child: menuItem(img: AppImg.verification, title: "Verification"),
+              ),
+
+              // menuItem(img: AppImg.faceIdImg, title: "Setup FaceID"),
+
+              const SizedBox(height: 20),
+              const Text(
+                "Wallet & Invoice",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoute.walletpage);
+                },
+                child: menuItem(img: AppImg.wallet, title: "Wallet"),
+              ),
+
+
+              Obx(() {
+                if (controller.isStripeLoading.value) {
+                  return CircularProgressIndicator();
+                }
+
+                if (controller.isStripeConnected.value) {
+                  return Text("");
+                }
+
+
+
+                  return GestureDetector(
+                    onTap: controller.createStripeAccountSession,
+                    child: menuItem(img: AppImg.stripeImg, title: "Connect Stripe",),
+                  );
+                return const SizedBox();
+              }),
+
+              GestureDetector(
+                onTap: () => Get.to(() => InvoiceListPage()),
+                child: menuItem(img: AppImg.pastInvoices, title: "Past Invoices"),
+              ),
+
+              const SizedBox(height: 20),
+              const Text(
+                "General Preferences",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              GestureDetector(
+                onTap: () => Get.to(() => NotificationSettings()),
+                child: menuItem(img: AppImg.notification, title: "Notification"),
+              ),
+
+              faqItem(),
+
+              GestureDetector(
+                onTap: () => Get.dialog(const CustomLogoutPopup(),
+                    barrierDismissible: false),
+                child: logoutItem(),
+              ),
+
+              const SizedBox(height: 20),
+              //
+              // /// SWITCH MODE
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Image.asset(
+              //       AppImg.Change,
+              //     ),
+              //     SizedBox(width: 6),
+              //     Text(
+              //       "Change to Service Provider Mode",
+              //       style: TextStyle(
+              //         color: Colors.blue,
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              //
+              // const SizedBox(height: 20),
+              //
+              // GestureDetector(
+              //   onTap: () => Get.offAll(() => const Homepage()), // switch mode
+              //   child: Container(
+              //     width: double.infinity,
+              //     padding: const EdgeInsets.symmetric(vertical: 14),
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(10),
+              //       border: Border.all(color: Colors.redAccent),
+              //     ),
+              //     child: const Center(
+              //       child: Text(
+              //         "Switch",
+              //         style: TextStyle(
+              //           color: Color(0xff000000),
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
