@@ -6,7 +6,7 @@ class ApiConstant {
 
   static const String socketUrl = baseUrl;
 
-  ///===================== SIGN UP =========================///
+  ///===================== SIGN UP =======================///
 
   static const String signUpSendEmailOtp =
       "$apiVersion/auth/send-email-otp";
