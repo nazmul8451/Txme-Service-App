@@ -94,10 +94,12 @@ class Topupcontroller extends GetxController {
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: clientSecret,
           merchantDisplayName: "TXME",
+
         ),
       );
 
       await Stripe.instance.presentPaymentSheet();
+
 
       ///  Payment success
       Get.snackbar(
@@ -108,7 +110,7 @@ class Topupcontroller extends GetxController {
 
       /// 👉 Done page + amount pass
       Get.offAllNamed(
-        AppRoute.paymentdone,
+        AppRoute.walletpage,
         arguments: {
           "amount": amount,
           "currency": "EUR",

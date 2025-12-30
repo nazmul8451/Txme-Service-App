@@ -123,13 +123,18 @@ class _SendpageState extends State<Sendpage> {
                 onTap: controller.isSending.value
                     ? null
                     : () async {
-                  final success = await controller.sendMoney();
+                  final transaction =
+                  await controller.sendMoney();
 
-                  if (success) {
-                    Get.toNamed(AppRoute.paymentdone); // ✅ ONLY IF 200
+                  if (transaction != null) {
+                    Get.toNamed(
+                      AppRoute.paymentdone,
+                      arguments: transaction, // 🔥 PASS DATA
+                    );
                   }
                 },
               )),
+
 
 
           ],

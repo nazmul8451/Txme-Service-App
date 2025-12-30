@@ -27,7 +27,7 @@ class BookingSchedulePage extends GetView<BookingScheduleController> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Good Morning, Sady",
+                "Good Morning",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

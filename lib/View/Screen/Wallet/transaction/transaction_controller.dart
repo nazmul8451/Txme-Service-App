@@ -1,7 +1,11 @@
 import 'package:get/get.dart';
+import '../WalletTransaction.dart';
 import 'transaction_type.dart';
 
 class TransactionDetailsController extends GetxController {
+
+  final WalletTransaction tx = Get.arguments as WalletTransaction;
+
   final TransactionType type;
 
   TransactionDetailsController(this.type);
@@ -73,16 +77,16 @@ class TransactionDetailsController extends GetxController {
   }
 
   Future<void> sendApi() async {
-    await Future.delayed(const Duration(seconds: 1));
-    title.value = "Send";
-    amount.value = "€50.00";
-    status.value = "Successful";
-    dateTime.value = "Oct 26, 2025 | 10:34 AM";
-    paymentMethod.value = "Wallet";
-    transactionId.value = "TXN_SEND_003";
-    amount2.value = "€50.00";
-    fee.value = "€00.00:";
-    total.value = "€50.00";
+    await Future.delayed(const Duration(milliseconds: 500));
+    title.value = tx.type;
+    amount.value = "€${tx.amount}";
+    status.value = tx.status;
+    dateTime.value = tx.createdAt;
+    paymentMethod.value = tx.wallet;
+    transactionId.value = tx.id;
+    amount2.value = "€${tx.amount}";
+    fee.value =  "€0.00";
+    total.value = "€${tx.amount}";
   }
 
   Future<void> receiveApi() async {

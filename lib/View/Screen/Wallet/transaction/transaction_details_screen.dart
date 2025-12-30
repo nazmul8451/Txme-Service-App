@@ -6,13 +6,17 @@ import 'package:txme_app/Utils/AppIcons/app_icons.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import '../WalletTransaction.dart';
 import 'transaction_controller.dart';
 import 'transaction_type.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
   final TransactionType type;
 
-  const TransactionDetailsScreen({
+  final WalletTransaction tx =
+  Get.arguments as WalletTransaction;
+
+   TransactionDetailsScreen({
     super.key,
     required this.type,
   });

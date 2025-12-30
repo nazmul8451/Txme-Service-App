@@ -11,6 +11,7 @@ import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
 import '../Availablebalance/WalletController.dart';
 import '../Top_up/TopUpController.dart';
+import '../WalletTransaction.dart';
 import '../transaction/transaction_details_screen.dart';
 import '../transaction/transaction_type.dart';
 
@@ -22,23 +23,27 @@ class Paymentdone extends StatefulWidget {
 }
 
 class _PaymentdoneState extends State<Paymentdone> {
-  late final int amount;
-  late final String currency;
-  late final double newBalance;
-  late final String transactionId;
 
+  final WalletTransaction tx =
+  Get.arguments as WalletTransaction;
 
-
-  @override
-  void initState() {
-    super.initState();
-    final args = Get.arguments ?? {};
-
-    amount = args["amount"] ?? 0;
-    currency = args["currency"] ?? "EUR";
-    newBalance = (args["amount"] ?? 0).toDouble();
-    transactionId = args["wallet"] ?? "N/A";
-  }
+  // late final int amount;
+  // late final String currency;
+  // late final double newBalance;
+  // late final String transactionId;
+  //
+  //
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final args = Get.arguments ?? {};
+  //
+  //   amount = args["amount"] ?? 0;
+  //   currency = args["currency"] ?? "EUR";
+  //   newBalance = (args["amount"] ?? 0).toDouble();
+  //   transactionId = args["wallet"] ?? "N/A";
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +92,8 @@ class _PaymentdoneState extends State<Paymentdone> {
 
               ///  Amount (Dynamic)
               Text(
-                "€${amount.toStringAsFixed(2)}",
+                ("€ ${tx.amount}"),
+                // "€${amount.toStringAsFixed(2)}",
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 48.sp,
@@ -113,12 +119,12 @@ class _PaymentdoneState extends State<Paymentdone> {
                   children: [
                     _infoRow(
                       "New balance:",
-                      "€${newBalance.toStringAsFixed(2)}",
+                      ("€ ${tx.amount}"),
                     ),
                     SizedBox(height: 12.h),
                     _infoRow(
                       "Transaction ID:",
-                      transactionId,
+                      (  "${tx.id}"),
                     ),
                   ],
                 ),
@@ -149,14 +155,14 @@ class _PaymentdoneState extends State<Paymentdone> {
                   Get.find<WalletControllerA>().getAvailableBalance();
 
                   //  Go to wallet page
-                  Get.offAllNamed(AppRoute.walletpage);
+                  Get.offAllNamed(AppRoute.walletpage,);
                 },
 
               ),
 
               SizedBox(height: 12.h),
 
-              /// 👉 Transaction Details
+              ///  Transaction Details
               CustomButton(
                 height: 56.h,
                 width: 353.w,
@@ -176,9 +182,8 @@ class _PaymentdoneState extends State<Paymentdone> {
                 ),
                 onTap: () {
                   Get.to(
-                    const TransactionDetailsScreen(
-                      type: TransactionType.topUp,
-                    ),
+                        () => TransactionDetailsScreen(type: TransactionType.send),
+                    arguments: tx,
                   );
                 },
               ),
