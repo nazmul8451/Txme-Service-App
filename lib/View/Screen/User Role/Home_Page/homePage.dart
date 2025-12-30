@@ -93,9 +93,15 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+      //
+      body: RefreshIndicator(
+        onRefresh: _refreshHome,
+        color: AppColors.A7DFF,
+        backgroundColor: Colors.white,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Container(
@@ -305,11 +311,12 @@ class _HomepageState extends State<Homepage> {
               }),
 
               SizedBox(
-                height: 100,
-              )
+                height: 100.h,
+              ),
             ],
           ),
         ),
+      ),
       ),
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
