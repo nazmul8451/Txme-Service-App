@@ -1,25 +1,45 @@
 class AllReviewModel {
-  final String name;
-  final String profile;
-  final String date;
+  final String id;
+
+  /// Reviewer
+  final String reviewerId;
+  final String reviewerName;
+  final String reviewerEmail;
+  final String reviewerProfile;
+
+  /// Review info
+  final String service;
   final double rating;
   final String comment;
+  final String createdAt;
 
   AllReviewModel({
-    required this.name,
-    required this.profile,
-    required this.date,
+    required this.id,
+    required this.reviewerId,
+    required this.reviewerName,
+    required this.reviewerEmail,
+    required this.reviewerProfile,
+    required this.service,
     required this.rating,
     required this.comment,
+    required this.createdAt,
   });
 
   factory AllReviewModel.fromJson(Map<String, dynamic> json) {
+    final reviewer = json['reviewer'] ?? {};
+
     return AllReviewModel(
-      name: json["name"] ?? "",
-      profile: json["profile"] ?? "",
-      date: json["date"] ?? "",
-      rating: (json["rating"] ?? 0).toDouble(),
-      comment: json["comment"] ?? "",
+      id: json['_id'] ?? '',
+
+      reviewerId: reviewer['_id'] ?? '',
+      reviewerName: reviewer['fullName'] ?? 'Anonymous',
+      reviewerEmail: reviewer['email'] ?? '',
+      reviewerProfile: reviewer['profilePicture'] ?? '',
+
+      service: json['service'] ?? '',
+      rating: (json['rating'] ?? 0).toDouble(),
+      comment: json['comment'] ?? '',
+      createdAt: json['createdAt'] ?? '',
     );
   }
 }

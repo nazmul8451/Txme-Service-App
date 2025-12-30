@@ -1,25 +1,47 @@
+import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../../../service/api_url.dart';
 import 'AllReviewModel.dart';
 
-final List<AllReviewModel> reviewList = [
-  AllReviewModel(
-    name: "Sofia",
-    profile: "https://randomuser.me/api/portraits/women/50.jpg",
-    date: "10 Jan 2025",
-    rating: 5.0,
-    comment: "Great Michelle was a great client. Very clear instructions and prompt payment. Would work with her again! - John D.",
-  ),
-  AllReviewModel(
-    name: "Alice",
-    profile: "https://randomuser.me/api/portraits/women/21.jpg",
-    date: "5 Jan 2025",
-    rating: 4.5,
-    comment: "Great work! Michelle was a great client. Very clear instructions and prompt payment. Would work with her again! - John D.",
-  ),
-  AllReviewModel(
-    name: "Bob",
-    profile: "https://randomuser.me/api/portraits/men/33.jpg",
-    date: "12 Feb 2025",
-    rating: 4.7,
-    comment: "Highly professional! Michelle was a great client. Very clear instructions and prompt payment. Would work with her again! - John D.",
-  ),
-];
+class AllReviewModelController extends GetxController {
+  final reviewList = <AllReviewModel>[].obs;
+  final isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchAllReviews();
+  }
+
+  Future<void> fetchAllReviews() async {
+    try {
+      isLoading.value = true;
+
+      final response = await http.get(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.postReview),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+
+        if (decoded['success'] == true) {
+          final List data = decoded['data'];
+
+          reviewList.value =
+              data.map((e) => AllReviewModel.fromJson(e)).toList();
+        }
+      } else {
+        Get.snackbar("Error", "Failed to load reviews");
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}

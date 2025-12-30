@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
-import 'package:txme_app/View/Screen/User%20Role/Home_Page/homePage.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
@@ -44,7 +43,6 @@ class ProviderProfilePage extends StatelessWidget {
               if (controller.isLoading.value) {
                 return const CircularProgressIndicator();
               }
-
               final user = controller.user.value;
               if (user == null) return const SizedBox();
 
@@ -174,19 +172,23 @@ class ProviderProfilePage extends StatelessWidget {
             ),
 
 
-
-
-
             Obx(() {
-              if (!controller.isStripeConnected.value) {
+              if (controller.isStripeLoading.value) {
+                return CircularProgressIndicator();
+              }
+
+              if (controller.isStripeConnected.value) {
+                return Text("");
+              }
+
+
+
                 return GestureDetector(
                   onTap: controller.createStripeAccountSession,
                   child: menuItem(img: AppImg.stripeImg, title: "Connect Stripe",),
                 );
-              }
               return const SizedBox();
             }),
-
 
             GestureDetector(
               onTap: () => Get.to(() => InvoiceListPage()),

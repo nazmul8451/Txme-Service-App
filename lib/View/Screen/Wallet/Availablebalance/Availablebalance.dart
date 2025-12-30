@@ -32,12 +32,7 @@ class _AvailablebalanceState extends State<Availablebalance> {
             ),
           ],
         ),
-        child: Obx(() {
-          if (controller.isLoading.value) {
-            return const CircularProgressIndicator();
-          }
-
-          return Column(
+        child:  Column(
             children: [
               Text(
                 "Available balance",
@@ -63,8 +58,7 @@ class _AvailablebalanceState extends State<Availablebalance> {
                 );
               })
             ],
-          );
-        }),
+          ),
       ),
     );
   }

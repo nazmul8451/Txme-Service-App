@@ -6,6 +6,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import '../Availablebalance/Availablebalance.dart';
 import 'RequestPageController.dart';
 
 
@@ -35,47 +36,11 @@ class _RequestpageState extends State<Requestpage> {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Obx(() => Column(
+          child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Balance Card
-              Center(
-                child: Container(
-                  width: 259.w,
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF7F7F7),
-                    borderRadius: BorderRadius.circular(10.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Available balance",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(height: 20.sp),
-                      Text(
-                        controller.balance.value,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 48.sp,
-                            color: Color(0xff1F2937)),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              Availablebalance(),
 
               SizedBox(height: 20.sp),
 
@@ -95,8 +60,10 @@ class _RequestpageState extends State<Requestpage> {
               ),
               SizedBox(height: 20.h),
 
+
+              // Amount Input
               Text(
-                "Recipient Name",
+                "Recipient Email or Phone",
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -104,10 +71,9 @@ class _RequestpageState extends State<Requestpage> {
                 ),
               ),
               SizedBox(height: 8.h),
-
-              // Message Input
               TextField(
                 controller: controller.nameController,
+                decoration: _inputDecoration(hint: ""),
               ),
               SizedBox(height: 20.h),
 
@@ -161,7 +127,6 @@ class _RequestpageState extends State<Requestpage> {
             ],
           )),
         ),
-      ),
     );
   }
 

@@ -58,111 +58,95 @@ class UserHeaderController extends GetxController {
   Future<void> fetchStripeAccountStatus() async {
     try {
       isStripeLoading(true);
-      print("🟡 STRIPE STATUS: API CALL STARTED");
 
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-      final url = ApiConstant.baseUrl + ApiConstant.stripeAccount;
-      print("🌐 GET => $url");
-
       final res = await http.get(
-        Uri.parse(url),
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccount),
         headers: {
           "Authorization": "Bearer $token",
           "Accept": "application/json",
         },
       );
 
-      print("📡 STATUS => ${res.statusCode}");
-      print("📨 BODY => ${res.body}");
-
       if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-
         isStripeConnected.value =
-            decoded['data']?['isConnected'] ?? false;
-
-        print("🔗 isStripeConnected => ${isStripeConnected.value}");
+            jsonDecode(res.body)['data']?['isConnected'] ?? false;
       } else {
         isStripeConnected.value = false;
       }
-    } catch (e, stack) {
-      print("❌ STRIPE STATUS ERROR => $e");
-      print(stack);
-      isStripeConnected.value = false;
     } finally {
       isStripeLoading(false);
-      print("🟢 STRIPE STATUS: FINISHED");
     }
   }
 
-  // ================= CREATE STRIPE SESSION =================
+  // ================= CREATE SESSION =================
 
   Future<void> createStripeAccountSession() async {
     try {
       isStripeLoading(true);
-      print("🟡 STRIPE SESSION: START");
 
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-      final url = ApiConstant.baseUrl + ApiConstant.stripeAccountSession;
-      print("🌐 POST => $url");
-
       final res = await http.post(
-        Uri.parse(url),
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccountSession),
         headers: {
           "Authorization": "Bearer $token",
           "Accept": "application/json",
+          "Content-Type": "application/json",
         },
+        body: jsonEncode({}), // 🔥 EMPTY BODY (IMPORTANT)
       );
 
-      print("📡 STATUS => ${res.statusCode}");
-      print("📨 BODY => ${res.body}");
+      print("STATUS => ${res.statusCode}");
+      print("BODY => ${res.body}");
 
-      if (res.statusCode == 200) {
-        final decoded = jsonDecode(res.body);
-        final onboardingUrl = decoded['data']?['onboardingUrl'];
-
-        if (onboardingUrl != null && onboardingUrl.isNotEmpty) {
-          await startStripeOnboarding(onboardingUrl);
-        } else {
-          Get.snackbar("Error", "Onboarding URL missing");
-        }
-      } else {
-        Get.snackbar("Error", "Stripe session failed");
+      if (res.statusCode != 200) {
+        Get.snackbar("Error", "Stripe link create failed");
+        return;
       }
+
+      final data = jsonDecode(res.body)['data'];
+      final String? url = data?['url'];
+
+      if (url == null) {
+        Get.snackbar("Error", "Stripe URL missing");
+        return;
+      }
+
+      await _openStripeLink(url);
+
     } catch (e) {
-      print("❌ STRIPE SESSION ERROR => $e");
+      print("❌ Stripe Error => $e");
+      Get.snackbar("Error", "Stripe onboarding failed");
     } finally {
       isStripeLoading(false);
     }
   }
 
-  // ================= STRIPE ONBOARDING =================
 
-  Future<void> startStripeOnboarding(String url) async {
+
+
+
+  Future<void> _openStripeLink(String url) async {
     try {
-      print("🟢 OPEN STRIPE ONBOARDING");
-      print("🌐 $url");
-
       final uri = Uri.parse(url);
 
-      final launched = await launchUrl(
+      final canLaunch = await canLaunchUrl(uri);
+      if (!canLaunch) {
+        Get.snackbar("Error", "Cannot open browser");
+        return;
+      }
+
+      await launchUrl(
         uri,
         mode: LaunchMode.externalApplication,
       );
-
-      if (!launched) {
-        throw "Could not launch Stripe onboarding";
-      }
-
-      /// User app এ ফিরে আসলে refresh হবে
-      await Future.delayed(const Duration(seconds: 3));
-      await fetchStripeAccountStatus();
     } catch (e) {
-      print("❌ STRIPE ONBOARDING ERROR => $e");
+      Get.snackbar("Error", "Stripe open failed");
+      print("Launch error => $e");
     }
   }
 

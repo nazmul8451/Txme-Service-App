@@ -74,7 +74,7 @@ class Walletpage extends StatelessWidget {
                 SizedBox(width: 16.sp),
                 buildButton(2, "Withdraw", () {
                   controller.selectButton(2);
-                  Get.toNamed(AppRoute.sendpage);
+                  Get.toNamed(AppRoute.withdrawpage);
                 }),
               ],
             ),
@@ -84,14 +84,14 @@ class Walletpage extends StatelessWidget {
                 buildButton(3, "Send", () {
                   controller.selectButton(3);
 
-                  Get.toNamed(AppRoute.requestpage);
+                  Get.toNamed(AppRoute. sendpage);
 
                 }),
                 SizedBox(width: 16.sp),
                 buildButton(4, "Request", () {
                   controller.selectButton(4);
 
-                  Get.toNamed(AppRoute.withdrawpage);
+                  Get.toNamed(AppRoute. requestpage);
 
                 }),
               ],

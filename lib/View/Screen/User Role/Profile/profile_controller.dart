@@ -88,7 +88,9 @@ class ProfileController extends GetxController {
         headers: {
           "Authorization": "Bearer $token",
           "Accept": "application/json",
+          "Content-Type": "application/json",
         },
+        body: jsonEncode({}), // 🔥 EMPTY BODY (IMPORTANT)
       );
 
       print("STATUS => ${res.statusCode}");
@@ -99,17 +101,24 @@ class ProfileController extends GetxController {
         return;
       }
 
-      final url = jsonDecode(res.body)['data']?['url'];
+      final data = jsonDecode(res.body)['data'];
+      final String? url = data?['url'];
+
       if (url == null) {
         Get.snackbar("Error", "Stripe URL missing");
         return;
       }
 
       await _openStripeLink(url);
+
+    } catch (e) {
+      print("❌ Stripe Error => $e");
+      Get.snackbar("Error", "Stripe onboarding failed");
     } finally {
       isStripeLoading(false);
     }
   }
+
 
 
 

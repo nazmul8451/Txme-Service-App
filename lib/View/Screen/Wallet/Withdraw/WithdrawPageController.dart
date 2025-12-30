@@ -1,61 +1,58 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../../helper/Shared_prefe/shared_prefe.dart';
+import '../../../../service/api_url.dart';
 
 class Withdrawpagecontroller extends GetxController {
-  // TextField controllers
   final ammountController = TextEditingController();
-  final nameController = TextEditingController();
-  final messageController = TextEditingController();
 
-  // Selected payment method index
-  var selectedPaymentIndex = 1.obs;
+  var isLoading = false.obs;
+  var isSuccess = false.obs;
 
-  // Available balance
-  var balance = "€0.00".obs;
+  Future<void> withdrawMoney() async {
+    try {
+      isLoading(true);
+      isSuccess(false);
 
-  // New card data
-  var newCardData = {}.obs;
+      final token =
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      print("================================>>>>>>>>>>>>>>>>>>===========================");
+      print(token);
 
-  /// Select payment method
-  void selectPaymentMethod(int index) {
-    selectedPaymentIndex.value = index;
-  }
+      final res = await http.post(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.walletWithdraw),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "amount": int.parse(ammountController.text.trim()),
+        }),
+      );
 
-  /// Add new card
-  void addNewCard(Map<String, dynamic> cardData) {
-    newCardData.value = cardData;
-  }
+      print("STATUS => ${res.statusCode}");
+      print("BODY => ${res.body}");
 
-  /// Simulate fetching balance from API
-  void fetchBalance() async {
-    await Future.delayed(Duration(seconds: 1));
-    balance.value = "€2,450.00"; // Replace with API call
-  }
+      final data = jsonDecode(res.body);
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchBalance();
-  }
-
-  @override
-  void onClose() {
-    ammountController.dispose();
-    nameController.dispose();
-    messageController.dispose();
-    super.onClose();
+      if (res.statusCode == 200 && data['success'] == true) {
+        isSuccess(true);
+        Get.snackbar("Success", data['message'] ?? "Withdraw successful");
+      } else {
+        Get.snackbar(
+          "Error",
+          data['message'] ?? "Withdraw failed",
+        );
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading(false);
+    }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

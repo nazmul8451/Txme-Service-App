@@ -321,100 +321,100 @@ class _DetailsPageState extends State<DetailsPage> {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       children: [
-                //         Text(
-                //           "Review",
-                //           style: TextStyle(
-                //               fontWeight: FontWeight.w600,
-                //               fontSize: 16.sp,
-                //               color: Color(0xff4C545F)),
-                //         ),
-                //         GestureDetector(
-                //           onTap: () {
-                //
-                //
-                //             Get.toNamed(AppRoute.allreviews);
-                //
-                //           },
-                //           child: Text(
-                //              "Show all",
-                //             style: TextStyle(
-                //                 fontWeight: FontWeight.w600,
-                //                 fontSize: 16.sp,
-                //                 color: Colors.blue),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //     const SizedBox(height: 10),
-                //     Column(
-                //       children: (showAll
-                //               ? widget.provider.rating
-                //               : widget.provider.totalReviews  .toList())
-                //           .map((review) {
-                //         return Padding(
-                //           padding: EdgeInsets.only(bottom: 10.h),
-                //           child: Column(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Row(
-                //                 children: [
-                //                   ClipRRect(
-                //                     borderRadius: BorderRadius.circular(12.r),
-                //                     child: review.profile.startsWith("http")
-                //                         ? Image.network(
-                //                             review.profile,
-                //                             width: 24.w,
-                //                             height: 24.h,
-                //                             fit: BoxFit.cover,
-                //                           )
-                //                         : Image.asset(
-                //                             review.profile,
-                //                             width: 24.w,
-                //                             height: 24.h,
-                //                             fit: BoxFit.cover,
-                //                           ),
-                //                   ),
-                //                   SizedBox(width: 8.w),
-                //                   Text(
-                //                     review.name,
-                //                     style: TextStyle(
-                //                         fontWeight: FontWeight.bold,
-                //                         fontSize: 14.sp),
-                //                   ),
-                //                   Spacer(),
-                //                   Text(
-                //                     review.date,
-                //                     style: TextStyle(
-                //                         fontSize: 12.sp,
-                //                         color: Colors.grey[600]),
-                //                   ),
-                //                 ],
-                //               ),
-                //
-                //               // ⭐ Rating stars added here
-                //               SizedBox(height: 4.h),
-                //               buildStarRating(review
-                //                   .rating), // <-- review.rating অনুযায়ী star
-                //
-                //               SizedBox(height: 4.h),
-                //               Text(
-                //                 review.comment,
-                //                 style: TextStyle(
-                //                     fontSize: 12.sp, color: Colors.grey[700]),
-                //               ),
-                //             ],
-                //           ),
-                //         );
-                //       }).toList(),
-                //     )
-                //   ],
-                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Review",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.sp,
+                              color: Color(0xff4C545F)),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+
+
+                            Get.toNamed(AppRoute.allreviews);
+
+                          },
+                          child: Text(
+                             "Show all",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.sp,
+                                color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Column(
+                    //   children: (showAll
+                    //           ? widget.provider.rating
+                    //           : widget.provider.totalReviews.toList())
+                    //       .map((review) {
+                    //     return Padding(
+                    //       padding: EdgeInsets.only(bottom: 10.h),
+                    //       child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Row(
+                    //             children: [
+                    //               ClipRRect(
+                    //                 borderRadius: BorderRadius.circular(12.r),
+                    //                 child: review.profile.startsWith("http")
+                    //                     ? Image.network(
+                    //                         review.profile,
+                    //                         width: 24.w,
+                    //                         height: 24.h,
+                    //                         fit: BoxFit.cover,
+                    //                       )
+                    //                     : Image.asset(
+                    //                         review.profile,
+                    //                         width: 24.w,
+                    //                         height: 24.h,
+                    //                         fit: BoxFit.cover,
+                    //                       ),
+                    //               ),
+                    //               SizedBox(width: 8.w),
+                    //               Text(
+                    //                 review.name,
+                    //                 style: TextStyle(
+                    //                     fontWeight: FontWeight.bold,
+                    //                     fontSize: 14.sp),
+                    //               ),
+                    //               Spacer(),
+                    //               Text(
+                    //                 review.date,
+                    //                 style: TextStyle(
+                    //                     fontSize: 12.sp,
+                    //                     color: Colors.grey[600]),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //
+                    //           // ⭐ Rating stars added here
+                    //           SizedBox(height: 4.h),
+                    //           buildStarRating(review
+                    //               .rating), // <-- review.rating অনুযায়ী star
+                    //
+                    //           SizedBox(height: 4.h),
+                    //           Text(
+                    //             review.comment,
+                    //             style: TextStyle(
+                    //                 fontSize: 12.sp, color: Colors.grey[700]),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     );
+                    //   }).toList(),
+                    // )
+                  ],
+                ),
 
                 SizedBox(
                   height: 20.h,

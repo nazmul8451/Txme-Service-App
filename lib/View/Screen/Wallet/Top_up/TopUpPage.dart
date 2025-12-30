@@ -18,6 +18,7 @@ class Topuppage extends StatefulWidget {
 }
 
 class _TopuppageState extends State<Topuppage> {
+
   final Topupcontroller controller = Get.put(Topupcontroller());
 
   var selectedIndex = 1;
@@ -81,57 +82,57 @@ class _TopuppageState extends State<Topuppage> {
               ),
               SizedBox(height: 12.h),
 
-              CustomButton(
-                height: 56.h,
-                width: 353.w,
-                BoxDecoration: BoxDecoration(
-                  color: AppColors.FFFFFF,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: selectedIndex == 1 ? AppColors.red601 : Color(0xffCACACA),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            AppImg.PayPal,
-                            height: 25,
-                            width: 25,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            "PayPal",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff4C545F),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 9,
-                        width: 9,
-                        decoration: BoxDecoration(
-                          color: selectedIndex == 1 ? AppColors.red601 : Color(0xffCACACA),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    selectedIndex = 1;
-                  });
-                  //Get.toNamed(AppRoute.chatspage);
-                },
-              ),
+              // CustomButton(
+              //   height: 56.h,
+              //   width: 353.w,
+              //   BoxDecoration: BoxDecoration(
+              //     color: AppColors.FFFFFF,
+              //     borderRadius: BorderRadius.circular(12.r),
+              //     border: Border.all(
+              //       color: selectedIndex == 1 ? AppColors.red601 : Color(0xffCACACA),
+              //     ),
+              //   ),
+              //   child: Padding(
+              //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         Row(
+              //           children: [
+              //             Image.asset(
+              //               AppImg.PayPal,
+              //               height: 25,
+              //               width: 25,
+              //             ),
+              //             SizedBox(width: 4.w),
+              //             Text(
+              //               "PayPal",
+              //               style: TextStyle(
+              //                 fontSize: 18,
+              //                 fontWeight: FontWeight.w400,
+              //                 color: Color(0xff4C545F),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //         Container(
+              //           height: 9,
+              //           width: 9,
+              //           decoration: BoxDecoration(
+              //             color: selectedIndex == 1 ? AppColors.red601 : Color(0xffCACACA),
+              //             borderRadius: BorderRadius.circular(4.r),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     setState(() {
+              //       selectedIndex = 1;
+              //     });
+              //     //Get.toNamed(AppRoute.chatspage);
+              //   },
+              // ),
 
               SizedBox(height: 12.h),
 

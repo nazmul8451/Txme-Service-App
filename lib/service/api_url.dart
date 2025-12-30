@@ -1,4 +1,5 @@
 class ApiConstant {
+  //static const String baseUrl = "http://174.129.53.103:5000";
   static const String baseUrl = "http://10.10.7.26:5002";
   static const String apiVersion = "/api/v1";
 
@@ -64,6 +65,9 @@ class ApiConstant {
 
 
   static const String walletPay  = "$apiVersion/appointment/pay-with-wallet/";
+
+  static const String walletSend  = "$apiVersion/wallet/send";
+  static const String walletWithdraw  = "$apiVersion/wallet/withdraw";
 
   static const String stripeAccount  = "$apiVersion/stripe/account-status";
 

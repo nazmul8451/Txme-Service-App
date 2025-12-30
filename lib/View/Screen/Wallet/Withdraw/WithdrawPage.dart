@@ -6,6 +6,7 @@ import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../Widgegt/Custom_Button/custom_button.dart';
+import '../Availablebalance/Availablebalance.dart';
 import 'WithdrawPageController.dart';
 
 
@@ -35,47 +36,11 @@ class _WithdrawpageState extends State<Withdrawpage> {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Obx(() => Column(
+          child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Balance Card
-              Center(
-                child: Container(
-                  width: 259.w,
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF7F7F7),
-                    borderRadius: BorderRadius.circular(10.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Available balance",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xff1F2937)),
-                      ),
-                      SizedBox(height: 20.sp),
-                      Text(
-                        controller.balance.value,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 48.sp,
-                            color: Color(0xff1F2937)),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              Availablebalance(),
 
               SizedBox(height: 20.sp),
 
@@ -95,126 +60,98 @@ class _WithdrawpageState extends State<Withdrawpage> {
               ),
               SizedBox(height: 20.h),
 
-              Text(
-                "Recipient Name",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff4C545F),
-                ),
-              ),
-              SizedBox(height: 8.h),
-
-              // Message Input
-              TextField(
-                controller: controller.nameController,
-              ),
-              SizedBox(height: 20.h),
-
-
-              /// Message Label
-              Text(
-                "Description",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color:  Color(0xff4C545F),
-                ),
-              ),
-              SizedBox(height: 8.h),
-
-              ///  Message Field (Big Box)
-              TextField(
-                controller: controller.messageController,
-                maxLines: 5,
-                decoration: _inputDecoration(
-                  hint: "Mandatory",
-                ),
-              ),
-
               SizedBox(height: 15.h),
 
 
               // Add New Card Button
-              CustomButton(
-                height: 56.h,
-                width: 353.w,
-                BoxDecoration: BoxDecoration(
-                  color: AppColors.red601,
-                  borderRadius: BorderRadius.circular(12.r),
-                  //border: Border.all(color: AppColors.red601)
+          Obx(() => CustomButton(
+            height: 56.h,
+            width: 353.w,
+            BoxDecoration: BoxDecoration(
+              color: AppColors.red601,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Center(
+              child: controller.isLoading.value
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                "Withdraw",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.FFFFFF,
                 ),
-                child: Center(
-                  child: Text(
-                    "Send",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors. FFFFFF,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                 Get.toNamed(AppRoute.paymentdone);
-                },
               ),
-            ],
+            ),
+            onTap: controller.isLoading.value
+                ? null
+                : () async {
+              await controller.withdrawMoney();
+
+              /// ✅ শুধু success হলে navigate
+              if (controller.isSuccess.value) {
+                Get.toNamed(AppRoute.paymentdone);
+              }
+            },
+          )),
+
+
+          ],
           )),
         ),
-      ),
     );
   }
 
-  Widget buildPaymentButton(
-      {required int index, required String iconPath, required String title}) {
-    return Obx(
-          () => CustomButton(
-        height: 56.h,
-        width: 353.w,
-        BoxDecoration: BoxDecoration(
-          color: AppColors.FFFFFF,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: controller.selectedPaymentIndex.value == index
-                ? AppColors.red601
-                : Color(0xffCACACA),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Image.asset(iconPath, height: 25, width: 25),
-                  SizedBox(width: 4.w),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff4C545F)),
-                  ),
-                ],
-              ),
-              Container(
-                height: 9,
-                width: 9,
-                decoration: BoxDecoration(
-                  color: controller.selectedPaymentIndex.value == index
-                      ? AppColors.red601
-                      : Color(0xffCACACA),
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-              )
-            ],
-          ),
-        ),
-        onTap: () => controller.selectPaymentMethod(index),
-      ),
-    );
-  }
+  // Widget buildPaymentButton(
+  //     {required int index, required String iconPath, required String title}) {
+  //   return Obx(
+  //         () => CustomButton(
+  //       height: 56.h,
+  //       width: 353.w,
+  //       BoxDecoration: BoxDecoration(
+  //         color: AppColors.FFFFFF,
+  //         borderRadius: BorderRadius.circular(12.r),
+  //         border: Border.all(
+  //           color: controller.selectedPaymentIndex.value == index
+  //               ? AppColors.red601
+  //               : Color(0xffCACACA),
+  //         ),
+  //       ),
+  //       child: Padding(
+  //         padding: EdgeInsets.symmetric(horizontal: 16.w),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Row(
+  //               children: [
+  //                 Image.asset(iconPath, height: 25, width: 25),
+  //                 SizedBox(width: 4.w),
+  //                 Text(
+  //                   title,
+  //                   style: TextStyle(
+  //                       fontSize: 18,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: Color(0xff4C545F)),
+  //                 ),
+  //               ],
+  //             ),
+  //             Container(
+  //               height: 9,
+  //               width: 9,
+  //               decoration: BoxDecoration(
+  //                 color: controller.selectedPaymentIndex.value == index
+  //                     ? AppColors.red601
+  //                     : Color(0xffCACACA),
+  //                 borderRadius: BorderRadius.circular(4.r),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //       onTap: () => controller.selectPaymentMethod(index),
+  //     ),
+  //   );
+  // }
 
   InputDecoration _inputDecoration({required String hint}) {
     return InputDecoration(
