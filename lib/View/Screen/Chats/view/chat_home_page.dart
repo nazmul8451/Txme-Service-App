@@ -79,18 +79,23 @@ class _ChatHomePageState extends State<ChatHomePage> {
                 child: Obx(() {
                   final chats = controller.filteredChats;
 
-                  return ListView.builder(
-                    itemCount: chats.length,
-                    itemBuilder: (context, index) {
-                      final chat = chats[index];
-
-                      return InkWell(
-                        onTap: () {
-                          Get.to(() => ChatDetailsPage(chat: chat));
-                        },
-                        child: ChatTile(chat: chat),
-                      );
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await controller.getChats();
                     },
+                    child: ListView.builder(
+                      itemCount: chats.length,
+                      itemBuilder: (context, index) {
+                        final chat = chats[index];
+
+                        return InkWell(
+                          onTap: () {
+                            Get.to(() => ChatDetailsPage(chat: chat));
+                          },
+                          child: ChatTile(chat: chat),
+                        );
+                      },
+                    ),
                   );
                 }),
               ),
