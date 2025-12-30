@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
+import '../../../../../service/socket_service.dart';
 import 'AppointmentModel/AppointmentModel2.dart';
 
 class AppointmentsController extends GetxController {
@@ -14,8 +13,6 @@ class AppointmentsController extends GetxController {
 
   final userRole = "".obs;
   final userId = "".obs;
-
-  IO.Socket? socket;
 
   @override
   void onInit() {
@@ -37,39 +34,14 @@ class AppointmentsController extends GetxController {
 
     userId.value =
         await SharePrefsHelper.getString(SharePrefsHelper.userId) ?? "";
-  }
-
-  /// 🔌 SOCKET INIT
-  void _initSocket() {
-    socket = IO.io(
-      ApiConstant.socketUrl, // e.g. http://10.10.7.26:5002
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .build(),
-    );
-
-    socket!.connect();
-
-    socket!.onConnect((_) {
-      debugPrint("✅ Socket Connected");
-
-      ///  appointmentUpdate:<userId>
-      socket!.on("appointmentUpdate:${userId.value}", (data) {
-        debugPrint("📡 Appointment Update Received: $data");
-        loadData(); //  refresh list
-      });
-    });
-
-    socket!.onDisconnect((_) {
-      debugPrint("❌ Socket Disconnected");
-    });
+    
+    debugPrint("👤 User Info Loaded: Role=${userRole.value}, ID=${userId.value}");
   }
 
   /// 📥 LOAD APPOINTMENTS
-  Future<void> loadData() async {
+  Future<void> loadData({bool silent = false}) async {
     try {
-      isLoading.value = true;
+      if (!silent) isLoading.value = true;
 
       final token = await SharePrefsHelper.getString(
         SharePrefsHelper.bearerToken,
@@ -121,14 +93,37 @@ class AppointmentsController extends GetxController {
     } catch (e) {
       debugPrint("❌ Appointment Error: $e");
     } finally {
-      isLoading.value = false;
+      if (!silent) isLoading.value = false;
     }
+  }
+
+  /// 🔌 SOCKET INIT
+  void _initSocket() async {
+    final socketApi = SocketApi();
+    await socketApi.init();
+
+    if (userId.value.isEmpty) {
+       await _loadUserInfo();
+    }
+
+    if (userId.value.isEmpty) {
+      debugPrint("⚠️ Cannot listen to socket: userId is empty");
+      return;
+    }
+
+    final eventName = "appointmentUpdate::${userId.value}";
+    debugPrint("🎧 Listening to Appointment Event: $eventName");
+
+    socketApi.on(eventName, (data) {
+      debugPrint("📡 Appointment Update Received [$eventName]: $data");
+      loadData(silent: true); // refresh list silently
+    });
   }
 
   @override
   void onClose() {
-    socket?.disconnect();
-    socket?.dispose();
+    final eventName = "appointmentUpdate::${userId.value}";
+    SocketApi().off(eventName);
     super.onClose();
   }
 }

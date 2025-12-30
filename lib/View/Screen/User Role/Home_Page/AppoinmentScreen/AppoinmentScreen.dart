@@ -306,39 +306,31 @@ class AppointmentsPage extends StatelessWidget {
 
 
   Widget buildSection(String title, List<String> types) {
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
+    final filteredAppointments = controller.appointments
+        .where((a) => types.contains(a.status.toLowerCase()))
+        .toList();
 
-      final filteredAppointments = controller.appointments
-          .where((a) => types.contains(a.status.toLowerCase()))
-          .toList();
+    if (filteredAppointments.isEmpty) {
+      return const SizedBox();
+    }
 
-      if (filteredAppointments.isEmpty) {
-        return const SizedBox();
-      }
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.h),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          ...filteredAppointments.map(buildCard).toList(),
-        ],
-      );
-    });
+        ),
+        ...filteredAppointments.map(buildCard).toList(),
+      ],
+    );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -347,39 +339,54 @@ class AppointmentsPage extends StatelessWidget {
       appBar: AppBar(
           backgroundColor: AppColors.FFFFFF,
           surfaceTintColor: AppColors.FFFFFF,
-          title: Text("Appointments")),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
-        child:Column(
-          children: [
-            /// ⏳ Pending
-            buildSection("Pending", ["pending"]),
+          title: const Text("Appointments")),
+      body: Obx(() {
+        if (controller.isLoading.value && controller.appointments.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            /// ✅ Confirmed / Ongoing
-            buildSection("Confirmed", [
-              "accepted",
-              "in_progress",
-              "work_completed",
-              "awaiting_payment",
-            ]),
+        return RefreshIndicator(
+          onRefresh: () => controller.loadData(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              children: [
+                /// ⏳ Pending
+                buildSection("Pending", ["pending"]),
 
-            /// ⭐ Review Pending
-            buildSection("Review", [
-              "review_pending",
-              "provider_review_pending",
-              "customer_review_pending",
-            ]),
+                /// ✅ Confirmed / Ongoing
+                buildSection("Confirmed", [
+                  "accepted",
+                  "in_progress",
+                  "work_completed",
+                  "awaiting_payment",
+                ]),
 
-            ///  Cancelled
-            buildSection("Cancelled", [
-              "cancelled",
-              "rejected",
-            ]),
-          ],
-        ),
+                /// ⭐ Review Pending
+                buildSection("Review", [
+                  "review_pending",
+                  "provider_review_pending",
+                  "customer_review_pending",
+                ]),
 
-      ),
-      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
+                ///  Cancelled
+                buildSection("Cancelled", [
+                  "cancelled",
+                  "rejected",
+                ]),
+                
+                if (controller.appointments.isEmpty)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: const Center(child: Text("No appointments found")),
+                  ),
+              ],
+            ),
+          ),
+        );
+      }),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }
 }

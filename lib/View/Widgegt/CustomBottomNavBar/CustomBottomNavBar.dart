@@ -28,9 +28,9 @@ class CustomBottomNavBar extends StatelessWidget {
       case 1:
       ///  REQUEST / BOOKINGS
         if (role == "CUSTOMER") {
-          Get.toNamed(AppRoute.bookingspage);
+          Get.toNamed(AppRoute.appointmentsPage);
         } else {
-          Get.toNamed(AppRoute.providerMyBookingsPage);
+          Get.toNamed(AppRoute.appointmentsPage);
         }
         break;
 
