@@ -24,9 +24,7 @@ class Providerpaymentsuccessful extends StatefulWidget {
 }
 
 class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
-
   final ReviewController controller = Get.put(ReviewController());
-
 
   final AppointmentModel2 appointment = Get.arguments as AppointmentModel2;
 
@@ -127,7 +125,7 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                               color: Color(0xff1F2937)),
                         ),
                         SizedBox(height: 12.h),
-          
+
                         Text(
                           "Cleaning",
                           style: TextStyle(
@@ -136,7 +134,7 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                               color: Color(0xff1F2937)),
                         ),
                         SizedBox(height: 12.h),
-          
+
                         /// এখানে price + (Hourly)
                         Text(
                           "€ ${appointment.totalCost?.toStringAsFixed(2) ?? '0.00'} (Hourly)",
@@ -146,7 +144,7 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                               color: Color(0xff1F2937)),
                         ),
                         SizedBox(height: 12.h),
-          
+
                         Text(
                           appointment.date,
                           style: TextStyle(
@@ -155,7 +153,7 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                               color: Color(0xff1F2937)),
                         ),
                         SizedBox(height: 12.h),
-          
+
                         Text(
                           "€ ${appointment.totalWorkedTime?.toStringAsFixed(2) ?? '0.00'} Hours",
                           style: TextStyle(
@@ -255,43 +253,44 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                   borderRadius: BorderRadius.circular(12.r),
                   color: Color(0xffFF5A36),
                 ),
-                child: Obx(() => controller.isLoading.value
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Center(
-                      child: Text(
-                                      "Submit",
-                                      style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                                      ),
-                                    ),
-                    )),
+                child: Center(
+                  child: Obx(
+                    () => controller.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Submit",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
                 onTap: () async {
                   final success = await controller.submitReview(appointment);
-          
+
                   if (success) {
-                    Get.delete<HomeController>(); //  clear review redirect guard
-          
-                    final userRole =
-                    await SharePrefsHelper.getString(SharePrefsHelper.userRole);
-          
+                    Get.delete<
+                        HomeController>(); //  clear review redirect guard
+
+                    final userRole = await SharePrefsHelper.getString(
+                        SharePrefsHelper.userRole);
+
                     if (userRole == "PROVIDER") {
                       Get.offAllNamed(AppRoute.providerHomeScreen);
                     } else {
                       Get.offAllNamed(AppRoute.homepage); // CUSTOMER
                     }
-          
+
                     Get.snackbar(
                       "Success",
                       "Review submitted successfully",
                       snackPosition: SnackPosition.BOTTOM,
                     );
                   }
-          
                 },
               ),
-          
             ],
           ),
         ),

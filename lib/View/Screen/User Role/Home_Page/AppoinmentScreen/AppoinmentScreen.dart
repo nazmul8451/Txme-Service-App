@@ -360,6 +360,7 @@ class AppointmentsPage extends StatelessWidget {
                   "accepted",
                   "in_progress",
                   "work_completed",
+                  "Completed",
                   "awaiting_payment",
                 ]),
 
