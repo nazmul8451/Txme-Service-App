@@ -78,73 +78,75 @@ class ChatDetailsPage extends StatelessWidget {
       ),
 
       /// BODY
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            /// MESSAGE LIST
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
-                  reverse: true, // ✅ START FROM BOTTOM
-                  padding: EdgeInsets.all(16),
-                  itemCount: controller.messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = controller.messages[index];
-                    return MessageBubble(message: msg);
-                  },
-                );
-              }),
-            ),
-
-            /// INPUT FIELD
-
-            Container(
-              width: 353.w,
-              height: 64.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(43.r),
-                color: Color(0xffF7F7F7),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              /// MESSAGE LIST
+              Expanded(
+                child: Obx(() {
+                  return ListView.builder(
+                    reverse: true, // ✅ START FROM BOTTOM
+                    padding: EdgeInsets.all(16),
+                    itemCount: controller.messages.length,
+                    itemBuilder: (context, index) {
+                      final msg = controller.messages[index];
+                      return MessageBubble(message: msg);
+                    },
+                  );
+                }),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: controller.messageController,
-                      decoration: InputDecoration(
-                        hintText: "Type a message",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(43.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Color(0xffF7F7F7),
-
-                        suffixIcon: SizedBox(
-                          width: 24.w,
-                          height: 24.h,
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: controller.sendMessage,
-                              child: SvgPicture.asset(
-                                AppIcons.rightarrow,
-                                height: 24.h,
-                                width: 24.w,
-                                fit: BoxFit.contain,
+        
+              /// INPUT FIELD
+        
+              Container(
+                width: 353.w,
+                height: 64.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(43.r),
+                  color: Color(0xffF7F7F7),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller.messageController,
+                        decoration: InputDecoration(
+                          hintText: "Type a message",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(43.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Color(0xffF7F7F7),
+        
+                          suffixIcon: SizedBox(
+                            width: 24.w,
+                            height: 24.h,
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: controller.sendMessage,
+                                child: SvgPicture.asset(
+                                  AppIcons.rightarrow,
+                                  height: 24.h,
+                                  width: 24.w,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
+        
                         ),
-
+        
                       ),
-
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-
-          ],
+        
+            ],
+          ),
         ),
       ),
     );
