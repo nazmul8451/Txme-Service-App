@@ -55,7 +55,6 @@ class CustomBottomNavBar extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Container(
-      height: 80,
       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -71,14 +70,20 @@ class CustomBottomNavBar extends StatelessWidget {
           )
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(Icons.home_outlined, "Home", 0),
-          _navItem(Icons.sticky_note_2_outlined, "Bookings", 1),
-          _navItem(Icons.message_outlined, "Message", 2),
-          _navItem(Icons.person_outline, "Profile", 3),
-        ],
+      child: SafeArea(
+        top: false,
+        child: Container(
+          height: 70, // Fixed height for the content area
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(Icons.home_outlined, "Home", 0),
+              _navItem(Icons.sticky_note_2_outlined, "Bookings", 1),
+              _navItem(Icons.message_outlined, "Message", 2),
+              _navItem(Icons.person_outline, "Profile", 3),
+            ],
+          ),
+        ),
       ),
     );
   }
