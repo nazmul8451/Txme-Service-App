@@ -54,14 +54,16 @@ class ChatModel {
     String? lastMessage,
     String? time,
     int? unreadCount,
+    String? name,
+    String? avatar,
   }) {
     return ChatModel(
       id: id,
-      name: name,
+      name: name ?? this.name,
       lastMessage: lastMessage ?? this.lastMessage,
       time: time ?? this.time,
       unreadCount: unreadCount ?? this.unreadCount,
-      avatar: avatar,
+      avatar: avatar ?? this.avatar,
     );
   }
 }

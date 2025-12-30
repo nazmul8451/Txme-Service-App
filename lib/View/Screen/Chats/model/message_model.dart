@@ -15,10 +15,19 @@ class MessageModel {
       Map<String, dynamic> json,
       String myUserId,
       ) {
+    dynamic sender = json['sender'];
+    bool isMe = false;
+    
+    if (sender is String) {
+      isMe = sender == myUserId;
+    } else if (sender is Map) {
+      isMe = sender['_id'] == myUserId;
+    }
+
     return MessageModel(
       id: json['_id'],
       message: json['text'] ?? "",
-      isMe: json['sender']?['_id'] == myUserId,
+      isMe: isMe,
       time: json['createdAt'] ?? "",
     );
   }

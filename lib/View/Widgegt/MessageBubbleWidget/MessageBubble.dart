@@ -11,9 +11,6 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Align(
       alignment:
       message.isMe ? Alignment.centerRight : Alignment.centerLeft,

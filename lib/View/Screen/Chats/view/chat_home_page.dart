@@ -8,13 +8,22 @@ import '../../../Widgegt/MessageBubbleWidget/ChatTile.dart';
 import '../controller/chat_controller.dart';
 import 'chat_details_page.dart';
 
-class ChatHomePage extends StatelessWidget {
+class ChatHomePage extends StatefulWidget {
   ChatHomePage({super.key});
 
-  final ChatController controller = Get.put(ChatController());
+  @override
+  State<ChatHomePage> createState() => _ChatHomePageState();
+}
 
+class _ChatHomePageState extends State<ChatHomePage> {
+  initState(){
+    super.initState();
+    Get.put(ChatController());
+  }
+  
   @override
   Widget build(BuildContext context) {
+    final ChatController controller = Get.find<ChatController>();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

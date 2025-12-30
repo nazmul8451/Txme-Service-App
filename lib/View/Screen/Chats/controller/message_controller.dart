@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,8 +13,10 @@ class MessageController extends GetxController {
   final String chatId;
   MessageController(this.chatId);
 
+  StreamSubscription? _socketSubscription;
+
   /// ✅ GLOBAL SOCKET INSTANCE
-  final SocketApi socketApi = Get.find<SocketApi>();
+  final SocketApi socketApi = SocketApi();
 
   RxList<MessageModel> messages = <MessageModel>[].obs;
   final TextEditingController messageController = TextEditingController();
@@ -23,7 +26,8 @@ class MessageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _init();
+    // No change needed here really, just ensuring structure is essentially correct
+    _init(); // _init is async and handles loading user ID first
   }
 
   Future<void> _init() async {
@@ -36,16 +40,26 @@ class MessageController extends GetxController {
     await getMessages();
 
     /// 🔥 LISTEN SOCKET MESSAGE
-    socketApi.onMessage((data) {
-      if (data['chatId'] != chatId) return;
-
+    final eventName = "getMessage::$chatId";
+    
+    debugPrint("🎧 Listening to Socket Event: $eventName");
+    
+    socketApi.on(eventName, (data) {
+      debugPrint("📩 EVENT RECEIVED [$eventName]: $data");
+      
       final raw = data['message'] ?? data;
 
-      final msg = MessageModel.fromJson(raw, myUserId);
+      try {
+        final msg = MessageModel.fromJson(raw, myUserId);
 
-      if (messages.any((m) => m.id == msg.id)) return;
+        // Avoid duplicates if we already have this message ID
+        if (messages.any((m) => m.id == msg.id)) return;
 
-      messages.add(msg);
+        messages.add(msg);
+        
+      } catch (e) {
+        debugPrint("Message Parse Error: $e");
+      }
     });
 
   }
@@ -144,6 +158,7 @@ class MessageController extends GetxController {
 
   @override
   void onClose() {
+    socketApi.off("getMessage::$chatId");
     socketApi.leaveChat(chatId);
     messageController.dispose();
     update();
