@@ -26,10 +26,10 @@ class ProviderHomeController extends GetxController {
 
   void checkAgain() {
     if (_alreadyRedirected) return;
-    _checkCurrentAppointmentStatus();
+    fetchCurrentAppointmentStatus();
   }
 
-  Future<void> _checkCurrentAppointmentStatus() async {
+  Future<void> fetchCurrentAppointmentStatus() async {
     if (isLoading.value) return;
 
     isLoading.value = true;
