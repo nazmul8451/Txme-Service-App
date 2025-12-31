@@ -1,6 +1,6 @@
 class ApiConstant {
-  // static const String baseUrl = "http://174.129.53.103:5000";
-  static const String baseUrl = "http://10.10.7.26:5002";
+  static const String baseUrl = "http://174.129.53.103:5000";
+  // static const String baseUrl = "http://10.10.7.26:5002";
   static const String apiVersion = "/api/v1";
 
 
