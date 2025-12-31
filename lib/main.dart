@@ -20,10 +20,10 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// ✅ GetStorage init
+  ///  GetStorage init
   await GetStorage.init();
 
-  /// ✅ Stripe init
+  ///  Stripe init
    //  তোমার Stripe publishable key
   Stripe.publishableKey =
   "pk_test_51S4W0lGhgUPSwjlABGmNej51c3D22QxSkMG6k4RC3rsR8lZcdLRGMzmSWmYEIhF5vT70ps9pzwcbVAmXGledP6pz00vlcvZLcV";
@@ -42,8 +42,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-
 
   @override
   Widget build(BuildContext context) {

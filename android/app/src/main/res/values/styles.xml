@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App main theme -->
+    <!-- 🚀 Main App Theme (USED by AndroidManifest) -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
+
+        <!-- Stripe + Flutter safety -->
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <!-- Splash / Launch theme -->
+    <!-- 🚀 Launch / Splash Theme -->
     <style name="LaunchTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
-    <!-- ✅ REQUIRED for Flutter + Stripe -->
+    <!-- 🚀 Normal Theme (Flutter requires this name) -->
     <style name="NormalTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
 </resources>
+
