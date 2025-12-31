@@ -113,6 +113,9 @@ class ChatController extends GetxController {
     super.onClose();
   }
 
+  //get chat funcfion
+  
+
   Future<void> getChats() async {
     try {
       isLoading.value = true;
