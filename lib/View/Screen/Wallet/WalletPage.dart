@@ -15,11 +15,6 @@ class Walletpage extends StatelessWidget {
 
   final WalletController controller = Get.put(WalletController());
 
-  final role =
-       SharePrefsHelper.getString(
-  SharePrefsHelper.userRole,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,12 +33,11 @@ class Walletpage extends StatelessWidget {
             } else if (role == "CUSTOMER") {
               Get.offAllNamed(AppRoute.homepage);
             } else {
-              Get.back(); // fallback
+              Get.back();
             }
           },
           icon: SvgPicture.asset(AppIcons.chevronleft),
         ),
-
         title: Text(
           "Wallet",
           style: TextStyle(
@@ -54,127 +48,132 @@ class Walletpage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Obx(() => Column(
-          children: [
-            SizedBox(height: 12.h),
 
-            Availablebalance(),
+      body: RefreshIndicator(
+        color: AppColors.red601,
+        backgroundColor: Colors.white,
+        onRefresh: () => controller.refreshWallet(), // ✅ CORRECT
+        child: Obx(
+              () => controller.isLoading.value
+              ? const Center(child: CircularProgressIndicator())
+              : ListView(
+            padding: const EdgeInsets.all(20),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: 12.h),
 
+              /// BALANCE
+              Availablebalance(),
 
-            SizedBox(height: 34.5.h),
-            // Buttons Row
-            Row(
-              children: [
-                buildButton(1, "Top-up", () {
-                  controller.selectButton(1);
-                  Get.toNamed(AppRoute.topuppage);
-                }),
-                SizedBox(width: 16.sp),
-                buildButton(2, "Withdraw", () {
-                  controller.selectButton(2);
-                  Get.toNamed(AppRoute.withdrawpage);
-                }),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            Row(
-              children: [
-                buildButton(3, "Send", () {
-                  controller.selectButton(3);
+              SizedBox(height: 34.5.h),
 
-                  Get.toNamed(AppRoute. sendpage);
-
-                }),
-                SizedBox(width: 16.sp),
-                buildButton(4, "Request", () {
-                  controller.selectButton(4);
-
-                  Get.toNamed(AppRoute. requestpage);
-
-                }),
-              ],
-            ),
-            SizedBox(height: 80.h),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              /// BUTTONS
+              Row(
                 children: [
-                  Text(
-                    "Recent Transactions",
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xff1F2937),
+                  buildButton(1, "Top-up", () {
+                    controller.selectButton(1);
+                    Get.toNamed(AppRoute.topuppage);
+                  }),
+                  SizedBox(width: 16.w),
+                  buildButton(2, "Withdraw", () {
+                    controller.selectButton(2);
+                    Get.toNamed(AppRoute.withdrawpage);
+                  }),
+                ],
+              ),
+
+              SizedBox(height: 20.h),
+
+              Row(
+                children: [
+                  buildButton(3, "Send", () {
+                    controller.selectButton(3);
+                    Get.toNamed(AppRoute.sendpage);
+                  }),
+                  SizedBox(width: 16.w),
+                  buildButton(4, "Request", () {
+                    controller.selectButton(4);
+                    Get.toNamed(AppRoute.requestpage);
+                  }),
+                ],
+              ),
+
+              SizedBox(height: 40.h),
+
+              /// TRANSACTIONS
+              Text(
+                "Recent Transactions",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xff1F2937),
+                ),
+              ),
+
+              SizedBox(height: 12.h),
+
+              if (controller.transactions.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 40.h),
+                    child: Text(
+                      "No transactions found",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 12.h),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.transactions.length,
-                      itemBuilder: (context, index) {
-                        final tx = controller.transactions[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          child: Row(
+                )
+              else
+                ...controller.transactions.map((tx) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.transactions,
+                          height: 24.h,
+                          width: 24.w,
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 12.h),
-                                child: SvgPicture.asset(
-                                  AppIcons.transactions,
-                                  height: 24.h,
-                                  width: 24.w,
+                              Text(
+                                "${tx['type']} ${tx['amount']}",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${tx['type']} ${tx['amount']}",
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: Color(0xff1F2937),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Text(
-                                      tx['note'],
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: Color(0xff4C545F),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 28.h),
-                                child: Text(
-                                  tx['timeAgo'],
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: Color(0xff9CA3AF),
-                                  ),
+                              SizedBox(height: 6.h),
+                              Text(
+                                tx['note'],
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ],
                           ),
-                        );
-                      },
+                        ),
+                        Text(
+                          tx['timeAgo'],
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
+                  );
+                }).toList(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -185,14 +184,13 @@ class Walletpage extends StatelessWidget {
         onTap: onTap,
         child: Obx(
               () => Container(
-            width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 14.5.h),
             decoration: BoxDecoration(
               color: controller.selectedIndex.value == index
                   ? Colors.red
                   : Colors.white,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: Colors.red, width: 1.w),
+              border: Border.all(color: Colors.red),
             ),
             child: Center(
               child: Text(
@@ -212,3 +210,4 @@ class Walletpage extends StatelessWidget {
     );
   }
 }
+

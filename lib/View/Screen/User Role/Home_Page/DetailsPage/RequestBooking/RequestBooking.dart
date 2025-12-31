@@ -9,9 +9,10 @@ class RequestBookingPage extends GetView<RequestBookingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.6),
-      body: Center(
+      body: SafeArea(
         child: Container(
-          width: 330,
+          width: double.infinity,
+          height: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -24,11 +25,11 @@ class RequestBookingPage extends GetView<RequestBookingController> {
                 child: Center(child: CircularProgressIndicator()),
               );
             }
-
+        
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
+        
                 /// ---------- HEADER ----------
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,9 +47,9 @@ class RequestBookingPage extends GetView<RequestBookingController> {
                     ),
                   ],
                 ),
-
+        
                 const SizedBox(height: 10),
-
+        
                 /// ---------- CALENDAR ----------
                 CalendarDatePicker(
                   initialDate: controller.initialDate, //  SAFE
@@ -57,7 +58,7 @@ class RequestBookingPage extends GetView<RequestBookingController> {
                   selectableDayPredicate: controller.isDaySelectable,
                   onDateChanged: controller.selectDate,
                 ),
-
+        
                 const SizedBox(height: 12),
               ],
             );
