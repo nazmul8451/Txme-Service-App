@@ -101,6 +101,11 @@ class ApiConstant {
 
 
   ///=====================  message =========================///
+  ///=====================  Notification =========================///
+
+  static const String  notification = "$apiVersion/notification";
+  static const String  notificationCount = "$apiVersion/notification/unread-count";
+
 
   /// ======================== post Api =========================///
 

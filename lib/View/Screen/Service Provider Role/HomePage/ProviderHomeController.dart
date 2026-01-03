@@ -13,10 +13,16 @@ class ProviderHomeController extends GetxController {
 
   var searchController = TextEditingController();
   var name = "".obs;
-  var notificationCount = 3.obs;
+  var notificationCount = 0.obs;
 
   final isLoading = false.obs;
   bool _alreadyRedirected = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUnreadNotificationCount();
+  }
 
   @override
   void onReady() {
@@ -27,6 +33,29 @@ class ProviderHomeController extends GetxController {
   void checkAgain() {
     if (_alreadyRedirected) return;
     fetchCurrentAppointmentStatus();
+  }
+
+  Future<void> fetchUnreadNotificationCount() async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      if (token == null || token.isEmpty) return;
+
+      final response = await http.get(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.notificationCount),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          notificationCount.value = data['data']['unreadCount'] ?? 0;
+        }
+      } else {
+        print('Failed to fetch notification count: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching notification count: $e');
+    }
   }
 
   Future<void> fetchCurrentAppointmentStatus() async {

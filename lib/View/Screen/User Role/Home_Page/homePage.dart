@@ -48,6 +48,7 @@ class _HomepageState extends State<Homepage> {
       serviceController.getParentServices(),
       popularProviderController.fetchPopularProviders(),
       appointmentController.loadData(),
+      homeController.fetchUnreadNotificationCount(), //  REFRESH COUNT
     ]);
 
     ///  review check
@@ -74,11 +75,43 @@ class _HomepageState extends State<Homepage> {
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.FFFFFF,
         actions: [
-          IconButton(
-              onPressed: () {
+          Padding(
+            padding: EdgeInsets.only(right: 20.w),
+            child: GestureDetector(
+              onTap: () {
                 Get.toNamed(AppRoute.notificationPage);
               },
-              icon: Icon(Icons.notifications)),
+              child: Obx(() => Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(Icons.notifications_none, size: 30.w),
+                  if(homeController.notificationCount.value > 0)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        height: 16.h,
+                        width: 16.w,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            homeController.notificationCount.value.toString(),
+                            style:  TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              )),
+            ),
+          ),
         ],
         title: Row(
           children: [

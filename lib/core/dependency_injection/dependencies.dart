@@ -4,6 +4,7 @@ import '../../View/Screen/Service Provider Role/Contactsupport/ContactSupportCon
 import '../../View/Screen/Sign _up/VerifyYourIdentity/verify_identity_controller.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWalletController.dart';
+import '../../View/Screen/User Role/Home_Page/NotificationPage/notification_controller.dart';
 import '../../View/Screen/User Role/Home_Page/Popularservices/ServiceController.dart';
 import '../../View/Screen/User Role/Profile/EditProfile/EditProfileController.dart';
 import '../../View/Screen/User Role/Profile/NotificationPage/NotificationController.dart';
@@ -28,6 +29,7 @@ class Dependencies {
     Get.put(VerificationController(), permanent: true);
     Get.put(VerifyIdentityController(), permanent: true);
     Get.put(NotificationController(), permanent: true);
+    Get.put(NotificationControllerSt(), permanent: true);
 
     /// ================= WALLET =================
     Get.put(WalletController(), permanent: true);

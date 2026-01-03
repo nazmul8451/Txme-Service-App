@@ -10,11 +10,41 @@ import 'AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 class HomeController extends GetxController {
   final isLoading = false.obs;
   bool _alreadyRedirected = false;
+  var notificationCount = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUnreadNotificationCount();
+  }
 
   @override
   void onReady() {
     super.onReady();
     checkAgain();
+  }
+
+  Future<void> fetchUnreadNotificationCount() async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      if (token == null || token.isEmpty) return;
+
+      final response = await http.get(
+        Uri.parse(ApiConstant.baseUrl + ApiConstant.notificationCount),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          notificationCount.value = data['data']['unreadCount'] ?? 0;
+        }
+      } else {
+        debugPrint('Failed to fetch notification count: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error fetching notification count: $e');
+    }
   }
 
   void checkAgain() {
@@ -89,4 +119,3 @@ class HomeController extends GetxController {
     );
   }
 }
-

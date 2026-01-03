@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class NotificationController extends GetxController {
+class NotificationControllerSt extends GetxController {
   var generalNotification = false.obs;
   var soundNotification = true.obs;
   var vibrateNotification = true.obs;

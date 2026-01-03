@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:collection/collection.dart';
 import 'NotificationCard.dart';
+import 'notification_controller.dart';
+import 'notification_model.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final NotificationController controller = Get.put(NotificationController());
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -23,55 +29,57 @@ class NotificationPage extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
+      body: Obx(() {
+        if (controller.isLoading.isTrue) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        if (controller.notificationList.isEmpty) {
+          return const Center(
+            child: Text(
+              'You have no notifications yet.',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          );
+        }
 
-            sectionTitle("Today"),
-            NotificationCard(
-              title: "Your service request has been sent.",
-              subtitle: "Just now",
-            ),
-            NotificationCard(
-              title: "Your booking request has approved.",
-              subtitle: "30 min ago",
-            ),
-            NotificationCard(
-              title: "Your service has been completed.",
-              subtitle: "2 hours ago",
-            ),
+        final groupedNotifications = _groupNotificationsByDate(controller.notificationList);
 
-            const SizedBox(height: 20),
-
-            sectionTitle("Yesterday"),
-            NotificationCard(
-              title: "Payment Successful",
-              subtitle: "Dec 10, 2025",
-            ),
-            NotificationCard(
-              title: "Booking Reminder",
-              subtitle: "Dec 10, 2025",
-            ),
-            NotificationCard(
-              title: "Your service has been completed.",
-              subtitle: "Dec 10 ago",
-            ),
-
-            const SizedBox(height: 20),
-
-            sectionTitle("This Week"),
-            NotificationCard(
-              title: "New Message",
-              subtitle: "Dec 4, 2025",
-            ),
-
-          ],
-        ),
-      ),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: groupedNotifications.entries.map((entry) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  sectionTitle(entry.key),
+                  ...entry.value.map((notification) => NotificationCard(notification: notification)).toList(),
+                  const SizedBox(height: 20),
+                ],
+              );
+            }).toList(),
+          ),
+        );
+      }),
     );
+  }
+
+  Map<String, List<NotificationModel>> _groupNotificationsByDate(List<NotificationModel> notifications) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    return groupBy(notifications, (NotificationModel n) {
+      final notificationDate = DateTime(n.createdAt.year, n.createdAt.month, n.createdAt.day);
+      if (notificationDate == today) {
+        return 'Today';
+      } else if (notificationDate == yesterday) {
+        return 'Yesterday';
+      } else {
+        return 'Older';
+      }
+    });
   }
 
   /// SECTION TITLE WIDGET
@@ -88,5 +96,4 @@ class NotificationPage extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -8,7 +8,7 @@ import '../../../../../Utils/AppColors/app_colors.dart';
 class NotificationSettings extends StatelessWidget {
   NotificationSettings({super.key});
 
-  final NotificationController controller = Get.put(NotificationController());
+  final NotificationControllerSt controller = Get.put(NotificationControllerSt());
 
   @override
   Widget build(BuildContext context) {
