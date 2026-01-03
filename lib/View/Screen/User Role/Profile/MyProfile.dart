@@ -131,22 +131,24 @@ class ProfilePage extends StatelessWidget {
                 title: "Wallet",
               ),
 
-          Obx(() {
-            if (controller.isStripeLoading.value) {
-              return CircularProgressIndicator();
-            }
 
-            if (controller.isStripeConnected.value) {
-              return Text("Stripe Connected ✅");
-            }
+              Obx(() {
+                if (controller.isStripeLoading.value) {
+                  return const CircularProgressIndicator();
+                }
 
-            return profileMenu(
-              onTap: controller.createStripeAccountSession,
-              img: AppImg.stripeImg,
-              title: "Connect Stripe",
-            );
-          }),
+                //  ALL 4 TRUE → HIDE BUTTON
+                if (controller.isStripeFullyVerified) {
+                  return const SizedBox();
+                }
 
+                //  ANY ONE FALSE → SHOW BUTTON
+                return profileMenu(
+                  onTap: controller.createStripeAccountSession,
+                  img: AppImg.stripeImg,
+                  title: "Connect Stripe",
+                );
+              }),
 
 
 

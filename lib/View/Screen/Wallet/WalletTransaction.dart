@@ -25,16 +25,18 @@ class WalletTransaction {
 
   factory WalletTransaction.fromJson(Map<String, dynamic> json) {
     return WalletTransaction(
-      fee: json["fee"],
-      wallet: json['wallet'],
-      id: json['_id'] ?? '',
-      amount: (json['amount'] as num).toDouble(),
-      status: json['status'] ?? '',
-      type: json['type'] ?? '',
-      direction: json['direction'] ?? '',
-      from: json['from'] ?? '',
-      to: json['to'] ?? '',
-      createdAt: json['createdAt'] ?? '',
+      id: json['_id']?.toString() ?? '',
+      wallet: json['wallet']?.toString() ?? '',
+      fee: json['fee']?.toString() ?? '0',
+      amount: json['amount'] == null
+          ? 0.0
+          : (json['amount'] as num).toDouble(),
+      status: json['status']?.toString() ?? '',
+      type: json['type']?.toString() ?? '',
+      direction: json['direction']?.toString() ?? '',
+      from: json['from']?.toString() ?? '',
+      to: json['to']?.toString() ?? '',
+      createdAt: json['createdAt']?.toString() ?? '',
     );
   }
 }

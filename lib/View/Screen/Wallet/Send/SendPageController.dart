@@ -26,6 +26,7 @@ class Sendpagecontroller extends GetxController {
 
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      print("Bearer Token =======================>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<=========================== $token");
 
       if (token == null) {
         Get.snackbar("Error", "User not authenticated");
@@ -55,7 +56,7 @@ class Sendpagecontroller extends GetxController {
         },
         body: jsonEncode({
           "receiverIdOrEmail": receiver,
-          "amount": amount,
+          "amount": amount
         }),
       );
 
@@ -67,14 +68,14 @@ class Sendpagecontroller extends GetxController {
 
         ammountController.clear();
         nameController.clear();
-        messageController.clear();
 
-        return transaction; // ✅ SUCCESS DATA
+        return transaction; //  SUCCESS DATA
       } else {
         Get.snackbar("Error", decoded['message'] ?? "Transaction failed");
         return null;
       }
     } catch (e) {
+      print(e.toString());
       Get.snackbar("Error", "Something went wrong");
       return null;
     } finally {
@@ -96,7 +97,6 @@ class Sendpagecontroller extends GetxController {
   void onClose() {
     ammountController.dispose();
     nameController.dispose();
-    messageController.dispose();
     super.onClose();
   }
 }

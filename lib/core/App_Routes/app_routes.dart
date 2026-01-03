@@ -56,6 +56,7 @@ import '../../View/Screen/User Role/Profile/MyProfile.dart';
 import '../../View/Screen/Wallet/PaymentDone/PaymentDone.dart';
 import '../../View/Screen/Wallet/Request/RequestPage.dart';
 import '../../View/Screen/Wallet/Send/SendPage.dart';
+import '../../View/Screen/Wallet/Top_up/TopUpDone.dart';
 import '../../View/Screen/Wallet/Top_up/TopUpPage.dart';
 import '../../View/Screen/Wallet/TransactionFailed/TransactionFailed.dart';
 import '../../View/Screen/Wallet/WalletPage.dart';
@@ -127,6 +128,7 @@ class AppRoute {
   static const String popularprovider = "/popularprovider";
   static const String requestBooking = "/requestBooking";
   static const String bookingSchedule = "/bookingSchedule";
+  static const String paymentdoneT = "/paymentdoneT";
 
 
 
@@ -194,6 +196,7 @@ class AppRoute {
     GetPage(name: allreviews, page: () =>  Allreviews()),
     GetPage(name: profession, page: () =>  Editprofileprofession()),
     GetPage(name: popularprovider, page: () =>  Popularprovider()),
+    GetPage(name: paymentdoneT, page: () =>  PaymentdoneT()),
     GetPage(
       name: requestBooking,
       page: () =>  RequestBookingPage(),

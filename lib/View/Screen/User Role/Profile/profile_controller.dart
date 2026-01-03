@@ -12,8 +12,20 @@ class ProfileController extends GetxController {
   final isLoading = false.obs;
   final user = Rxn<UserModel>();
 
-  final isStripeConnected = false.obs;
   final isStripeLoading = false.obs;
+
+  // 🔥 Stripe raw states
+  final isConnected = false.obs;
+  final detailsSubmitted = false.obs;
+  final payoutsEnabled = false.obs;
+  final chargesEnabled = false.obs;
+
+  // 🔥 FINAL STATE (button hide / show)
+  bool get isStripeFullyVerified =>
+      isConnected.value &&
+          detailsSubmitted.value &&
+          payoutsEnabled.value &&
+          chargesEnabled.value;
 
   @override
   void onInit() {
@@ -53,13 +65,13 @@ class ProfileController extends GetxController {
 
   // ================= STRIPE STATUS =================
 
+  // ================= STRIPE STATUS =================
   Future<void> fetchStripeAccountStatus() async {
-    update();
     try {
       isStripeLoading(true);
 
       final token =
-          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.stripeAccount),
@@ -70,12 +82,18 @@ class ProfileController extends GetxController {
       );
 
       if (res.statusCode == 200) {
-        isStripeConnected.value =
-            jsonDecode(res.body)['data']?['isConnected'] ?? false;
+        final data = jsonDecode(res.body)['data'];
+
+        isConnected.value = data?['isConnected'] ?? false;
+        detailsSubmitted.value = data?['detailsSubmitted'] ?? false;
+        payoutsEnabled.value = data?['payoutsEnabled'] ?? false;
+        chargesEnabled.value = data?['chargesEnabled'] ?? false;
       } else {
-        isStripeConnected.value = false;
+        isConnected(false);
+        detailsSubmitted(false);
+        payoutsEnabled(false);
+        chargesEnabled(false);
       }
-      update();
     } finally {
       isStripeLoading(false);
     }

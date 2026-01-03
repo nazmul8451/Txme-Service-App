@@ -8,6 +8,7 @@ import '../../../Utils/AppIcons/app_icons.dart';
 import '../../../core/App_Routes/app_routes.dart';
 import '../../../helper/Shared_prefe/shared_prefe.dart';
 import 'WalletController.dart';
+import 'modelTransactions.dart';
 
 
 class Walletpage extends StatelessWidget {
@@ -138,20 +139,23 @@ class Walletpage extends StatelessWidget {
                           width: 24.w,
                         ),
                         SizedBox(width: 12.w),
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${tx['type']} ${tx['amount']}",
+                                "${tx.type.toUpperCase()} €${tx.amount}",
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               SizedBox(height: 6.h),
                               Text(
-                                tx['note'],
+                                tx.direction == "debit"
+                                    ? "To ${tx.toEmail}"
+                                    : "From ${tx.fromEmail}",
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   color: Colors.grey,
@@ -160,8 +164,9 @@ class Walletpage extends StatelessWidget {
                             ],
                           ),
                         ),
+
                         Text(
-                          tx['timeAgo'],
+                          format24h(tx.createdAt),
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.grey,
@@ -171,6 +176,7 @@ class Walletpage extends StatelessWidget {
                     ),
                   );
                 }).toList(),
+
             ],
           ),
         ),

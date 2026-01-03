@@ -101,39 +101,41 @@ class _SendpageState extends State<Sendpage> {
 
 
               // Add New Card Button
-              Obx(() => CustomButton(
-                height: 56.h,
-                width: 353.w,
-                BoxDecoration: BoxDecoration(
-                  color: AppColors.red601,
-                  borderRadius: BorderRadius.circular(12.r),
+          Obx(() => CustomButton(
+            height: 56.h,
+            width: 353.w,
+            BoxDecoration: BoxDecoration(
+              color: controller.isSending.value
+                  ? Colors.grey
+                  : AppColors.red601,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Center(
+              child: controller.isSending.value
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                "Send",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.FFFFFF,
                 ),
-                child: Center(
-                  child: controller.isSending.value
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                    "Send",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.FFFFFF,
-                    ),
-                  ),
-                ),
-                onTap: controller.isSending.value
-                    ? null
-                    : () async {
-                  final transaction =
-                  await controller.sendMoney();
+              ),
+            ),
+            onTap: () async {
+              if (controller.isSending.value) return;
 
-                  if (transaction != null) {
-                    Get.toNamed(
-                      AppRoute.paymentdone,
-                      arguments: transaction, // 🔥 PASS DATA
-                    );
-                  }
-                },
-              )),
+              final transaction = await controller.sendMoney();
+
+              if (transaction != null) {
+                Get.offNamed(
+                  AppRoute.paymentdone,
+                  arguments: transaction,
+                );
+              }
+            },
+          ))
+
 
 
 

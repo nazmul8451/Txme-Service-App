@@ -99,7 +99,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                 SizedBox(height: 24.h),
 
                 /// 🔹 Download
-                CustomButton(
+                Obx(() => CustomButton(
                   height: 44.h,
                   width: 349.w,
                   BoxDecoration: BoxDecoration(
@@ -108,7 +108,13 @@ class TransactionDetailsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(AppIcons.download),
+                      controller.isDownloading.value
+                          ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : SvgPicture.asset(AppIcons.download),
                       SizedBox(width: 6.w),
                       Text(
                         "Download Pdf",
@@ -120,8 +126,11 @@ class TransactionDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  onTap: () {},
-                ),
+                  onTap: controller.isDownloading.value
+                      ? null
+                      : controller.downloadInvoice,
+                )),
+
               ],
             ),
           ),

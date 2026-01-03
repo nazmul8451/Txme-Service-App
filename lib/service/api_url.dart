@@ -65,24 +65,23 @@ class ApiConstant {
 
 
   static const String walletPay  = "$apiVersion/appointment/pay-with-wallet/";
+  static const String myTransactions  = "$apiVersion/transaction/my-transactions";
+  static const String transactionInvoice  = "$apiVersion/transaction/invoice/";
 
   static const String walletSend  = "$apiVersion/wallet/send";
+
   static const String walletWithdraw  = "$apiVersion/wallet/withdraw";
 
   static const String stripeAccount  = "$apiVersion/stripe/account-status";
 
   static const String stripeAccountSession  = "$apiVersion/stripe/account-link";
 
-
-
-
   static const String myWalletAvailableBalance  = "$apiVersion/wallet/my-wallet";
 
 
 
 
-  static const String createPaymentIntent  =
-      "$apiVersion/wallet/topup";
+  static const String createPaymentIntent  = "$apiVersion/wallet/topup";
 
 
   ///===================== Chats =========================///
@@ -91,15 +90,12 @@ class ApiConstant {
 
 
   static const String CeatsChat  = "$apiVersion/chat";
-
   static const String chatAdminSupport  = "$apiVersion/chat/admin-support";
 
 
   /// ====================== Get Api ======================= ///
 
   static const String  getChat = "$apiVersion/chat";  ///
-
-
   static const String  getAdminSupportAll = "$apiVersion/chat/admin-support/all";
   static const String  deleteChat = "$apiVersion/api/chat/"; //+id caicce
 
@@ -118,16 +114,11 @@ class ApiConstant {
 
   static const String deleteMessage = "$apiVersion/message"; // + /{messageId}
 
-
-
   static const String childServices = "$apiVersion/service/get-all-child-services";
-
 
   static const String userMe = "$apiVersion/user/me";
 
   static const String allProviderUser = "$apiVersion/user";
-
-
   static const String bearerToken = "bearerToken";
 
 }

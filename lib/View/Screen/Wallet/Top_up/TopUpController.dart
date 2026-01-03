@@ -113,7 +113,7 @@ class Topupcontroller extends GetxController {
 
       /// 👉 Done page + amount pass
       Get.offAllNamed(
-        AppRoute.walletpage,
+        AppRoute.paymentdoneT,
         arguments: {
           "amount": amount,
           "currency": "EUR",

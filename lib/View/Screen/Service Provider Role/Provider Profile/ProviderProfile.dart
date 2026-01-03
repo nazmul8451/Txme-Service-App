@@ -184,21 +184,24 @@ class ProviderProfilePage extends StatelessWidget {
 
               Obx(() {
                 if (controller.isStripeLoading.value) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
 
-                if (controller.isStripeConnected.value) {
-                  return Text("");
+                // 🔥 ALL 4 TRUE → HIDE BUTTON
+                if (controller.isStripeFullyVerified) {
+                  return const SizedBox();
                 }
 
-
-
-                  return GestureDetector(
-                    onTap: controller.createStripeAccountSession,
-                    child: menuItem(img: AppImg.stripeImg, title: "Connect Stripe",),
-                  );
-                return const SizedBox();
+                // ❌ ANY ONE FALSE → SHOW BUTTON
+                return GestureDetector(
+                  onTap: controller.createStripeAccountSession,
+                  child: menuItem(
+                    img: AppImg.stripeImg,
+                    title: "Connect Stripe",
+                  ),
+                );
               }),
+
 
               GestureDetector(
                 onTap: () => Get.to(() => InvoiceListPage()),

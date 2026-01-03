@@ -19,3 +19,7 @@
 -dontwarn kotlinx.parcelize.Parcelize
 # Keep Stripe classes
 -keep class com.stripe.** { *; }
+
+# Keep rules for open_file plugin
+-keep class com.crazecoder.openfile.** { *; }
+-dontwarn com.crazecoder.openfile.**

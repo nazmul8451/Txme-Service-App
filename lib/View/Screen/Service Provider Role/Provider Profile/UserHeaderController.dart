@@ -13,10 +13,20 @@ class UserHeaderController extends GetxController {
   final isLoading = false.obs;
   final user = Rxn<UserModel>();
 
-
-  /// Stripe states
-  final isStripeConnected = false.obs; // ✅ default false
   final isStripeLoading = false.obs;
+
+  //  Stripe raw states
+  final isConnected = false.obs;
+  final detailsSubmitted = false.obs;
+  final payoutsEnabled = false.obs;
+  final chargesEnabled = false.obs;
+
+  //  FINAL STATE (button hide / show)
+  bool get isStripeFullyVerified =>
+      isConnected.value &&
+          detailsSubmitted.value &&
+          payoutsEnabled.value &&
+          chargesEnabled.value;
 
   @override
   void onInit() {
@@ -57,6 +67,7 @@ class UserHeaderController extends GetxController {
 
   // ================= STRIPE STATUS =================
 
+  // ================= STRIPE STATUS =================
   Future<void> fetchStripeAccountStatus() async {
     try {
       isStripeLoading(true);
@@ -73,10 +84,17 @@ class UserHeaderController extends GetxController {
       );
 
       if (res.statusCode == 200) {
-        isStripeConnected.value =
-            jsonDecode(res.body)['data']?['isConnected'] ?? false;
+        final data = jsonDecode(res.body)['data'];
+
+        isConnected.value = data?['isConnected'] ?? false;
+        detailsSubmitted.value = data?['detailsSubmitted'] ?? false;
+        payoutsEnabled.value = data?['payoutsEnabled'] ?? false;
+        chargesEnabled.value = data?['chargesEnabled'] ?? false;
       } else {
-        isStripeConnected.value = false;
+        isConnected(false);
+        detailsSubmitted(false);
+        payoutsEnabled(false);
+        chargesEnabled(false);
       }
     } finally {
       isStripeLoading(false);
