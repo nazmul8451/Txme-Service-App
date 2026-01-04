@@ -35,7 +35,8 @@ class _NotificationCardState extends State<NotificationCard> {
         if (!isRead) {
           setState(() {
             isRead = true;
-          });
+          }
+          );
           // TODO: Call controller to mark notification as read on the server
         }
       },
@@ -103,7 +104,8 @@ class _NotificationCardState extends State<NotificationCard> {
                           ),
                         ),
                       ],
-                    ),                  ),
+                    ),
+                  ),
                 ],
               ),
             ),

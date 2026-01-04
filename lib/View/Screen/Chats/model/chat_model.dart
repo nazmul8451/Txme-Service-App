@@ -1,3 +1,39 @@
+import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
+import '../../../../service/api_url.dart';
+
+// Helper function to format the timestamp
+String _formatChatTimestamp(String isoString) {
+  if (isoString.isEmpty) {
+    return "";
+  }
+  try {
+    final messageTime = DateTime.parse(isoString).toLocal();
+    final now = DateTime.now();
+
+    final startOfToday = DateTime(now.year, now.month, now.day);
+    final startOfYesterday = startOfToday.subtract(const Duration(days: 1));
+    final startOfWeek = startOfToday.subtract(Duration(days: now.weekday - 1));
+
+    if (messageTime.isAfter(startOfToday)) {
+      // Today: Show time like "3:00 PM"
+      return DateFormat('h:mm a').format(messageTime);
+    } else if (messageTime.isAfter(startOfYesterday)) {
+      // Yesterday
+      return 'Yesterday';
+    } else if (messageTime.isAfter(startOfWeek)) {
+      // Within the last week: Show day like "Monday"
+      return DateFormat('EEEE').format(messageTime);
+    } else {
+      // Older than a week: Show date like "Jan 3"
+      return DateFormat('MMM d').format(messageTime);
+    }
+  } catch (e) {
+    debugPrint("Error parsing or formatting chat time: $e");
+    return ""; // Return empty string if parsing fails
+  }
+}
+
 class ChatModel {
   final String id;
   final String name;
@@ -17,48 +53,39 @@ class ChatModel {
 
   factory ChatModel.fromJson(Map<String, dynamic> json, String myUserId) {
     final participants = json['participants'] as List;
-
     dynamic other;
 
     if (participants.isNotEmpty && participants.first is String) {
-      /// 🔥 CASE 1: CREATE CHAT RESPONSE (only IDs)
-      final otherId =
-      participants.firstWhere((id) => id != myUserId);
-
+      final otherId = participants.firstWhere((id) => id != myUserId, orElse: () => '');
       other = {
         "_id": otherId,
         "fullName": "User",
-        "avatar": "https://i.pravatar.cc/150?img=12", // Fallback for case 1
+        "avatar": "",
       };
     } else {
-      /// 🔥 CASE 2: GET CHAT LIST RESPONSE (full user object)
       other = participants.firstWhere(
             (p) => p['_id'] != myUserId,
-        orElse: () => participants.first,
+        orElse: () => participants.isNotEmpty ? participants.first : {},
       );
     }
 
-    String avatarUrl = other['avatar'] ?? 
-        other['image'] ?? 
-        other['profileImage'] ?? 
-        other['profilePicture'] ?? // ✅ User confirmed key
-        "";
-        
-    if (avatarUrl.isEmpty) {
-      avatarUrl = "https://i.pravatar.cc/150?img=12";
+    String avatarUrl = other['avatar'] ?? other['image'] ?? other['profileImage'] ?? other['profilePicture'] ?? "";
+
+    if (avatarUrl.isNotEmpty && !avatarUrl.startsWith('http')) {
+      avatarUrl = '${ApiConstant.baseUrl}$avatarUrl';
     }
-    // Check if we need to prepend base url? (Assuming full url for now based on context)
+
+    debugPrint("✅ Constructed Avatar URL: $avatarUrl");
 
     return ChatModel(
       id: json['_id'],
       name: other['fullName'] ?? "Unknown",
       lastMessage: json['lastMessage']?['text'] ?? "",
-      time: json['lastMessage']?['createdAt'] ?? "",
+      time: _formatChatTimestamp(json['lastMessage']?['createdAt'] ?? ""),
       unreadCount: json['unreadCount'] ?? 0,
       avatar: avatarUrl,
     );
   }
-
 
   ChatModel copyWith({
     String? lastMessage,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:collection/collection.dart';
+import '../../../../../Utils/AppColors/app_colors.dart';
 import 'NotificationCard.dart';
 import 'notification_controller.dart';
-import 'notification_model.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -30,69 +29,95 @@ class NotificationPage extends StatelessWidget {
         ),
       ),
       body: Obx(() {
-        if (controller.isLoading.isTrue) {
+        if (controller.isLoading.isTrue &&
+            controller.notificationList.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
         if (controller.notificationList.isEmpty) {
-          return const Center(
-            child: Text(
-              'You have no notifications yet.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+          return RefreshIndicator(
+            onRefresh: controller.refreshNotifications,
+            child: Stack(
+              children: <Widget>[
+                ListView(), // For RefreshIndicator to work on empty screen
+                const Center(
+                  child: Text(
+                    'You have no notifications yet.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              ],
             ),
           );
         }
 
-        final groupedNotifications = _groupNotificationsByDate(controller.notificationList);
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: groupedNotifications.entries.map((entry) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  sectionTitle(entry.key),
-                  ...entry.value.map((notification) => NotificationCard(notification: notification)).toList(),
-                  const SizedBox(height: 20),
-                ],
-              );
-            }).toList(),
-          ),
+        return Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: controller.refreshNotifications,
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      itemCount: controller.notificationList.length,
+                      itemBuilder: (context, index) {
+                        final notification = controller.notificationList[index];
+                        return NotificationCard(notification: notification);
+                      },
+                    ),
+                    if (controller.isLoading.isTrue)
+                      const Center(child: CircularProgressIndicator()),
+                  ],
+                ),
+              ),
+            ),
+            _buildPaginationControls(controller),
+          ],
         );
       }),
     );
   }
 
-  Map<String, List<NotificationModel>> _groupNotificationsByDate(List<NotificationModel> notifications) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
+  Widget _buildPaginationControls(NotificationController controller) {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        color: Colors.white,
+        child: Obx(() => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Previous Button
+                if (controller.currentPage.value > 1)
+                  ElevatedButton(
+                    onPressed: controller.isLoading.isTrue
+                        ? null
+                        : controller.loadPreviousPage,
+                    child: const Text('Previous'),
+                  )
+                else
+                  const SizedBox(width: 80), // Keep space for alignment
 
-    return groupBy(notifications, (NotificationModel n) {
-      final notificationDate = DateTime(n.createdAt.year, n.createdAt.month, n.createdAt.day);
-      if (notificationDate == today) {
-        return 'Today';
-      } else if (notificationDate == yesterday) {
-        return 'Yesterday';
-      } else {
-        return 'Older';
-      }
-    });
-  }
+                // Page Indicator
+                Text(
+                  'Page ${controller.currentPage.value} of ${controller.totalPages.value}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
 
-  /// SECTION TITLE WIDGET
-  Widget sectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
-        ),
+                // Next Button
+                if (controller.currentPage.value < controller.totalPages.value)
+                  ElevatedButton(
+                    onPressed: controller.isLoading.isTrue
+                        ? null
+                        : controller.loadNextPage,
+                    child: const Text('Next'),
+                  )
+                else
+                  const SizedBox(width: 80), // Keep space for alignment
+              ],
+            )),
       ),
     );
   }

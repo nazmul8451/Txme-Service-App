@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../../Screen/User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 
@@ -81,13 +82,14 @@ class JobTimerController extends GetxController {
 
   // ---------------- HELPERS ----------------
 
+  // ✅ FIXED: Now correctly parses the full ISO 8601 timestamp from the API.
   DateTime _parseTimeToday(String time) {
-    final parts = time.split(':');
-    return DateTime.now().copyWith(
-      hour: int.parse(parts[0]),
-      minute: int.parse(parts[1]),
-      second: 0,
-    );
+    try {
+      return DateTime.parse(time);
+    } catch (e) {
+      debugPrint("Error parsing time in JobTimerController: $e");
+      return DateTime.now(); // Return current time as a safe fallback.
+    }
   }
 
   int _workedTimeToSeconds(double value) {

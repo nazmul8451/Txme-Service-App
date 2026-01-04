@@ -79,11 +79,12 @@ class AppointmentsController extends GetxController {
           appointments.sort((a, b) {
             const order = {
               "pending": 0,
-              "confirmed": 4,
-              "cancelled": 5,
-              "accepted": 3,
               "in_progress": 1,
               "work_completed": 2,
+              "accepted": 3,
+              "confirmed": 4,
+              "completed": 5, // ✅ ADDED
+              "cancelled": 6,
             };
             return (order[a.status] ?? 99) -
                 (order[b.status] ?? 99);

@@ -32,7 +32,6 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
     final AppointmentModel2 initialAppointment = Get.arguments as AppointmentModel2;
     appointmentId = initialAppointment.id;
 
-    // Auto navigation if status changes (e.g., customer pays)
     ever(appController.appointments, (List<AppointmentModel2> list) {
       final updated = list.firstWhereOrNull((e) => e.id == appointmentId);
       if (updated != null) {
@@ -345,22 +344,23 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                     )),
 
                     onTap: () async {
-                      ///  prevent double tap
                       if (controller.isLoading.value) return;
 
-                      final success =
-                      await controller.acceptBooking(appointment.id);
+                      final currentStatus = appointment.status.toLowerCase();
+                      bool success = false;
 
-                      ///  API SUCCESS → GO TO JOB PAGE
+                      if (currentStatus == "work_completed" || currentStatus == "awaiting_payment" || currentStatus == "cashpayment") {
+                        success = await controller.acceptBooking(appointment.id);
+                      } else if (currentStatus.contains("review")) {
+                        success = true; 
+                      }
+
                       if (success) {
-                        Get.off(
-                              () => Providerpaymentsuccessful(),
-                          arguments: appointment, //  FULL MODEL
-                        );
+                        Get.off(() => Providerpaymentsuccessful(), arguments: appointment);
                       } else {
                         Get.snackbar(
                           "Error",
-                          "Failed to accept booking",
+                          "Could not confirm payment. The appointment may have already been processed.",
                           snackPosition: SnackPosition.BOTTOM,
                         );
                       }
@@ -394,4 +394,3 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
     );
   }
 }
-

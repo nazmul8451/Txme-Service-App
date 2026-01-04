@@ -48,8 +48,11 @@ class _AvailablebalanceState extends State<Availablebalance> {
                   return const CircularProgressIndicator();
                 }
 
+                // ✅ FIXED: Parse the string to a double before formatting
+                final balanceValue = double.tryParse(controller.balance.value) ?? 0.0;
+
                 return Text(
-                  "€ ${controller.balance.value}",
+                  "€ ${balanceValue.toStringAsFixed(2)}",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 48.sp,

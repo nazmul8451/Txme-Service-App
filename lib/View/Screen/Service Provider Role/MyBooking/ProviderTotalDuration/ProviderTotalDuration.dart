@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:get/get.dart';
 
 import '../../../../../Utils/AppColors/app_colors.dart';
 import '../../../../../Utils/AppIcons/app_icons.dart';
 import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
-import '../../../../Widgegt/CustomBottomNavBar/ProviderNavBar.dart';
-import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../../Widgegt/JobProgressTime/CountdownTimerWidget.dart';
-import '../../../../Widgegt/JobProgressTime/JobTimerController.dart';
 import '../../../../Widgegt/JobProgressTime/ProviderCountdownTimerWidget.dart';
+import '../../../../Widgegt/JobProgressTime/JobTimerController.dart';
 import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import '../ConfirmPayment/ConfirmPayment.dart';
 import 'ProviderToralDurationController.dart';
-
-
 
 class Providertotalduration extends StatefulWidget {
   const Providertotalduration({super.key});
@@ -40,9 +33,10 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
   void initState() {
     super.initState();
     timer.initFromAppointment(appointment);
+    // ✅ ADDED: Initialize socket listener for real-time updates
+    controller.initSocketListener(appointment);
   }
 
- // 2 hours
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,12 +60,12 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
             style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: Color(0xff1F2937)),
+                color: const Color(0xff1F2937)),
           ),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -88,7 +82,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xff1F2937)),
+                    color: const Color(0xff1F2937)),
               ),
               SizedBox(
                 height: 40.h,
@@ -100,9 +94,9 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 20.h),
                 decoration: BoxDecoration(
-                    color: Color(0xffF7F7F7),
+                    color: const Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: Color(0xffFF5A36), width: 1.w)),
+                    border: Border.all(color: const Color(0xffFF5A36), width: 1.w)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -111,7 +105,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                       style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xff1F2937)),
+                          color: const Color(0xff1F2937)),
                     ),
                     SizedBox(
                       height: 12.h,
@@ -122,7 +116,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           AppIcons.location,
                           height: 18.h,
                           width: 16.w,
-                          color: Color(0xff4C545F),
+                          color: const Color(0xff4C545F),
                         ),
                         SizedBox(
                           width: 4.w,
@@ -133,7 +127,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
-                              color: Color(0xff1F2937)),
+                              color: const Color(0xff1F2937)),
                         ),
                       ],
                     ),
@@ -146,7 +140,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           AppIcons.date,
                           height: 18.h,
                           width: 16.w,
-                          color: Color(0xff4C545F),
+                          color: const Color(0xff4C545F),
                         ),
                         SizedBox(
                           width: 4.w,
@@ -156,7 +150,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
-                              color: Color(0xff1F2937)),
+                              color: const Color(0xff1F2937)),
                         ),
                       ],
                     ),
@@ -169,7 +163,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           AppIcons.prof,
                           height: 18.h,
                           width: 16.w,
-                          color: Color(0xff4C545F),
+                          color: const Color(0xff4C545F),
                         ),
                         SizedBox(
                           width: 4.w,
@@ -179,7 +173,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
-                              color: Color(0xff1F2937)),
+                              color: const Color(0xff1F2937)),
                         ),
                       ],
                     ),
@@ -191,8 +185,8 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                 width: 353.w,
                 height: 137.h,
                 decoration: BoxDecoration(
-                  color: Color(0xffF7F7F7),
-                  border: Border.all(color: Color(0xffFF5A36), width: 1.w),
+                  color: const Color(0xffF7F7F7),
+                  border: Border.all(color: const Color(0xffFF5A36), width: 1.w),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Padding(
@@ -205,7 +199,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                         style: TextStyle(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xff1F2937)),
+                            color: const Color(0xff1F2937)),
                       ),
                       SizedBox(
                         height: 8.h,
@@ -216,7 +210,7 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
                         style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xff1F2937)),
+                            color: const Color(0xff1F2937)),
                       ),
                     ],
                   ),
@@ -225,51 +219,49 @@ class _ProvidertotaldurationState extends State<Providertotalduration> {
               SizedBox(
                 height: 20.h,
               ),
-              CustomButton(
-                  height: 56.h,
-                  width: 353.w,
-                  BoxDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    color: Color(0xffDA0808),
-                  ),
-                  child: Center(
-                      child: Text(
-                    "End",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Color(0xffFFFFFF)),
-                  )),
-
-
+              GestureDetector(
                 onTap: () async {
-                  ///  prevent double tap
                   if (controller.isLoading.value) return;
 
                   final success =
                   await controller.acceptBooking(appointment.id);
 
-                  ///  API SUCCESS → GO TO JOB PAGE
                   if (success) {
                     Get.off(
                           () => ConfirmPaymentpage(),
-                      arguments: appointment, //  FULL MODEL
+                      arguments: appointment,
                     );
                   } else {
                     Get.snackbar(
                       "Error",
-                      "Failed to accept booking",
+                      "Failed to end job",
                       snackPosition: SnackPosition.BOTTOM,
                     );
                   }
                 },
+                child: Container(
+                  height: 56.h,
+                  width: 353.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    color: const Color(0xffDA0808),
+                  ),
+                  child: Center(
+                      child: Obx(() => controller.isLoading.value
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                        "End",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Color(0xffFFFFFF)),
+                      ))),
+                ),
               ),
             ],
           ),
         ),
       ),
-      //bottomNavigationBar: CustomProvidernavbar(selectedIndex: 1),
-
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 1),
     );
   }

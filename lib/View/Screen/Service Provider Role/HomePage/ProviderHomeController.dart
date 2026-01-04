@@ -48,7 +48,11 @@ class ProviderHomeController extends GetxController {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true && data['data'] != null) {
-          notificationCount.value = data['data']['unreadCount'] ?? 0;
+          if (data['data'] is int) {
+            notificationCount.value = data['data'];
+          } else if (data['data'] is Map) {
+            notificationCount.value = data['data']['unreadCount'] ?? 0;
+          }
         }
       } else {
         print('Failed to fetch notification count: ${response.statusCode}');

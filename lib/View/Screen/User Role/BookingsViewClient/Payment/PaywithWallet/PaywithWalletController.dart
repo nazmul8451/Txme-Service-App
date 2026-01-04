@@ -48,7 +48,7 @@ class PayWithWalletController extends GetxController {
       debugPrint("📨 BODY => ${res.body}");
 
       if (res.statusCode == 200 || res.statusCode == 201) {
-        Get.offAllNamed(AppRoute.providerpaymentsuccessful);
+        Get.offAllNamed(AppRoute.providerpaymentsuccessful, arguments: appointment);
         Get.snackbar("Success", "Payment completed successfully");
       } else {
         Get.snackbar("Error", "Payment failed");

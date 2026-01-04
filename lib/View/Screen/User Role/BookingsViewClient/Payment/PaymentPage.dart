@@ -13,6 +13,7 @@ import '../../../../../core/App_Routes/app_routes.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
+import 'Onlinepayment/Onlinepayment.dart';
 import 'PaymentPageController.dart';
 import 'PaymentSuccessful/PaymentSuccessful.dart';
 import 'PaywithWallet/PaywithWallet.dart';
@@ -347,7 +348,10 @@ class _PaymentpageState extends State<Paymentpage> {
                   )),
 
                   onTap: () {
-                    Get.toNamed(AppRoute.onlinepayment);
+                    Get.off(
+                          () => Onlinepayment(),
+                      arguments: appointment, //  FULL MODEL
+                    );
                   }
                   ),
               SizedBox(

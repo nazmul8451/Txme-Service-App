@@ -1,152 +1,127 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:txme_app/Utils/AppIcons/app_icons.dart';
-import '../../../../Utils/AppColors/app_colors.dart';
-import '../../../Widgegt/MessageBubbleWidget/MessageBubble.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../controller/message_controller.dart';
 import '../model/chat_model.dart';
+import '../../../Widgegt/MessageBubbleWidget/MessageBubble.dart';
 
-class ChatDetailsPage extends StatelessWidget {
+class ChatDetailsPage extends StatefulWidget {
   final ChatModel chat;
-  ChatDetailsPage({super.key, required this.chat});
+
+  const ChatDetailsPage({super.key, required this.chat});
+
+  @override
+  State<ChatDetailsPage> createState() => _ChatDetailsPageState();
+}
+
+class _ChatDetailsPageState extends State<ChatDetailsPage> {
+  late final MessageController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(MessageController(widget.chat.id));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final MessageController controller = Get.put(MessageController(chat.id));
-
     return Scaffold(
-      backgroundColor: AppColors.FFFFFF,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.FFFFFF,
         elevation: 1,
-        leading: InkWell(
-          onTap: () => Get.back(),
-          child: Center(
-            child: SizedBox(
-              height: 18.h,
-              width: 18.w,
-              child: SvgPicture.asset(
-                AppIcons.backIcons,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
+        shadowColor: Colors.black.withOpacity(0.1),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () => Get.back(),
         ),
-        title: Obx(() {
-          // Initialize logic (dirty but efficient inline) or use controller onInit
-          if (controller.chatName.value.isEmpty) {
-             controller.chatName.value = chat.name;
-             controller.chatAvatar.value = chat.avatar;
-          }
-          
-          return Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(controller.chatAvatar.value),
-              ),
-              SizedBox(width: 10.w),
-              Text(
-                controller.chatName.value,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          );
-        }),
-        actions: [
-          InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(right: 16.w),
-              child: SizedBox(
-                height: 20.h,
-                width: 20.w,
-                child: SvgPicture.asset(
-                  AppIcons.dots3,
-                  fit: BoxFit.contain,
-                ),
-              ),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(widget.chat.avatar),
             ),
+            const SizedBox(width: 12),
+            Text(
+              widget.chat.name,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Obx(() {
+              if (controller.messages.isEmpty) {
+                return const Center(child: Text("No messages yet."));
+              }
+              return ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.all(16),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  final message = controller.messages[index];
+                  return MessageBubble(message: message);
+                },
+              );
+            }),
+          ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
           ),
         ],
       ),
-
-      /// BODY
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              /// MESSAGE LIST
-              Expanded(
-                child: Obx(() {
-                  return ListView.builder(
-                    reverse: true, // ✅ START FROM BOTTOM
-                    padding: EdgeInsets.all(16),
-                    itemCount: controller.messages.length,
-                    itemBuilder: (context, index) {
-                      final msg = controller.messages[index];
-                      return MessageBubble(message: msg);
-                    },
-                  );
-                }),
-              ),
-        
-              /// INPUT FIELD
-        
-              Container(
-                width: 353.w,
-                height: 64.h,
+      child: SafeArea(
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.photo_outlined, color: Colors.grey),
+              onPressed: controller.sendImageMessage,
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(43.r),
-                  color: Color(0xffF7F7F7),
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: controller.messageController,
-                        decoration: InputDecoration(
-                          hintText: "Type a message",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(43.r),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Color(0xffF7F7F7),
-        
-                          suffixIcon: SizedBox(
-                            width: 24.w,
-                            height: 24.h,
-                            child: Center(
-                              child: GestureDetector(
-                                onTap: controller.sendMessage,
-                                child: SvgPicture.asset(
-                                  AppIcons.rightarrow,
-                                  height: 24.h,
-                                  width: 24.w,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
-        
-                        ),
-        
-                      ),
-                    ),
-                  ],
+                child: TextField(
+                  controller: controller.messageController,
+                  decoration: const InputDecoration(
+                    hintText: "Type a message",
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
-        
-            ],
-          ),
+            ),
+            SizedBox(width: 10.w),
+            Obx(() => IconButton(
+              icon: Icon(
+                Icons.send,
+                color: controller.canSend.value ? Colors.blue : Colors.grey,
+              ),
+              onPressed: () {
+                if (controller.canSend.value) {
+                  controller.sendMessage();
+                }
+              },
+            )),
+          ],
         ),
       ),
     );

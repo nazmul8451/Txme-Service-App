@@ -84,6 +84,9 @@ class ApiConstant {
   static const String createPaymentIntent  = "$apiVersion/wallet/topup";
 
 
+  static const String onlinePay  = "$apiVersion/stripe/create-appointment-payment-intent/";
+
+
   ///===================== Chats =========================///
 
   /// ======================== post Api =========================///

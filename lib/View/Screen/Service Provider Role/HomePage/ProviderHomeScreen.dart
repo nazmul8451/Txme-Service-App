@@ -52,6 +52,7 @@ class ProviderHomeScreen extends StatelessWidget {
             controller.fetchCurrentAppointmentStatus(),
             appointmentController.loadData(),
             walletController.getAvailableBalance(),
+            controller.fetchUnreadNotificationCount(), // Refresh notification count
           ]);
         },
         child: SingleChildScrollView(

@@ -9,34 +9,63 @@ class NotificationController extends GetxController {
   var isLoading = true.obs;
   var notificationList = <NotificationModel>[].obs;
 
+  // Pagination
+  var currentPage = 1.obs;
+  var totalPages = 1.obs;
+  final int limit = 10;
+
   @override
   void onInit() {
-    fetchNotifications();
+    fetchNotifications(page: 1);
     super.onInit();
   }
 
-  Future<void> fetchNotifications() async {
+  Future<void> refreshNotifications() async {
+    await fetchNotifications(page: 1);
+  }
+
+  Future<void> fetchNotifications({required int page}) async {
+    isLoading.value = true;
     try {
-      isLoading(true);
       final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url = "${ApiConstant.baseUrl}${ApiConstant.notification}?page=$page&limit=$limit";
+      
       final response = await http.get(
-        Uri.parse(ApiConstant.baseUrl + ApiConstant.notification),
+        Uri.parse(url),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> notificationsJson = data['data']['notifications'];
-        notificationList.value = notificationsJson.map((json) => NotificationModel.fromJson(json)).toList();
+        final newNotifications = notificationsJson.map((json) => NotificationModel.fromJson(json)).toList();
+
+        notificationList.assignAll(newNotifications);
+
+        if (data['data']['pagination'] != null) {
+          totalPages.value = data['data']['pagination']['totalPage'] ?? 1;
+          currentPage.value = data['data']['pagination']['page'] ?? 1;
+        }
+
       } else {
         Get.snackbar('Error', 'Failed to fetch notifications');
-        print('Failed to fetch notifications: ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred');
-      print('Error fetching notifications: $e');
+      Get.snackbar('Error', 'An error occurred: $e');
     } finally {
-      isLoading(false);
+      isLoading.value = false;
+    }
+  }
+
+  void loadNextPage() {
+    if (currentPage.value < totalPages.value) {
+      fetchNotifications(page: currentPage.value + 1);
+    }
+  }
+
+  void loadPreviousPage() {
+    if (currentPage.value > 1) {
+      fetchNotifications(page: currentPage.value - 1);
     }
   }
 }

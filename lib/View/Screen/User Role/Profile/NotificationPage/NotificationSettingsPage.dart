@@ -58,9 +58,7 @@ class NotificationSettings extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Save logic
-                },
+                onPressed: controller.saveSettings, // Save logic
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.red601,
                   padding: EdgeInsets.symmetric(vertical: 14.h),

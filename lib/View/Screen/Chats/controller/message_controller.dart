@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
@@ -16,27 +20,27 @@ class MessageController extends GetxController {
 
   StreamSubscription? _socketSubscription;
 
-  /// ✅ GLOBAL SOCKET INSTANCE
   final SocketApi socketApi = SocketApi();
 
   RxList<MessageModel> messages = <MessageModel>[].obs;
   final TextEditingController messageController = TextEditingController();
 
-  /// Header Info
   RxString chatName = "".obs;
   RxString chatAvatar = "".obs;
+  final canSend = false.obs;
 
   late String myUserId;
 
   @override
   void onInit() {
     super.onInit();
-    // No change needed here really, just ensuring structure is essentially correct
-    _init(); // _init is async and handles loading user ID first
+    messageController.addListener(() {
+      canSend.value = messageController.text.isNotEmpty;
+    });
+    _init();
   }
 
   Future<void> _init() async {
-    // Ensure userId is fetched
     final fetchedId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
     myUserId = fetchedId;
     debugPrint("👤 My User ID loaded: $myUserId");
@@ -45,119 +49,95 @@ class MessageController extends GetxController {
       debugPrint("❌ ERROR: User ID is empty! Cannot determine 'isMe'.");
     }
 
-    /// 🔥 JOIN CHAT ROOM
     socketApi.joinChat(chatId);
-
-    /// 🔥 LOAD OLD MESSAGES
     await getMessages();
 
-    /// 🔥 LISTEN SOCKET MESSAGE
     final eventName = "getMessage::$chatId";
-    
     debugPrint("🎧 Listening to Socket Event: $eventName");
-    
+
     socketApi.on(eventName, (data) {
       debugPrint("📩 EVENT RECEIVED [$eventName]: $data");
-      
       if (data == null) return;
 
       final raw = data['message'] ?? data;
 
       try {
         final msg = MessageModel.fromJson(raw, myUserId);
-        debugPrint("🧩 Parsed Socket Message: ${msg.message} | isMe: ${msg.isMe}");
+        debugPrint("🧩 Parsed Socket Message: ${msg.text} | isMe: ${msg.isMe}");
 
-        // ✅ Check if this message mimics my own optimistic message
         if (messages.any((m) => m.id == msg.id)) {
-           debugPrint("⚠️ Duplicate Message ID ignored: ${msg.id}");
-           return;
+          debugPrint("⚠️ Duplicate Message ID ignored: ${msg.id}");
+          return;
         }
-        
+
         if (msg.isMe) {
-           // Check for temp message match
-           final tempIndex = messages.indexWhere((m) => m.id.startsWith("temp_") && m.message == msg.message);
-           
-           if (tempIndex != -1) {
-             debugPrint("🔄 Replacing Temp Message with Socket Message");
-             messages[tempIndex] = msg;
-             return; 
-           }
+          final tempIndex = messages.indexWhere((m) => m.id.startsWith("temp_") && m.text == msg.text);
+          if (tempIndex != -1) {
+            debugPrint("🔄 Replacing Temp Message with Socket Message");
+            messages[tempIndex] = msg;
+            return;
+          }
         }
-        
+
         messages.insert(0, msg);
-        
+
       } catch (e) {
         debugPrint("❌ Message Parse Error: $e");
       }
     });
-
   }
 
-  /// ================= GET OLD MESSAGES =================
   Future<void> getMessages() async {
-    final token =
-    await SharePrefsHelper.getString(ApiConstant.bearerToken);
-
+    final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
     final response = await http.get(
-      Uri.parse(
-        "${ApiConstant.baseUrl}${ApiConstant.apiVersion}/message/$chatId?page=1&limit=50",
-      ),
-      headers: {
-        "Authorization": "Bearer $token",
-      },
+      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.apiVersion}/message/$chatId?page=1&limit=50"),
+      headers: {"Authorization": "Bearer $token"},
     );
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
+      final list = decoded['data'] is Map ? decoded['data']['messages'] : decoded['data'];
 
-      final list = decoded['data'] is Map
-          ? decoded['data']['messages']
-          : decoded['data'];
-
-      // ✅ Parse Participant info if available to update Header
       if (decoded['data'] is Map && decoded['data']['participant'] != null) {
-          final p = decoded['data']['participant'];
-          chatName.value = p['fullName'] ?? chatName.value;
-          chatAvatar.value = p['profilePicture'] ?? p['avatar'] ?? chatAvatar.value;
+        final p = decoded['data']['participant'];
+        chatName.value = p['fullName'] ?? chatName.value;
+        chatAvatar.value = p['profilePicture'] ?? p['avatar'] ?? chatAvatar.value;
       }
 
       messages.value = list
           .map<MessageModel>((e) => MessageModel.fromJson(e, myUserId))
           .toList()
           .reversed
-          .toList(); // Reverse so Index 0 is Newest (Bottom)
+          .toList();
       update();
     }
   }
 
-  /// ================= SEND MESSAGE =================
   Future<void> sendMessage() async {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
-    /// 🔥 TEMP ID (IMPORTANT)
     final tempId = "temp_${DateTime.now().millisecondsSinceEpoch}";
 
-    /// ✅ 1. OPTIMISTIC UI
     messages.insert(0,
       MessageModel(
         id: tempId,
-        message: text,
+        text: text,
         isMe: true,
         time: "now",
+        type: 'TEXT',
+        files: [],
       ),
     );
     update();
 
     messageController.clear();
 
-    /// ✅ 2. SOCKET → REALTIME
     socketApi.sendMessage(
       chatId: chatId,
       text: text,
     );
 
-    /// 🔄 Update Chat List Screen (Last Message)
     try {
       if (Get.isRegistered<ChatController>()) {
         Get.find<ChatController>().updateLastMessage(chatId, text);
@@ -166,11 +146,8 @@ class MessageController extends GetxController {
       debugPrint("Error updating Chat List: $e");
     }
 
-    /// ✅ 3. API → SAVE DATABASE
     try {
-      final token =
-      await SharePrefsHelper.getString(ApiConstant.bearerToken);
-
+      final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
       final response = await http.post(
         Uri.parse("${ApiConstant.baseUrl}${ApiConstant.message}"),
         headers: {
@@ -186,10 +163,8 @@ class MessageController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final decoded = jsonDecode(response.body);
-        final savedMsg =
-        MessageModel.fromJson(decoded['data'], myUserId);
+        final savedMsg = MessageModel.fromJson(decoded['data'], myUserId);
 
-        ///  REPLACE TEMP MESSAGE WITH REAL ONE
         final index = messages.indexWhere((m) => m.id == tempId);
         if (index != -1) {
           messages[index] = savedMsg;
@@ -200,6 +175,50 @@ class MessageController extends GetxController {
       }
     } catch (e) {
       debugPrint("❌ Message API error: $e");
+    }
+  }
+
+  /// ================= SEND IMAGE =================
+  Future<void> sendImageMessage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url = "${ApiConstant.baseUrl}${ApiConstant.message}";
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.headers['Authorization'] = 'Bearer $token';
+      request.fields['chatId'] = chatId;
+      request.fields['type'] = 'IMAGE';
+
+      // ✅ FIXED: Added filename and debug print
+      final mimeType = lookupMimeType(pickedFile.path);
+      debugPrint("✅ MIME Type: $mimeType");
+
+      final file = await http.MultipartFile.fromPath(
+        'messageFiles',
+        pickedFile.path,
+        filename: pickedFile.name, // ✅ ADDED filename
+        contentType: mimeType != null ? MediaType.parse(mimeType) : null,
+      );
+
+      request.files.add(file);
+
+      final response = await request.send();
+
+      if (response.statusCode == 201) {
+        getMessages(); // Refresh messages to show the new image
+        print("Image sent successfully");
+      } else {
+        final responseBody = await response.stream.bytesToString();
+        print("Failed to send image: ${response.statusCode} - $responseBody");
+      }
+    } catch (e) {
+      print("Error sending image: $e");
+      Get.snackbar("Error", "An error occurred while sending the image");
     }
   }
 

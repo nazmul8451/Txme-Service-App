@@ -58,7 +58,8 @@ dependencies:
   open_file: ^3.2.1
   timeago: ^3.6.1
   collection: ^1.18.0
-
+  http_parser: ^4.0.2
+  mime: ^1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -8,26 +8,14 @@ import '../../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../../service/api_url.dart';
 
 class Confirmpaymentcontroller extends GetxController {
-  // Routing Number (Reactive)
-
-  var totalAmount = ''.obs;
-
-  // Note TextField Controller
-  TextEditingController noteController = TextEditingController();
-
   final isLoading = false.obs;
 
-  /// ================== ACCEPT BOOKING ==================
   Future<bool> acceptBooking(String appointmentId) async {
     try {
       isLoading.value = true;
 
-      final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
-
-      final uri = Uri.parse(
-        "${ApiConstant.baseUrl}${ApiConstant.appointmentUpdate}$appointmentId",
-      );
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final uri = Uri.parse("${ApiConstant.baseUrl}${ApiConstant.appointmentUpdate}$appointmentId");
 
       debugPrint("🔗 FINAL URL => $uri");
 
@@ -46,10 +34,16 @@ class Confirmpaymentcontroller extends GetxController {
       if (res.statusCode == 200 || res.statusCode == 201) {
         final body = jsonDecode(res.body);
         return body['success'] == true;
+      } else {
+        // ✅ ADDED: Handle API errors gracefully
+        final body = jsonDecode(res.body);
+        final message = body['message'] ?? "An unknown error occurred.";
+        Get.snackbar("Error", message, snackPosition: SnackPosition.BOTTOM);
+        return false;
       }
-      return false;
     } catch (e) {
       debugPrint("❌ ERROR => $e");
+      Get.snackbar("Error", "An unexpected error occurred.", snackPosition: SnackPosition.BOTTOM);
       return false;
     } finally {
       isLoading.value = false;
