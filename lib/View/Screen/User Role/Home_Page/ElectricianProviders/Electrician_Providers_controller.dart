@@ -1,11 +1,8 @@
 
-
 import 'dart:convert';
 
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../../helper/Shared_prefe/shared_prefe.dart';
@@ -22,9 +19,16 @@ class ProviderController extends GetxController {
   final int limit = 10;
   int totalPage = 1;
 
+  // ✅ ADDED: To store filter parameters from the previous page
+  Map<String, String> filterParams = {};
+
   @override
   void onInit() {
     super.onInit();
+    // ✅ ADDED: Check for arguments and store them
+    if (Get.arguments is Map<String, String>) {
+      filterParams = Get.arguments as Map<String, String>;
+    }
     getAllProviders(isFirst: true);
   }
 
@@ -40,14 +44,26 @@ class ProviderController extends GetxController {
         isMoreLoading(true);
       }
 
-      final token =
-      await SharePrefsHelper.getString(ApiConstant.bearerToken);
+      final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
 
-      final url =
-          "${ApiConstant.baseUrl}${ApiConstant.allProviderUser}?page=$page&limit=$limit";
+      // ✅ MODIFIED: Build the URI with query parameters
+      final queryParameters = {
+        'page': page.toString(),
+        'limit': limit.toString(),
+        ...filterParams, // Add all the filters from the search page
+      };
+
+      // Remove null or empty values to keep the URL clean
+      queryParameters.removeWhere((key, value) => value.isEmpty);
+
+      final uri = Uri.parse(
+              "${ApiConstant.baseUrl}${ApiConstant.allProviderUser}")
+          .replace(queryParameters: queryParameters);
+
+      debugPrint("✅ Fetching providers with URL: $uri");
 
       final response = await http.get(
-        Uri.parse(url),
+        uri,
         headers: {
           "Authorization": "Bearer $token",
         },
@@ -62,7 +78,7 @@ class ProviderController extends GetxController {
         totalPage = pagination?['totalPage'] ?? 1;
 
         final newProviders =
-        list.map((e) => ProviderModel.fromJson(e)).toList();
+            list.map((e) => ProviderModel.fromJson(e)).toList();
 
         providers.addAll(newProviders);
       }
@@ -74,4 +90,3 @@ class ProviderController extends GetxController {
     }
   }
 }
-
