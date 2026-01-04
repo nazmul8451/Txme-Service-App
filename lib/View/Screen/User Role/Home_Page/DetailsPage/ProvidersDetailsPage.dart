@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Home_Page/models/review_model.dart';
@@ -32,8 +30,10 @@ class _DetailsPageState extends State<DetailsPage> {
   void initState() {
     super.initState();
     controller.fetchAllReviews(widget.provider.id);
+    controller.fetchProviderStats(widget.provider.id); // ✅ ADDED
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -41,7 +41,6 @@ class _DetailsPageState extends State<DetailsPage> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Image Section
           Container(
             width: 393.w,
             height: 344.h,
@@ -67,7 +66,7 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
 
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,23 +75,22 @@ class _DetailsPageState extends State<DetailsPage> {
                   style: TextStyle(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xff4C545F)),
+                      color: const Color(0xff4C545F)),
                 ),
 
                 Text(
                   widget.provider.service,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: Color(0xff4C545F),
+                    color: const Color(0xff4C545F),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-                // Rating / Orders / Experience
-
-                Container(
+                // ✅ UPDATED: Now uses Obx to be reactive
+                Obx(() => Container(
                   width: 353.w,
                   height: 103.h,
                   decoration: BoxDecoration(
@@ -102,24 +100,24 @@ class _DetailsPageState extends State<DetailsPage> {
                       BoxShadow(
                         color: AppColors.gray.withOpacity(0.3),
                         blurRadius: 12.r,
-                        offset: Offset(0, 6),
+                        offset: const Offset(0, 6),
                       ),
                     ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _infoColumn(
-                          AppImg.star, widget.provider.rating, "Rating"),
-                      _infoColumn(AppImg.completed, widget.provider.experience,
-                          "Orders"),
-                      _infoColumn(AppImg.experience, widget.provider.experience,
-                          "Years"),
-                    ],
-                  ),
-                ),
+                  child: controller.providerStats.value == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _infoColumn(
+                                AppImg.star, controller.providerStats.value!.averageRating, "Rating"),
+                            _infoColumn(AppImg.completed, controller.providerStats.value!.totalOrders, "Orders"),
+                            _infoColumn(AppImg.experience, controller.providerStats.value!.experience, "Years"),
+                          ],
+                        ),
+                )),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +127,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16.sp,
-                        color: Color(0xff565656),
+                        color: const Color(0xff565656),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -146,13 +144,13 @@ class _DetailsPageState extends State<DetailsPage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 12.w), // width text অনুযায়ী
                             decoration: BoxDecoration(
-                              color: Color(0xffF7F7F7),
+                              color: const Color(0xffF7F7F7),
                               borderRadius: BorderRadius.circular(6.r),
                               boxShadow: [
                                 BoxShadow(
                                   color: AppColors.gray.withOpacity(0.2),
                                   blurRadius: 12.r,
-                                  offset: Offset(0, 6),
+                                  offset: const Offset(0, 6),
                                 ),
                               ],
                             ),
@@ -162,7 +160,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xff565656),
+                                  color: const Color(0xff565656),
                                 ),
                               ),
                             ),
@@ -187,7 +185,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16.sp,
-                              color: Color(0xff4C545F)),
+                              color: const Color(0xff4C545F)),
                         ),
                         Padding(
                           padding: EdgeInsets.only(right: 60.w),
@@ -196,7 +194,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16.sp,
-                                color: Color(0xff4C545F)),
+                                color: const Color(0xff4C545F)),
                           ),
                         )
                       ],
@@ -213,20 +211,20 @@ class _DetailsPageState extends State<DetailsPage> {
                               width: 60.w,
                               height: 30.h,
                               decoration: BoxDecoration(
-                                color: Color(0xffF7F7F7),
+                                color: const Color(0xffF7F7F7),
                                 borderRadius: BorderRadius.circular(6.r),
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppColors.gray.withOpacity(0.2),
                                     blurRadius: 12.r,
-                                    offset: Offset(0, 6),
+                                    offset: const Offset(0, 6),
                                   ),
                                 ],
                               ),
                               child: Center(
                                   child: Text(
                                 widget.provider.availableFrom,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xff4C545F)),
@@ -235,7 +233,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             SizedBox(
                               width: 10.w,
                             ),
-                            Text(
+                            const Text(
                               "To",
                               style: TextStyle(
                                   fontSize: 12,
@@ -249,20 +247,20 @@ class _DetailsPageState extends State<DetailsPage> {
                               width: 60.w,
                               height: 30.h,
                               decoration: BoxDecoration(
-                                color: Color(0xffF7F7F7),
+                                color: const Color(0xffF7F7F7),
                                 borderRadius: BorderRadius.circular(6.r),
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppColors.gray.withOpacity(0.2),
                                     blurRadius: 12.r,
-                                    offset: Offset(0, 6),
+                                    offset: const Offset(0, 6),
                                   ),
                                 ],
                               ),
                               child: Center(
                                   child: Text(
                                 widget.provider.availableTo,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xff4C545F)),
@@ -274,20 +272,20 @@ class _DetailsPageState extends State<DetailsPage> {
                           width: 95.w,
                           height: 30.h,
                           decoration: BoxDecoration(
-                            color: Color(0xffF7F7F7),
+                            color: const Color(0xffF7F7F7),
                             borderRadius: BorderRadius.circular(6.r),
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.gray.withOpacity(0.2),
                                 blurRadius: 12.r,
-                                offset: Offset(0, 6),
+                                offset: const Offset(0, 6),
                               ),
                             ],
                           ),
                           child: Center(
                             child: Text(
                               "\$${widget.provider.hourlyRate} (Hourly)",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff4C545F),
@@ -308,17 +306,17 @@ class _DetailsPageState extends State<DetailsPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Bio",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       widget.provider.bio,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.black87,
                       ),
@@ -337,7 +335,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 16.sp,
-                              color: Color(0xff4C545F)),
+                              color: const Color(0xff4C545F)),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -346,11 +344,11 @@ class _DetailsPageState extends State<DetailsPage> {
                               arguments: widget.provider.id, // 🔥 providerId pass
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             "Show all",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16.sp,
+                                fontSize: 16,
                                 color: Colors.blue),
                           ),
                         ),
@@ -360,11 +358,11 @@ class _DetailsPageState extends State<DetailsPage> {
 
                     Obx(() {
                       if (controller.isLoading.value) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (controller.reviewList.isEmpty) {
-                        return Text(
+                        return const Text(
                           "No reviews yet",
                           style: TextStyle(color: Colors.grey),
                         );
@@ -405,7 +403,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14.sp),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Text(
                                       review.createdAt, //  formatted date
                                       style: TextStyle(
@@ -444,7 +442,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     BoxDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.r),
                       color:
-                          isUserSelected ? AppColors.red601 : Color(0xffFFEFEB),
+                          isUserSelected ? AppColors.red601 : const Color(0xffFFEFEB),
                       border: Border.all(color: AppColors.red601, width: 1.w),
                     ),
                     child: Center(
@@ -481,13 +479,13 @@ class _DetailsPageState extends State<DetailsPage> {
                       BoxDecoration: BoxDecoration(
                         color: !controller.isUserSelected.value
                             ? AppColors.red601
-                            : Color(0xffFFEFEB),
+                            : const Color(0xffFFEFEB),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.red601),
                       ),
                       child: Center(
                         child: controller.isLoading.value
-                            ? CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(color: Colors.white)
                             : Text(
                                 "Message",
                                 style: TextStyle(
@@ -551,7 +549,7 @@ class _DetailsPageState extends State<DetailsPage> {
         Image.asset(icon),
         Text(
           value.toString(),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         Text(label),
       ],

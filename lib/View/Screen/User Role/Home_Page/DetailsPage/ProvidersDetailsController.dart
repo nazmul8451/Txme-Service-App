@@ -2,25 +2,24 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../../../../service/api_url.dart';
-import '../../../../../../helper/shared_prefe/shared_prefe.dart';
+import '../../../../../service/api_url.dart';
+import '../../../../../helper/shared_prefe/shared_prefe.dart';
 import '../../../Chats/model/chat_model.dart';
 import '../../../Chats/view/chat_details_page.dart';
 import '../AllReviews/AllReviewModel.dart';
+import '../models/provider_stats_model.dart';
 
 class Providersdetailscontroller extends GetxController {
   final isUserSelected = true.obs;
   final isLoading = false.obs;
   final reviewList = <AllReviewModel>[].obs;
+  final providerStats = Rx<ProviderStats?>(null);
 
   void selectRequest() {
     print("🔹 selectRequest() called");
     isUserSelected.value = true;
   }
 
-
-
-  /// 🔹 MESSAGE BUTTON CLICK
   Future<void> selectMessage({
     required String participantId,
   }) async {
@@ -31,7 +30,6 @@ class Providersdetailscontroller extends GetxController {
     await _createChat(participantId);
   }
 
-  /// 🔹 CREATE CHAT API
   Future<void> _createChat(String participantId) async {
     try {
       isLoading.value = true;
@@ -108,4 +106,26 @@ class Providersdetailscontroller extends GetxController {
     }
   }
 
+  Future<void> fetchProviderStats(String providerId) async {
+    try {
+      final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
+      // ✅ UPDATED: Use the new ApiConstant
+      final response = await http.get(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.providerStats}$providerId/statistics"),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded['success'] == true && decoded['data'] != null) {
+          providerStats.value = ProviderStats.fromJson(decoded['data']);
+        }
+      }
+    } catch (e) {
+      print("Error fetching provider stats: $e");
+    }
+  }
 }
