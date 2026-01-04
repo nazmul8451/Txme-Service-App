@@ -62,6 +62,7 @@ import '../../View/Screen/Wallet/TransactionFailed/TransactionFailed.dart';
 import '../../View/Screen/Wallet/WalletPage.dart';
 import '../../View/Screen/Wallet/WalletPayPalSelectPaymentMethod/WalletPayPalSelectPaymentMethod.dart';
 import '../../View/Screen/Wallet/Withdraw/WithdrawPage.dart';
+import '../../View/Screen/splashScreen/splash_screen_view.dart';
 
 class AppRoute {
   ///==================== Initial Routes ====================///
@@ -129,6 +130,7 @@ class AppRoute {
   static const String requestBooking = "/requestBooking";
   static const String bookingSchedule = "/bookingSchedule";
   static const String paymentdoneT = "/paymentdoneT";
+  static const String splashScreenView = "/splashScreenView";
 
 
 
@@ -138,12 +140,11 @@ class AppRoute {
 
     GetPage(name: signAsScreen, page: () => const SignAsScreen()),
     GetPage(name: signinwithbiometrics, page: () =>  SigninWithBiometrics()),
+    GetPage(name: splashScreenView, page: () =>  SplashScreenView()),
     GetPage(name: verifyfingerprint, page: () =>  Verifyfingerprint()),
     GetPage(name: enterEmail, page: () =>  EnterEmail()),
-   // GetPage(name: verifyfaceid, page: () => const Verifyfaceid()),
     GetPage(name: verifyFaceId, page: () =>  VerifyFaceId()),
     GetPage(name: faceverificationdone, page: () => const Faceverificationdone()),
-    //GetPage(name: verifyotppage, page: () =>  Verifyotppage()),
     GetPage(name: homepage, page: () => const Homepage()),
     GetPage(name: signUpEmail, page: () => const SignUpEmail()),
     GetPage(name: verifyotppageS, page: () => const VerifyotppageS()),

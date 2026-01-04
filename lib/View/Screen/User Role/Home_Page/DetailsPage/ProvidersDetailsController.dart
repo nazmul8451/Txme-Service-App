@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart'; // ✅ ADDED
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -61,10 +62,16 @@ class Providersdetailscontroller extends GetxController {
 
         Get.to(() => ChatDetailsPage(chat: chat));
       } else {
-        Get.snackbar("Error", "Chat create failed");
+        // ✅ FIXED: Safely call snackbar
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.snackbar("Error", "Chat create failed");
+        });
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      // ✅ FIXED: Safely call snackbar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar("Error", e.toString());
+      });
     } finally {
       isLoading.value = false;
     }
@@ -97,10 +104,16 @@ class Providersdetailscontroller extends GetxController {
               data.map((e) => AllReviewModel.fromJson(e)).toList();
         }
       } else {
-        Get.snackbar("Error", "Failed to load reviews");
+        // ✅ FIXED: Safely call snackbar
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.snackbar("Error", "Failed to load reviews");
+        });
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      // ✅ FIXED: Safely call snackbar
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar("Error", e.toString());
+      });
     } finally {
       isLoading.value = false;
     }
@@ -109,7 +122,6 @@ class Providersdetailscontroller extends GetxController {
   Future<void> fetchProviderStats(String providerId) async {
     try {
       final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
-      // ✅ UPDATED: Use the new ApiConstant
       final response = await http.get(
         Uri.parse("${ApiConstant.baseUrl}${ApiConstant.providerStats}$providerId/statistics"),
         headers: {
