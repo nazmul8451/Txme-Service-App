@@ -33,7 +33,7 @@ class EditProfilePage extends GetView<EditProfileController> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         child: Obx(() {
-          if (controller.isLoading.value) {
+          if (controller.isLoading.value && controller.user.value == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -198,12 +198,12 @@ class EditProfilePage extends GetView<EditProfileController> {
     );
   }
 
-
+  // ✅ UPDATED: Added Obx and loading indicator
   Widget _updateButton() {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: controller.updateProfile,
+      child: Obx(() => ElevatedButton(
+        onPressed: controller.isLoading.value ? null : controller.updateProfile,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFFF5A36),
           padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -211,11 +211,13 @@ class EditProfilePage extends GetView<EditProfileController> {
             borderRadius: BorderRadius.circular(12.r),
           ),
         ),
-        child: Text(
+        child: controller.isLoading.value
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(
           "Update",
           style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600),
         ),
-      ),
+      )),
     );
   }
 }

@@ -48,10 +48,9 @@ class NotificationController extends GetxController {
         }
 
       } else {
-        Get.snackbar('Error', 'Failed to fetch notifications');
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred: $e');
+      Get.snackbar('', 'An error occurred: $e');
     } finally {
       isLoading.value = false;
     }

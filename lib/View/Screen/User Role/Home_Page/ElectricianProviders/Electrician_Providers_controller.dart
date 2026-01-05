@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -19,15 +17,13 @@ class ProviderController extends GetxController {
   final int limit = 10;
   int totalPage = 1;
 
-  // ✅ ADDED: To store filter parameters from the previous page
   Map<String, String> filterParams = {};
 
   @override
   void onInit() {
     super.onInit();
-    // ✅ ADDED: Check for arguments and store them
     if (Get.arguments is Map<String, String>) {
-      filterParams = Get.arguments as Map<String, String>;
+      filterParams = Get.arguments;
     }
     getAllProviders(isFirst: true);
   }
@@ -46,18 +42,15 @@ class ProviderController extends GetxController {
 
       final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
 
-      // ✅ MODIFIED: Build the URI with query parameters
       final queryParameters = {
         'page': page.toString(),
         'limit': limit.toString(),
-        ...filterParams, // Add all the filters from the search page
+        ...filterParams,
       };
 
-      // Remove null or empty values to keep the URL clean
       queryParameters.removeWhere((key, value) => value.isEmpty);
 
-      final uri = Uri.parse(
-              "${ApiConstant.baseUrl}${ApiConstant.allProviderUser}")
+      final uri = Uri.parse("${ApiConstant.baseUrl}${ApiConstant.allProviderUser}")
           .replace(queryParameters: queryParameters);
 
       debugPrint("✅ Fetching providers with URL: $uri");
@@ -71,7 +64,6 @@ class ProviderController extends GetxController {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-
         final List list = decoded['data'] ?? [];
         final pagination = decoded['pagination'];
 
@@ -81,6 +73,9 @@ class ProviderController extends GetxController {
             list.map((e) => ProviderModel.fromJson(e)).toList();
 
         providers.addAll(newProviders);
+      } else {
+        final errorBody = jsonDecode(response.body);
+        Get.snackbar("Error", errorBody['message'] ?? "Failed to load providers");
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());

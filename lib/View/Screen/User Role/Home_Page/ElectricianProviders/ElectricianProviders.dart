@@ -1,38 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import '../../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../../Widgegt/WorkerCard/WorkerCard.dart';
-import '../models/provider_model.dart';
 import 'Electrician_Providers_controller.dart';
 
-class Electricianproviders extends StatefulWidget {
+class Electricianproviders extends StatelessWidget {
   const Electricianproviders({super.key});
 
   @override
-  State<Electricianproviders> createState() => _ElectricianprovidersState();
-}
-
-class _ElectricianprovidersState extends State<Electricianproviders> {
-
-  final controller = Get.put(ProviderController());
-
-
-  @override
-  void initState() {
-    super.initState();
-    controller.getAllProviders();
-  }
   Widget build(BuildContext context) {
+    final controller = Get.put(ProviderController());
+
     return Scaffold(
       backgroundColor: AppColors.FFFFFF,
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Obx(() {
-          if (controller.isLoading.value) {
+          if (controller.isLoading.value && controller.providers.isEmpty) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (controller.providers.isEmpty) {
+            return const Center(child: Text("No providers found for your filter."));
           }
 
           return Column(
@@ -54,7 +43,6 @@ class _ElectricianprovidersState extends State<Electricianproviders> {
                 ),
               ),
 
-              /// NEXT BUTTON
               Obx(() {
                 if (controller.isMoreLoading.value) {
                   return const Padding(
@@ -88,7 +76,6 @@ class _ElectricianprovidersState extends State<Electricianproviders> {
           );
         }),
       ),
-
       bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
     );
   }

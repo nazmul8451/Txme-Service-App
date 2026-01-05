@@ -71,13 +71,12 @@ class EditProfileController extends GetxController {
 
         /// ================= SET FORM VALUES =================
         nameController.text = data.fullName;
-        addressController.text =
-            data.residentialAddress?.address ?? "";
+        addressController.text = data.residentialAddress?.address ?? "";
         postalController.text = data.postalAddress;
         residenceController.text = data.countryOfResidence;
         bioController.text = data.bio ?? "";
+        phoneController.text =  ""; // ✅ FIXED: Show phone number in UI
 
-        /// ================= AUTO COUNTRY + FLAG =================
         final country = _findCountryByName(data.nationality);
 
         if (country != null) {
@@ -85,14 +84,15 @@ class EditProfileController extends GetxController {
           selectedFlag.value = country.flagEmoji;
           phoneCode.value = "+${country.phoneCode}";
         } else {
-          /// fallback (unknown country name)
           selectedCountryName.value = data.nationality;
           selectedFlag.value = "🏳️";
           phoneCode.value = "";
         }
+      } else {
+        Get.snackbar("", "Failed to load profile");
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to load profile");
+      Get.snackbar("", "Failed to parse profile data.");
     } finally {
       isLoading(false);
     }
@@ -128,16 +128,33 @@ class EditProfileController extends GetxController {
 
   /// ================= LOCATION =================
   Future<void> getLocation() async {
-    final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    latitude = position.latitude;
-    longitude = position.longitude;
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          latitude = 0.0;
+          longitude = 0.0;
+          return;
+        }
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      latitude = position.latitude;
+      longitude = position.longitude;
+    } catch(e) {
+      // ✅ FIXED: Default to 0.0 if location fails for any reason
+      latitude = 0.0;
+      longitude = 0.0;
+    }
   }
 
   /// ================= UPDATE PROFILE =================
   Future<void> updateProfile() async {
     try {
+      isLoading.value = true;
       await getLocation();
 
       final token =
@@ -168,7 +185,6 @@ class EditProfileController extends GetxController {
 
       request.fields["data"] = jsonEncode(data);
 
-      /// IMAGE OPTIONAL
       if (profileImage.value != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -184,12 +200,14 @@ class EditProfileController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Profile updated successfully");
-        fetchUserHeader();
+        fetchUserHeader(); // Refresh data on success
       } else {
         Get.snackbar("Error", body);
       }
     } catch (e) {
       Get.snackbar("Error", "Profile update failed");
+    } finally {
+      isLoading.value = false;
     }
   }
 

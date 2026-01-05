@@ -64,7 +64,6 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -91,31 +90,40 @@ class _DetailsPageState extends State<DetailsPage> {
 
                 // ✅ UPDATED: Now uses Obx to be reactive
                 Obx(() => Container(
-                  width: 353.w,
-                  height: 103.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.gray.withOpacity(0.3),
-                        blurRadius: 12.r,
-                        offset: const Offset(0, 6),
+                      width: 353.w,
+                      height: 103.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.gray.withOpacity(0.3),
+                            blurRadius: 12.r,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: controller.providerStats.value == null
-                      ? const Center(child: CircularProgressIndicator())
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _infoColumn(
-                                AppImg.star, controller.providerStats.value!.averageRating, "Rating"),
-                            _infoColumn(AppImg.completed, controller.providerStats.value!.totalOrders, "Orders"),
-                            _infoColumn(AppImg.experience, controller.providerStats.value!.experience, "Years"),
-                          ],
-                        ),
-                )),
+                      child: controller.providerStats.value == null
+                          ? const Center(child: CircularProgressIndicator())
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _infoColumn(
+                                    AppImg.star,
+                                    controller
+                                        .providerStats.value!.averageRating,
+                                    "Rating"),
+                                _infoColumn(
+                                    AppImg.completed,
+                                    controller.providerStats.value!.totalOrders,
+                                    "Orders"),
+                                _infoColumn(
+                                    AppImg.experience,
+                                    controller.providerStats.value!.experience,
+                                    "Years"),
+                              ],
+                            ),
+                    )),
 
                 const SizedBox(height: 20),
 
@@ -341,7 +349,8 @@ class _DetailsPageState extends State<DetailsPage> {
                           onTap: () {
                             Get.toNamed(
                               AppRoute.allreviews,
-                              arguments: widget.provider.id, // 🔥 providerId pass
+                              arguments:
+                                  widget.provider.id, // 🔥 providerId pass
                             );
                           },
                           child: const Text(
@@ -355,7 +364,6 @@ class _DetailsPageState extends State<DetailsPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-
                     Obx(() {
                       if (controller.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
@@ -383,18 +391,19 @@ class _DetailsPageState extends State<DetailsPage> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(12.r),
-                                      child: review.reviewerProfile.startsWith("http")
+                                      child: review.reviewerProfile
+                                              .startsWith("http")
                                           ? Image.network(
-                                        review.reviewerProfile,
-                                        width: 24.w,
-                                        height: 24.h,
-                                        fit: BoxFit.cover,
-                                      )
+                                              review.reviewerProfile,
+                                              width: 24.w,
+                                              height: 24.h,
+                                              fit: BoxFit.cover,
+                                            )
                                           : Image.asset(
-                                        AppImg.editProfile,
-                                        width: 24.w,
-                                        height: 24.h,
-                                      ),
+                                              AppImg.editProfile,
+                                              width: 24.w,
+                                              height: 24.h,
+                                            ),
                                     ),
                                     SizedBox(width: 8.w),
                                     Text(
@@ -412,10 +421,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                     ),
                                   ],
                                 ),
-
                                 SizedBox(height: 4.h),
                                 buildStarRating(review.rating),
-
                                 SizedBox(height: 4.h),
                                 Text(
                                   review.comment,
@@ -431,7 +438,6 @@ class _DetailsPageState extends State<DetailsPage> {
                   ],
                 ),
 
-
                 SizedBox(
                   height: 20.h,
                 ),
@@ -441,8 +447,9 @@ class _DetailsPageState extends State<DetailsPage> {
                     width: 353.w,
                     BoxDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.r),
-                      color:
-                          isUserSelected ? AppColors.red601 : const Color(0xffFFEFEB),
+                      color: isUserSelected
+                          ? AppColors.red601
+                          : const Color(0xffFFEFEB),
                       border: Border.all(color: AppColors.red601, width: 1.w),
                     ),
                     child: Center(
@@ -485,7 +492,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       child: Center(
                         child: controller.isLoading.value
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
                             : Text(
                                 "Message",
                                 style: TextStyle(

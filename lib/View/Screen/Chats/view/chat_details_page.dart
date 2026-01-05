@@ -35,6 +35,9 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          TextButton(onPressed: (){}, child: Text("Money Request"))
+        ],
         title: Row(
           children: [
             CircleAvatar(

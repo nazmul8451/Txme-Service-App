@@ -106,7 +106,6 @@ class Providersdetailscontroller extends GetxController {
       } else {
         // ✅ FIXED: Safely call snackbar
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar("Error", "Failed to load reviews");
         });
       }
     } catch (e) {

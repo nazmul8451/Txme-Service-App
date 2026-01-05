@@ -39,6 +39,7 @@ class ProviderProfilePage extends StatelessWidget {
           await Future.wait([
             controller.fetchUserHeader(),
             controller.fetchStripeAccountStatus(),
+            controller.fetchProviderStats(),
           ]);
         },
         child: SingleChildScrollView(
@@ -51,7 +52,7 @@ class ProviderProfilePage extends StatelessWidget {
 
               Obx(() {
                 if (controller.isLoading.value) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final user = controller.user.value;
                 if (user == null) return const SizedBox();
@@ -99,7 +100,7 @@ class ProviderProfilePage extends StatelessWidget {
 
               const SizedBox(height: 22),
 
-              Container(
+                Obx(() =>Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -113,27 +114,30 @@ class ProviderProfilePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
+                child: controller.providerStats.value == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _statItem(
-                      image: AppImg.earnings,
-                      value: "€355",
+                      image:  AppImg.star,
+                      value: controller.providerStats.value!.averageRating.toStringAsFixed(1),
                       label: "Rating",
                     ),
                     _statItem(
                       image: AppImg.active,
-                      value: "2 Orders",
+                      value: controller.providerStats.value!.totalOrders.toString(),
                       label: "Completed",
                     ),
                     _statItem(
                       image: AppImg.completed,
-                      value: "4 Years",
+                      value:  "${controller.providerStats.value!.experience.toString()} yrs",
                       label: "Experience",
                     ),
                   ],
                 ),
               ),
+                ),
 
               const SizedBox(height: 22),
 
@@ -162,8 +166,6 @@ class ProviderProfilePage extends StatelessWidget {
                 child: menuItem(img: AppImg.verification, title: "Verification"),
               ),
 
-              // menuItem(img: AppImg.faceIdImg, title: "Setup FaceID"),
-
               const SizedBox(height: 20),
               const Text(
                 "Wallet & Invoice",
@@ -187,12 +189,10 @@ class ProviderProfilePage extends StatelessWidget {
                   return const CircularProgressIndicator();
                 }
 
-                // 🔥 ALL 4 TRUE → HIDE BUTTON
                 if (controller.isStripeFullyVerified) {
                   return const SizedBox();
                 }
 
-                // ❌ ANY ONE FALSE → SHOW BUTTON
                 return GestureDetector(
                   onTap: controller.createStripeAccountSession,
                   child: menuItem(
@@ -232,49 +232,6 @@ class ProviderProfilePage extends StatelessWidget {
                 child: logoutItem(),
               ),
 
-              const SizedBox(height: 20),
-              //
-              // /// SWITCH MODE
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Image.asset(
-              //       AppImg.Change,
-              //     ),
-              //     SizedBox(width: 6),
-              //     Text(
-              //       "Change to Service Provider Mode",
-              //       style: TextStyle(
-              //         color: Colors.blue,
-              //         fontWeight: FontWeight.w600,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              //
-              // const SizedBox(height: 20),
-              //
-              // GestureDetector(
-              //   onTap: () => Get.offAll(() => const Homepage()), // switch mode
-              //   child: Container(
-              //     width: double.infinity,
-              //     padding: const EdgeInsets.symmetric(vertical: 14),
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       border: Border.all(color: Colors.redAccent),
-              //     ),
-              //     child: const Center(
-              //       child: Text(
-              //         "Switch",
-              //         style: TextStyle(
-              //           color: Color(0xff000000),
-              //           fontWeight: FontWeight.bold,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
               const SizedBox(height: 30),
             ],
           ),
@@ -313,7 +270,7 @@ class ProviderProfilePage extends StatelessWidget {
             width: 40,
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-                color: Color(0xFFFF5A36),
+                color: const Color(0xFFFF5A36),
                 borderRadius: BorderRadius.circular(8)),
             child: const Icon(Icons.arrow_forward_ios,
                 size: 16, color: Colors.white),
@@ -325,10 +282,10 @@ class ProviderProfilePage extends StatelessWidget {
 
   Widget faqItem() {
     return Container(
-      margin: EdgeInsets.only(top: 12, bottom: 12),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      margin: const EdgeInsets.only(top: 12, bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-          color: Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
+          color: const Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           Image.asset(
@@ -336,8 +293,8 @@ class ProviderProfilePage extends StatelessWidget {
             height: 40,
             width: 40,
           ),
-          SizedBox(width: 14),
-          Expanded(
+          const SizedBox(width: 14),
+          const Expanded(
             child: Text(
               "FAQ (THIS IS LINKED WITH TXME FAQ)",
               style: TextStyle(
@@ -351,10 +308,10 @@ class ProviderProfilePage extends StatelessWidget {
 
   Widget logoutItem() {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-          color: Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
+          color: const Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           Image.asset(
@@ -362,8 +319,8 @@ class ProviderProfilePage extends StatelessWidget {
             height: 40,
             width: 40,
           ),
-          SizedBox(width: 14),
-          Text("Logout",
+          const SizedBox(width: 14),
+          const Text("Logout",
               style: TextStyle(
                   color: Color(0xFFFF5A36), fontWeight: FontWeight.bold)),
         ],
@@ -374,6 +331,7 @@ class ProviderProfilePage extends StatelessWidget {
   Widget _statItem(
       {required String image, required String value, required String label}) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
           width: 33,

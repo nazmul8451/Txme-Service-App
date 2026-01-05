@@ -6,12 +6,14 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
 import '../../Model/UserModel.dart';
+import '../../User Role/Home_Page/models/provider_stats_model.dart';
 
 
 
 class UserHeaderController extends GetxController {
   final isLoading = false.obs;
   final user = Rxn<UserModel>();
+  final providerStats = Rx<ProviderStats?>(null);
 
   final isStripeLoading = false.obs;
 
@@ -33,6 +35,7 @@ class UserHeaderController extends GetxController {
     super.onInit();
     fetchUserHeader();
     fetchStripeAccountStatus();
+    fetchProviderStats(); // ✅ ADDED
   }
 
   Future<void> fetchUserHeader() async {
@@ -42,8 +45,6 @@ class UserHeaderController extends GetxController {
       final token =
       await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-      print("========================>..............=====================");
-      print(token);
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.userMe),
         headers: {
@@ -64,8 +65,6 @@ class UserHeaderController extends GetxController {
     }
   }
 
-
-  // ================= STRIPE STATUS =================
 
   // ================= STRIPE STATUS =================
   Future<void> fetchStripeAccountStatus() async {
@@ -102,7 +101,6 @@ class UserHeaderController extends GetxController {
   }
 
   // ================= CREATE SESSION =================
-
   Future<void> createStripeAccountSession() async {
     try {
       isStripeLoading(true);
@@ -119,9 +117,6 @@ class UserHeaderController extends GetxController {
         },
         body: jsonEncode({}), // 🔥 EMPTY BODY (IMPORTANT)
       );
-
-      print("STATUS => ${res.statusCode}");
-      print("BODY => ${res.body}");
 
       if (res.statusCode != 200) {
         Get.snackbar("Error", "Stripe link create failed");
@@ -146,10 +141,6 @@ class UserHeaderController extends GetxController {
     }
   }
 
-
-
-
-
   Future<void> _openStripeLink(String url) async {
     try {
       final uri = Uri.parse(url);
@@ -170,5 +161,30 @@ class UserHeaderController extends GetxController {
     }
   }
 
+  // ✅ UPDATED: No longer needs providerId as an argument
+  Future<void> fetchProviderStats() async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final id = await SharePrefsHelper.getString(SharePrefsHelper.userId);
 
+      if (id == null || id.isEmpty) return; //  Guard clause
+
+      final response = await http.get(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.providerStats}$id/statistics"),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded['success'] == true && decoded['data'] != null) {
+          providerStats.value = ProviderStats.fromJson(decoded['data']);
+        }
+      }
+    } catch (e) {
+      print("Error fetching provider stats: $e");
+    }
+  }
 }
