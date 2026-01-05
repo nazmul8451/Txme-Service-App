@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import '../controller/message_controller.dart';
 import '../model/chat_model.dart';
 import '../../../Widgegt/MessageBubbleWidget/MessageBubble.dart';
@@ -23,6 +24,75 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
     controller = Get.put(MessageController(widget.chat.id));
   }
 
+  // ✅ ADDED: Function to show the money request dialog
+  void _showMoneyRequestDialog() {
+    final textController = TextEditingController();
+    final amountController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Request Money"),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: textController,
+                decoration: const InputDecoration(
+                  labelText: "Message",
+                  hintText: "e.g., For lunch",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a message';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16.h),
+              TextFormField(
+                controller: amountController,
+                decoration: const InputDecoration(
+                  labelText: "Amount",
+                  prefixText: "€",
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an amount';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                final text = textController.text;
+                final amount = double.parse(amountController.text);
+                controller.sendMoneyRequest(text: text, amount: amount);
+                Get.back(); // Close the dialog
+              }
+            },
+            child: const Text("Send"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +106,18 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           onPressed: () => Get.back(),
         ),
         actions: [
-          TextButton(onPressed: (){}, child: Text("Money Request"))
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.red601,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)
+                  )
+                ),
+                onPressed: _showMoneyRequestDialog, // ✅ CONNECTED
+                child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF),)),
+          )
         ],
         title: Row(
           children: [

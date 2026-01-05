@@ -178,7 +178,65 @@ class MessageController extends GetxController {
     }
   }
 
-  /// ================= SEND IMAGE =================
+  Future<void> sendMoneyRequest({
+    required String text,
+    required double amount,
+  }) async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final response = await http.post(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.moneyRequestMessage}"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "chatId": chatId,
+          "text": text,
+          "type": "MONEY_REQUEST",
+          "amount": amount,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        getMessages();
+        Get.snackbar("Success", "Money request sent!");
+      } else {
+        final errorBody = jsonDecode(response.body);
+        Get.snackbar("Error", errorBody['message'] ?? "Failed to send request");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "An unexpected error occurred.");
+    }
+  }
+
+  // ✅ ADDED: Function to respond to a money request
+  Future<void> respondToMoneyRequest(String messageId, String status) async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url = "${ApiConstant.baseUrl}${ApiConstant.message}/$messageId/money-request";
+      
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'status': status}),
+      );
+
+      if (response.statusCode == 200) {
+        getMessages(); // Refresh the chat to show the updated status
+        Get.snackbar("Success", "Request has been $status");
+      } else {
+        final errorBody = jsonDecode(response.body);
+        Get.snackbar("Error", errorBody['message'] ?? "Failed to respond to request");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "An unexpected error occurred.");
+    }
+  }
+
   Future<void> sendImageMessage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -194,14 +252,13 @@ class MessageController extends GetxController {
       request.fields['chatId'] = chatId;
       request.fields['type'] = 'IMAGE';
 
-      // ✅ FIXED: Added filename and debug print
       final mimeType = lookupMimeType(pickedFile.path);
       debugPrint("✅ MIME Type: $mimeType");
 
       final file = await http.MultipartFile.fromPath(
         'messageFiles',
         pickedFile.path,
-        filename: pickedFile.name, // ✅ ADDED filename
+        filename: pickedFile.name,
         contentType: mimeType != null ? MediaType.parse(mimeType) : null,
       );
 
@@ -210,11 +267,12 @@ class MessageController extends GetxController {
       final response = await request.send();
 
       if (response.statusCode == 201) {
-        getMessages(); // Refresh messages to show the new image
+        getMessages();
         print("Image sent successfully");
       } else {
         final responseBody = await response.stream.bytesToString();
         print("Failed to send image: ${response.statusCode} - $responseBody");
+        Get.snackbar("Error", "Failed to send image");
       }
     } catch (e) {
       print("Error sending image: $e");

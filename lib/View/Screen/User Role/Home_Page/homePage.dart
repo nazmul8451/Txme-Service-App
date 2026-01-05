@@ -74,6 +74,7 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.FFFFFF,
+        leading: Text(""),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.w),

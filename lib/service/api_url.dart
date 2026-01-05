@@ -57,6 +57,7 @@ class ApiConstant {
   static const String notification = "$apiVersion/notification";
   static const String notificationCount = "$apiVersion/notification/unread-count";
   static const String message = "$apiVersion/message";
+  static const String moneyRequestMessage = "$apiVersion/message";
 
   ///================================ Get Api ==================================///
 

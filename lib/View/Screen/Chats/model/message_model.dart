@@ -7,8 +7,10 @@ class MessageModel {
   final String text;
   final bool isMe;
   final String time;
-  final String type; // e.g., 'TEXT', 'IMAGE'
-  final List<String> files; // List of image URLs
+  final String type;
+  final List<String> files;
+  final double? amount;
+  final String? moneyRequestStatus; // ✅ ADDED: To track 'pending', 'accepted', 'rejected'
 
   MessageModel({
     required this.id,
@@ -17,6 +19,8 @@ class MessageModel {
     required this.time,
     required this.type,
     required this.files,
+    this.amount,
+    this.moneyRequestStatus,
   });
 
   factory MessageModel.fromJson(
@@ -33,7 +37,6 @@ class MessageModel {
       isMe = senderId == myUserId;
     }
 
-    // Time Formatting
     String formattedTime = "";
     if (json['createdAt'] != null && json['createdAt'].isNotEmpty) {
       try {
@@ -44,7 +47,6 @@ class MessageModel {
       }
     }
 
-    // Image URL Formatting
     List<String> fileUrls = [];
     if (json['files'] != null && json['files'] is List) {
       fileUrls = (json['files'] as List).map((file) {
@@ -63,6 +65,8 @@ class MessageModel {
       time: formattedTime,
       type: json['type'] ?? 'TEXT',
       files: fileUrls,
+      amount: (json['amount'] as num?)?.toDouble(),
+      moneyRequestStatus: json['moneyRequestStatus'], // ✅ ADDED
     );
   }
 }
