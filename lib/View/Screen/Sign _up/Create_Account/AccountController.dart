@@ -12,7 +12,6 @@ import 'package:txme_app/helper/Shared_prefe/shared_prefe.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 
 class AccountController extends GetxController {
-  /// ================= TEXT CONTROLLERS =================
   final nameController = TextEditingController();
   final dobController = TextEditingController();
   final nationalityController = TextEditingController();
@@ -24,13 +23,11 @@ class AccountController extends GetxController {
   final iDController = TextEditingController();
   final maritalController = TextEditingController();
 
-  /// ================= RX VALUES =================
   final selectedDate = Rxn<DateTime>();
-  final selectedGender = RxnString();     // male / female
-  final selectedID = RxnString();         // passport / nid
-  final selectedMarital = RxnString();    // married / unmarried
+  final selectedGender = RxnString();
+  final selectedID = RxnString();
+  final selectedMarital = RxnString();
 
-  /// ================= FILES =================
   var profileImage = Rxn<File>();
   final List<File> idDocuments = [];
   final List<File> addressDocuments = [];
@@ -42,24 +39,20 @@ class AccountController extends GetxController {
 
   final isLoading = false.obs;
 
-
-  /// ================= CAMERA =================
   Future<void> openCamera() async {
     final XFile? image = await _picker.pickImage(
       source: ImageSource.camera,
       imageQuality: 85,
     );
-
     if (image != null) {
       profileImage.value = File(image.path);
     }
   }
 
-
   Future<void> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      Get.snackbar("Error", "Location service disabled");
+      Get.snackbar("", "Location service disabled");
       return;
     }
 
@@ -69,20 +62,17 @@ class AccountController extends GetxController {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      Get.snackbar("Error", "Location permission denied forever");
+      Get.snackbar("", "Location permission denied forever");
       return;
     }
 
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-
     latitude = position.latitude;
     longitude = position.longitude;
   }
 
-
-  /// ================= DATE PICKER =================
   Future<void> selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: Get.context!,
@@ -90,14 +80,12 @@ class AccountController extends GetxController {
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
     );
-
     if (picked != null) {
       selectedDate.value = picked;
       dobController.text = DateFormat('yyyy-MM-dd').format(picked);
     }
   }
 
-  /// ================= GENDER =================
   Future<void> selectGender(BuildContext context) async {
     final result = await showDialog<String>(
       context: context,
@@ -115,14 +103,12 @@ class AccountController extends GetxController {
         ],
       ),
     );
-
     if (result != null) {
       selectedGender.value = result;
       genderController.text = result.capitalizeFirst!;
     }
   }
 
-  /// ================= ID TYPE =================
   Future<void> selectID(BuildContext context) async {
     final result = await showDialog<String>(
       context: context,
@@ -140,14 +126,12 @@ class AccountController extends GetxController {
         ],
       ),
     );
-
     if (result != null) {
       selectedID.value = result;
       iDController.text = result.toUpperCase();
     }
   }
 
-  /// ================= MARITAL =================
   Future<void> selectMarital(BuildContext context) async {
     final result = await showDialog<String>(
       context: context,
@@ -165,51 +149,35 @@ class AccountController extends GetxController {
         ],
       ),
     );
-
     if (result != null) {
       selectedMarital.value = result;
       maritalController.text = result.capitalizeFirst!;
     }
   }
 
-  /// ================= COMPLETE PROFILE API =================
   Future<void> submitCompleteProfile() async {
-    if (isLoading.value) return; // 🔒 prevent double click
-
+    if (isLoading.value) return;
     try {
       isLoading(true);
-
       await getCurrentLocation();
-
-      final accessToken =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
-
+      final accessToken = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
       if (accessToken.isEmpty) {
-        Get.snackbar("Error", "Unauthorized");
+        Get.snackbar("", "Unauthorized");
         return;
       }
-
       if (profileImage.value == null) {
-        Get.snackbar("Error", "Profile image required");
+        Get.snackbar("", "Profile image required");
         return;
       }
-
-      final uri =
-      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
-
+      final uri = Uri.parse("${ApiConstant.baseUrl}${ApiConstant.completeProfile}");
       final request = http.MultipartRequest("PATCH", uri);
-
-      /// HEADER
       request.headers.addAll({
         "Authorization": "Bearer $accessToken",
         "Accept": "application/json",
       });
-
-      /// JSON DATA
       final Map<String, dynamic> data = {
         "fullName": nameController.text.trim(),
-        "dateOfBirth":
-        selectedDate.value?.toIso8601String().split("T").first,
+        "dateOfBirth": selectedDate.value?.toIso8601String().split("T").first,
         "gender": selectedGender.value,
         "nationality": nationalityController.text.trim(),
         "countryOfResidence": residenceController.text.trim(),
@@ -225,15 +193,10 @@ class AccountController extends GetxController {
         },
         "maritalStatus": selectedMarital.value,
       };
-
       request.fields["data"] = jsonEncode(data);
-
-      /// IMAGE FILE
       final imageFile = profileImage.value!;
       final extension = imageFile.path.split('.').last.toLowerCase();
-
       String mimeType = extension == "png" ? "image/png" : "image/jpeg";
-
       request.files.add(
         await http.MultipartFile.fromPath(
           "image",
@@ -242,26 +205,48 @@ class AccountController extends GetxController {
           contentType: MediaType.parse(mimeType),
         ),
       );
-
       final response = await request.send();
       final body = await response.stream.bytesToString();
-
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final decoded = jsonDecode(body);
+
+        debugPrint(body);
+
+        // ✅ FIXED: Correctly access tokens from the 'tokens' object
+        if (decoded['data']?['tokens']?['accessToken'] != null) {
+          final newAccessToken = decoded['data']['tokens']['accessToken'];
+          await SharePrefsHelper.setString(SharePrefsHelper.bearerToken, newAccessToken);
+          debugPrint("✅ New Access Token Saved: $newAccessToken");
+        }
+        if (decoded['data']?['tokens']?['refreshToken'] != null) {
+          final newRefreshToken = decoded['data']['tokens']['refreshToken'];
+          await SharePrefsHelper.setString(SharePrefsHelper.refreshToken, newRefreshToken);
+          debugPrint("✅ New Refresh Token Saved: $newRefreshToken");
+        }
+
         Get.snackbar("Success", "Profile completed successfully");
-        Get.offAllNamed(AppRoute.verifyyouridentity);
+        _navigateToNextPage();
       } else {
-        Get.snackbar("Error", body);
+        Get.snackbar("", body);
       }
     } catch (e) {
       debugPrint("❌ COMPLETE PROFILE ERROR => $e");
-      Get.snackbar("Error", "Server error, try again");
+      Get.snackbar("", "Server error, try again");
     } finally {
-      isLoading(false); // ✅ always stop loader
+      isLoading(false);
     }
   }
 
-
-
+  Future<void> _navigateToNextPage() async {
+    final role = await SharePrefsHelper.getString(SharePrefsHelper.userRole);
+    if (role == "PROVIDER") {
+      Get.offAllNamed(AppRoute.profession);
+    } else if (role == "CUSTOMER") {
+      Get.offAllNamed(AppRoute.signindone);
+    } else {
+      Get.offAllNamed(AppRoute.signinwithbiometrics);
+    }
+  }
 
   @override
   void onClose() {

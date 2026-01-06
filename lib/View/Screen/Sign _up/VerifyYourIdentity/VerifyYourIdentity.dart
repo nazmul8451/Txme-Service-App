@@ -216,9 +216,6 @@ class _VerifyyouridentityState extends State<Verifyyouridentity> {
                 } else if (role == "CUSTOMER") {
                   Get.toNamed(AppRoute.signindone);
                 } else {
-                  // fallback (optional)
-                  Get.snackbar("Error", "User role not found");
-
                   Get.toNamed(AppRoute.signinwithbiometrics);
 
                 }
