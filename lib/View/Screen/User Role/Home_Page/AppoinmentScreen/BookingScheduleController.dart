@@ -171,10 +171,10 @@ class BookingScheduleController extends GetxController {
       if (res.statusCode == 200 || res.statusCode == 201) {
         Get.snackbar("Success", "Booking Confirmed ✅");
       } else {
-        Get.snackbar("Error", "Booking Failed");
+        Get.snackbar("", "Booking Failed");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading.value = false;
     }

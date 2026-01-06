@@ -75,10 +75,10 @@ class ProviderController extends GetxController {
         providers.addAll(newProviders);
       } else {
         final errorBody = jsonDecode(response.body);
-        Get.snackbar("Error", errorBody['message'] ?? "Failed to load providers");
+        Get.snackbar("", errorBody['message'] ?? "Failed to load providers");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading(false);
       isMoreLoading(false);

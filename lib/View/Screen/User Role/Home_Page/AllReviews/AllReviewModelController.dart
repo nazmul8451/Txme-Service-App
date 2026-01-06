@@ -50,13 +50,13 @@ class AllReviewModelController extends GetxController {
           reviewList.value =
               data.map((e) => AllReviewModel.fromJson(e)).toList();
         } else {
-          Get.snackbar("Error", decoded['message'] ?? "Failed");
+          Get.snackbar("", decoded['message'] ?? "Failed");
         }
       } else {
-        Get.snackbar("Error", "Failed to load reviews");
+        Get.snackbar("", "Failed to load reviews");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading.value = false;
     }

@@ -74,7 +74,7 @@ class PopularProviderController extends GetxController {
         );
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading(false);
       isMoreLoading(false);

@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-
-import '../../View/Screen/Service Provider Role/Contactsupport/ContactSupportController.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/verify_identity_controller.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWalletController.dart';
@@ -41,8 +39,7 @@ class Dependencies {
     Get.put(Paywithcashcontroller(), permanent: true);
     Get.put(PayWithWalletController(), permanent: true);
 
-    /// ================= SUPPORT =================
-    Get.put(ContactSupportController(), permanent: true);
+
 
     /// ================= SERVICES =================
     Get.put(ServiceController(), permanent: true);

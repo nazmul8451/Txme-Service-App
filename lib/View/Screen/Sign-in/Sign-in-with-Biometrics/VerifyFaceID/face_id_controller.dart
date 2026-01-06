@@ -74,10 +74,10 @@ class VerifyFaceController extends GetxController {
 
         Get.offAllNamed(AppRoute.signindone);
       } else {
-        Get.snackbar("Error", "Face login failed");
+        Get.snackbar("", "Face login failed");
       }
     } catch (e) {
-      Get.snackbar("Error", "Face authentication failed");
+      Get.snackbar("", "Face authentication failed");
     }
   }
 }

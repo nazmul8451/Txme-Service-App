@@ -13,6 +13,7 @@ import '../../../../Widgegt/Custom_Button/custom_button.dart';
 import '../../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import '../PaymentSuccessful/ProviderPaymentSuccessful.dart';
 import 'ConfirmPaymentController.dart';
+import 'ContactSupportController.dart'; // ✅ ADDED
 
 class ConfirmPaymentpage extends StatefulWidget {
   const ConfirmPaymentpage({super.key});
@@ -23,6 +24,7 @@ class ConfirmPaymentpage extends StatefulWidget {
 
 class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
   final Confirmpaymentcontroller controller = Get.put(Confirmpaymentcontroller());
+  final ContactSupportController supportController = Get.put(ContactSupportController()); // ✅ ADDED
   final appController = Get.find<AppointmentsController>();
   late String appointmentId;
 
@@ -359,7 +361,7 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                         Get.off(() => Providerpaymentsuccessful(), arguments: appointment);
                       } else {
                         Get.snackbar(
-                          "Error",
+                          "",
                           "Could not confirm payment. The appointment may have already been processed.",
                           snackPosition: SnackPosition.BOTTOM,
                         );
@@ -372,14 +374,16 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                 ),
 
                 GestureDetector(
-                  onTap: (){
-                    Get.toNamed(AppRoute.contactsupport);
-                  },
-                  child: Text("Need help? Contact support", style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xff3A7DFF)
-                  ),),
+                  onTap: () => supportController.createAdminChat(), //  UPDATED
+                  child: Obx(() => supportController.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : Text(
+                    "Need help? Contact support",
+                    style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                        color: const Color(0xff3A7DFF)),
+                  )),
                 ),
 
                 SizedBox(

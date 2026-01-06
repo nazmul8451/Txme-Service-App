@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
@@ -62,10 +65,10 @@ class ChatController extends GetxController {
           chats.assignAll(chatList);
         }
       } else {
-        Get.snackbar("Error", "Failed to fetch chats");
+        Get.snackbar("Failed to fetch chats", "");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar(e.toString(), "");
     } finally {
       isLoading.value = false;
     }

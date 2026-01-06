@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/material.dart'; // ✅ ADDED
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,15 +62,13 @@ class Providersdetailscontroller extends GetxController {
 
         Get.to(() => ChatDetailsPage(chat: chat));
       } else {
-        // ✅ FIXED: Safely call snackbar
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar("Error", "Chat create failed");
+          Get.snackbar("Chat create failed", "");
         });
       }
     } catch (e) {
-      // ✅ FIXED: Safely call snackbar
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Get.snackbar("Error", e.toString());
+        Get.snackbar(e.toString(), "");
       });
     } finally {
       isLoading.value = false;
@@ -104,14 +102,13 @@ class Providersdetailscontroller extends GetxController {
               data.map((e) => AllReviewModel.fromJson(e)).toList();
         }
       } else {
-        // ✅ FIXED: Safely call snackbar
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.snackbar("Failed to load reviews", "");
         });
       }
     } catch (e) {
-      // ✅ FIXED: Safely call snackbar
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Get.snackbar("Error", e.toString());
+        Get.snackbar(e.toString(), "");
       });
     } finally {
       isLoading.value = false;
@@ -136,7 +133,7 @@ class Providersdetailscontroller extends GetxController {
         }
       }
     } catch (e) {
-      print("Error fetching provider stats: $e");
+      print("fetching provider stats: $e");
     }
   }
 }

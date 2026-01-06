@@ -184,7 +184,7 @@ class AppRoute {
     GetPage(name: providertotalduration, page: () =>  Providertotalduration()),
     GetPage(name: confirmPaymentpage, page: () =>  ConfirmPaymentpage()),
     GetPage(name: providerpaymentsuccessful, page: () =>  Providerpaymentsuccessful()),
-    GetPage(name: contactsupport, page: () =>  ContactSupport()),
+    // GetPage(name: contactsupport, page: () =>  ContactSupport()),
     GetPage(name: chatspage, page: () =>  ChatHomePage()),
     GetPage(name: walletpage, page: () =>  Walletpage()),
     GetPage(name: topuppage, page: () =>  Topuppage()),

@@ -54,10 +54,10 @@ class ProviderProfileDetailsController extends GetxController {
 
         Get.to(() => ChatDetailsPage(chat: chat));
       } else {
-        Get.snackbar("Error", "Chat create failed");
+        Get.snackbar("", "Chat create failed");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading.value = false;
     }

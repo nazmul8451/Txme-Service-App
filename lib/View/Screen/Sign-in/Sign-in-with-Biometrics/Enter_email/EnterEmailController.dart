@@ -72,7 +72,7 @@ class EnterEmailController extends GetxController {
 
   void _error(String msg) {
     Get.snackbar(
-      "Error",
+      "",
       msg,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.black87,

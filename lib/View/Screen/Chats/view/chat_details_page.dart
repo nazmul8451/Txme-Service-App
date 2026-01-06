@@ -24,7 +24,6 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
     controller = Get.put(MessageController(widget.chat.id));
   }
 
-  // ✅ ADDED: Function to show the money request dialog
   void _showMoneyRequestDialog() {
     final textController = TextEditingController();
     final amountController = TextEditingController();
@@ -83,7 +82,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
                 final text = textController.text;
                 final amount = double.parse(amountController.text);
                 controller.sendMoneyRequest(text: text, amount: amount);
-                Get.back(); // Close the dialog
+                Get.back();
               }
             },
             child: const Text("Send"),
@@ -106,18 +105,20 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           onPressed: () => Get.back(),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.red601,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)
-                  )
-                ),
-                onPressed: _showMoneyRequestDialog, // ✅ CONNECTED
-                child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF),)),
-          )
+          // ✅ UPDATED: Conditionally hide the button
+          if (!widget.chat.isAdminSupport)
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.red601,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)
+                    )
+                  ),
+                  onPressed: _showMoneyRequestDialog,
+                  child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF),)),
+            )
         ],
         title: Row(
           children: [

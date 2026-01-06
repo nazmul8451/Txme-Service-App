@@ -16,21 +16,17 @@ String _formatChatTimestamp(String isoString) {
     final startOfWeek = startOfToday.subtract(Duration(days: now.weekday - 1));
 
     if (messageTime.isAfter(startOfToday)) {
-      // Today: Show time like "3:00 PM"
       return DateFormat('h:mm a').format(messageTime);
     } else if (messageTime.isAfter(startOfYesterday)) {
-      // Yesterday
       return 'Yesterday';
     } else if (messageTime.isAfter(startOfWeek)) {
-      // Within the last week: Show day like "Monday"
       return DateFormat('EEEE').format(messageTime);
     } else {
-      // Older than a week: Show date like "Jan 3"
       return DateFormat('MMM d').format(messageTime);
     }
   } catch (e) {
     debugPrint("Error parsing or formatting chat time: $e");
-    return ""; // Return empty string if parsing fails
+    return ""; 
   }
 }
 
@@ -41,6 +37,7 @@ class ChatModel {
   final String time;
   final int unreadCount;
   final String avatar;
+  final bool isAdminSupport; // ✅ ADDED
 
   ChatModel({
     required this.id,
@@ -49,6 +46,7 @@ class ChatModel {
     required this.time,
     required this.unreadCount,
     required this.avatar,
+    required this.isAdminSupport,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json, String myUserId) {
@@ -84,6 +82,7 @@ class ChatModel {
       time: _formatChatTimestamp(json['lastMessage']?['createdAt'] ?? ""),
       unreadCount: json['unreadCount'] ?? 0,
       avatar: avatarUrl,
+      isAdminSupport: json['isAdminSupport'] ?? false, //  ADDED
     );
   }
 
@@ -93,6 +92,7 @@ class ChatModel {
     int? unreadCount,
     String? name,
     String? avatar,
+    bool? isAdminSupport, //  ADDED
   }) {
     return ChatModel(
       id: id,
@@ -101,6 +101,7 @@ class ChatModel {
       time: time ?? this.time,
       unreadCount: unreadCount ?? this.unreadCount,
       avatar: avatar ?? this.avatar,
+      isAdminSupport: isAdminSupport ?? this.isAdminSupport,
     );
   }
 }

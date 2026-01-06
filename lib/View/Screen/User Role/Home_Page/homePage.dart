@@ -74,7 +74,7 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.FFFFFF,
-        leading: Text(""),
+        automaticallyImplyLeading: false, //  FIXED: Removed unnecessary leading widget
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20.w),

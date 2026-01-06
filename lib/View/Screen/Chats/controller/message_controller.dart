@@ -203,14 +203,13 @@ class MessageController extends GetxController {
         Get.snackbar("Success", "Money request sent!");
       } else {
         final errorBody = jsonDecode(response.body);
-        Get.snackbar("Error", errorBody['message'] ?? "Failed to send request");
+        Get.snackbar(errorBody['message'] ?? "Failed to send request", "");
       }
     } catch (e) {
-      Get.snackbar("Error", "An unexpected error occurred.");
+      Get.snackbar("An unexpected error occurred.", "");
     }
   }
 
-  // ✅ ADDED: Function to respond to a money request
   Future<void> respondToMoneyRequest(String messageId, String status) async {
     try {
       final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
@@ -226,14 +225,14 @@ class MessageController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        getMessages(); // Refresh the chat to show the updated status
+        getMessages();
         Get.snackbar("Success", "Request has been $status");
       } else {
         final errorBody = jsonDecode(response.body);
-        Get.snackbar("Error", errorBody['message'] ?? "Failed to respond to request");
+        Get.snackbar(errorBody['message'] ?? "Failed to respond to request", "");
       }
     } catch (e) {
-      Get.snackbar("Error", "An unexpected error occurred.");
+      Get.snackbar("An unexpected error occurred.", "");
     }
   }
 
@@ -272,11 +271,11 @@ class MessageController extends GetxController {
       } else {
         final responseBody = await response.stream.bytesToString();
         print("Failed to send image: ${response.statusCode} - $responseBody");
-        Get.snackbar("Error", "Failed to send image");
+        Get.snackbar("Failed to send image", "");
       }
     } catch (e) {
       print("Error sending image: $e");
-      Get.snackbar("Error", "An error occurred while sending the image");
+      Get.snackbar("An error occurred while sending the image", "");
     }
   }
 

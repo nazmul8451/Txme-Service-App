@@ -60,7 +60,7 @@ class BiometricsController extends GetxController {
         },
       );
     } else {
-      Get.snackbar("Error", "Failed to send OTP");
+      Get.snackbar("", "Failed to send OTP");
     }
   }
 }

@@ -93,7 +93,7 @@ class RequestBookingController extends GetxController {
         initialDate = _getValidInitialDate();
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("", e.toString());
     } finally {
       isLoading.value = false;
     }

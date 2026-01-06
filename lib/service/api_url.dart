@@ -27,6 +27,7 @@ class ApiConstant {
   static const String appointmentMyAppointments = "$apiVersion/appointment/my-appointments/";
   static const String serviceGet = "$apiVersion/service/get-services";
   static const String popularProviders = "$apiVersion/provider/popular";
+
   static const String appointmentUpdate = "$apiVersion/appointment/update-status/";
   static const String providerStats = "$apiVersion/provider/"; // ✅ ADDED
 

@@ -51,11 +51,11 @@ class PayWithWalletController extends GetxController {
         Get.offAllNamed(AppRoute.providerpaymentsuccessful, arguments: appointment);
         Get.snackbar("Success", "Payment completed successfully");
       } else {
-        Get.snackbar("Error", "Payment failed");
+        Get.snackbar("", "Payment failed");
       }
     } catch (e) {
       debugPrint("❌ WALLET PAY ERROR => $e");
-      Get.snackbar("Error", "Something went wrong");
+      Get.snackbar("", "Something went wrong");
     } finally {
       isLoading.value = false;
     }

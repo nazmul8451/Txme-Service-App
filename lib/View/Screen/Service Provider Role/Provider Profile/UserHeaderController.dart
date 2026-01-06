@@ -56,10 +56,10 @@ class UserHeaderController extends GetxController {
         final decoded = jsonDecode(res.body);
         user.value = UserModel.fromJson(decoded['data']);
       } else {
-        Get.snackbar("Error", "Failed to load profile");
+        Get.snackbar("Failed to load profile", "");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar(e.toString(), "");
     } finally {
       isLoading(false);
     }
@@ -119,7 +119,7 @@ class UserHeaderController extends GetxController {
       );
 
       if (res.statusCode != 200) {
-        Get.snackbar("Error", "Stripe link create failed");
+        Get.snackbar("Stripe link create failed", "");
         return;
       }
 
@@ -127,7 +127,7 @@ class UserHeaderController extends GetxController {
       final String? url = data?['url'];
 
       if (url == null) {
-        Get.snackbar("Error", "Stripe URL missing");
+        Get.snackbar("Stripe URL missing", "");
         return;
       }
 
@@ -135,7 +135,7 @@ class UserHeaderController extends GetxController {
 
     } catch (e) {
       print("❌ Stripe Error => $e");
-      Get.snackbar("Error", "Stripe onboarding failed");
+      Get.snackbar("Stripe onboarding failed", "");
     } finally {
       isStripeLoading(false);
     }
@@ -147,7 +147,7 @@ class UserHeaderController extends GetxController {
 
       final canLaunch = await canLaunchUrl(uri);
       if (!canLaunch) {
-        Get.snackbar("Error", "Cannot open browser");
+        Get.snackbar("Cannot open browser", "");
         return;
       }
 
@@ -156,15 +156,14 @@ class UserHeaderController extends GetxController {
         mode: LaunchMode.externalApplication,
       );
     } catch (e) {
-      Get.snackbar("Error", "Stripe open failed");
+      Get.snackbar("Stripe open failed", "");
       print("Launch error => $e");
     }
   }
 
-  // ✅ UPDATED: No longer needs providerId as an argument
   Future<void> fetchProviderStats() async {
     try {
-      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
       final id = await SharePrefsHelper.getString(SharePrefsHelper.userId);
 
       if (id == null || id.isEmpty) return; //  Guard clause
