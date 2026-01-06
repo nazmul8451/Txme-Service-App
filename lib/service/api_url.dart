@@ -60,6 +60,11 @@ class ApiConstant {
   static const String message = "$apiVersion/message";
   static const String moneyRequestMessage = "$apiVersion/message";
 
+  ///================================ Kyc Api ==================================///
+
+  static const String kycSession = "$apiVersion/kyc/didit-session";
+
+
   ///================================ Get Api ==================================///
 
   static const String getMessage = "$apiVersion/message";

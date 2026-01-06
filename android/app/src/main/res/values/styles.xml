@@ -8,7 +8,6 @@
         <!-- Stripe + Flutter safety -->
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <!-- 🚀 Launch / Splash Theme -->

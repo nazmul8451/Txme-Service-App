@@ -4,18 +4,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'package:txme_app/service/api_client.dart';
 import 'package:txme_app/service/socket_service.dart';
-
 import 'Language/translator.dart';
 import 'View/Screen/splashScreen/splash_screen_view.dart';
 import 'core/App_Routes/app_routes.dart';
 import 'core/dependency_injection/dependencies.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
