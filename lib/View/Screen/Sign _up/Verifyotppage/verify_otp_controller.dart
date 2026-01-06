@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/App_Routes/app_routes.dart';
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
@@ -13,7 +16,7 @@ class VerifyOtpController extends GetxController {
   String email = "";
   String channel = "email";
   String purpose = "";
-  String biometricType = ""; // ✅ NEW
+  String biometricType = ""; //  NEW
   String otpCode = "";
 
   bool isLoading = false;
@@ -21,13 +24,10 @@ class VerifyOtpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     final args = Get.arguments ?? {};
-
     email = args['email'] ?? "";
     purpose = args['purpose'] ?? "";
     biometricType = args['biometricType'] ?? "";
-
     debugPrint("📥 OTP PAGE ARGS => $args");
   }
 
@@ -110,32 +110,57 @@ class VerifyOtpController extends GetxController {
     }
   }
 
+  // ADDED: KYC Process
+  Future<void> startKycProcess() async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      final response = await http.post(
+        Uri.parse("${ApiConstant.baseUrl}${ApiConstant.kycSession}"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json.decode(response.body)['data'];
+        final String? url = data?['url'];
+
+        if (url != null && await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+          // After returning from KYC, navigate to the create account page
+          Get.offAllNamed(AppRoute.createaccount);
+        } else {
+          _error("Could not launch KYC page.");
+        }
+      } else {
+        _error("Could not start KYC process.");
+      }
+    } catch (e) {
+      _error("An error occurred during KYC.");
+    }
+  }
+
   /// ================= NAVIGATION =================
   void _handleNavigation() {
     debugPrint("➡ NAVIGATION PURPOSE => $purpose");
 
     if (purpose == OtpPurpose.loginOtp.value) {
       Get.offAllNamed(AppRoute.signindone);
-    }
-
-    else if (purpose == OtpPurpose.emailVerify.value) {
-      Get.offAllNamed(AppRoute.signUpPhone);
-    }
-
-    else if (purpose == OtpPurpose.phoneVerify.value) {
-      Get.offAllNamed(AppRoute.createaccount);
-    }
-
-    /// 🧬 BIOMETRIC ENABLE
-    else if (purpose == OtpPurpose.biometricEnable.value) {
+    } else if (purpose == OtpPurpose.emailVerify.value) {
+      startKycProcess();
+      //Get.offAllNamed(AppRoute.signUpPhone);
+    } else if (purpose == OtpPurpose.phoneVerify.value) {
+      //  UPDATED: Start KYC process instead of direct navigation
+      startKycProcess();
+    } else if (purpose == OtpPurpose.biometricEnable.value) {
       if (biometricType == "face") {
         Get.offAllNamed(AppRoute.verifyFaceId);
       } else {
         Get.offAllNamed(AppRoute.verifyfingerprint);
       }
-    }
-
-    else {
+    } else {
       Get.back();
     }
   }
@@ -144,7 +169,6 @@ class VerifyOtpController extends GetxController {
   Future<void> _saveUserData(dynamic data) async {
     if (data == null) return;
 
-    /// ================= USER BASIC INFO =================
     if (data['email'] != null && data['email'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.userEmail,
@@ -166,28 +190,21 @@ class VerifyOtpController extends GetxController {
       );
     }
 
-    /// ================= NORMAL TOKENS =================
-    /// (Email verify / Login case)
-    if (data['accessToken'] != null &&
-        data['accessToken'].toString().isNotEmpty) {
+    if (data['accessToken'] != null && data['accessToken'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.bearerToken,
         data['accessToken'],
       );
     }
 
-    if (data['refreshToken'] != null &&
-        data['refreshToken'].toString().isNotEmpty) {
+    if (data['refreshToken'] != null && data['refreshToken'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.refreshToken,
         data['refreshToken'],
       );
     }
 
-    /// ================= BIOMETRIC TOKEN =================
-    /// (Biometric enable case)
-    if (data['biometricToken'] != null &&
-        data['biometricToken'].toString().isNotEmpty) {
+    if (data['biometricToken'] != null && data['biometricToken'].toString().isNotEmpty) {
       await SharePrefsHelper.setString(
         SharePrefsHelper.biometricToken,
         data['biometricToken'],
@@ -195,13 +212,11 @@ class VerifyOtpController extends GetxController {
     }
   }
 
-
   void _error(String msg) {
     Get.snackbar(
-      "Error",
+      "Please enter correct OTP",
       msg,
       snackPosition: SnackPosition.BOTTOM,
     );
   }
 }
-

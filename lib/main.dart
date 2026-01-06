@@ -13,6 +13,7 @@ import 'View/Screen/splashScreen/splash_screen_view.dart';
 import 'core/App_Routes/app_routes.dart';
 import 'core/dependency_injection/dependencies.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

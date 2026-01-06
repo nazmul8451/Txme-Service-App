@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/Utils/StaticString/static_string.dart';
 import 'package:txme_app/View/Widgegt/Custom_Button/custom_button.dart';
 import 'package:txme_app/View/Widgegt/Email_Input_Field/EmailTextFieldWidget.dart';
 import '../../../../core/App_Routes/app_routes.dart';
+import 'SignUp_Phone_Controller.dart';
 
 class SignUpPhone extends StatefulWidget {
   const SignUpPhone({super.key});
@@ -19,7 +18,8 @@ class SignUpPhone extends StatefulWidget {
 }
 
 class _SignUpPhoneState extends State<SignUpPhone> {
-  bool isChecked = false;
+  final controller = Get.put(SignUpPhoneController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,11 @@ class _SignUpPhoneState extends State<SignUpPhone> {
           SizedBox(height: 32.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: CustomTextFieldE(hint: AppString.phone, icon: Icons.phone),
+            child: CustomTextFieldE( // ✅ UPDATED: Added controller
+              controller: controller.phoneController,
+              hint: AppString.phone,
+              icon: Icons.phone,
+            ),
           ),
           SizedBox(height: 20.h),
           CustomButton(
@@ -56,19 +60,20 @@ class _SignUpPhoneState extends State<SignUpPhone> {
               color: AppColors.red601,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
+            // ✅ UPDATED: Added Obx for loading state
+            child: Obx(() => controller.isLoading.value
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Center(
               child: Text(
                 AppString.verifyNumber.tr,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
                   color: AppColors.FFFFFF,
                 ),
               ),
-            ),
-            onTap: () {
-              Get.toNamed(AppRoute.createaccount);
-            },
+            )),
+            onTap: controller.sendPhoneOtp, //  UPDATED: Call controller method
           ),
         ],
       ),

@@ -72,8 +72,6 @@ class VerificationPage extends StatelessWidget {
                 title: "ID Verification",
                 status: controller.idStatus,
                 onTap: () {
-
-                  Get.toNamed(AppRoute.verifyyouridentity);
                   // ID tap action
                   Get.snackbar("ID", "ID verification tapped");
                 },

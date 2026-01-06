@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/NormalTheme" 
+            android:theme="@style/NormalTheme"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -32,6 +32,15 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- ✅ ADDED: Deep Link Intent Filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="txme" android:host="kyc-complete" />
+            </intent-filter>
+
         </activity>
 
         <service

@@ -38,7 +38,7 @@ class BiometricsController extends GetxController {
     await SharePrefsHelper.getString(SharePrefsHelper.userEmail);
 
     if (email.isEmpty) {
-      Get.snackbar("Error", "Email not found");
+      Get.snackbar("", "Email not found");
       return;
     }
 

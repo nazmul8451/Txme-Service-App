@@ -8,6 +8,9 @@ class ApiConstant {
   ///===================== SIGN UP =======================///
 
   static const String signUpSendEmailOtp = "$apiVersion/auth/send-email-otp";
+
+  static const String signUpSendPhoneOtp = "$apiVersion/auth/send-phone-otp";
+
   static const String signUpEmailVerifyOtp = "$apiVersion/auth/verify-otp";
   static const String resendOtp = "$apiVersion/auth/resend-otp";
   static const String completeProfile = "$apiVersion/auth/complete-profile";
