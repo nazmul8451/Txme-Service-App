@@ -6,11 +6,11 @@ import 'package:http/http.dart' as http;
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
 import '../../../../core/App_Routes/app_routes.dart';
+import '../../../../service/socket_service.dart'; // ✅ ADDED
 import '../../User Role/Home_Page/AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 import '../MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
 
 class ProviderHomeController extends GetxController {
-
   var searchController = TextEditingController();
   var name = "".obs;
   var notificationCount = 0.obs;
@@ -18,16 +18,33 @@ class ProviderHomeController extends GetxController {
   final isLoading = false.obs;
   bool _alreadyRedirected = false;
 
+  final SocketApi socketApi = Get.find<SocketApi>(); // ✅ ADDED
+  String? _eventName;
+
   @override
   void onInit() {
     super.onInit();
     fetchUnreadNotificationCount();
+    _initSocketListener(); // ✅ ADDED
   }
 
   @override
   void onReady() {
     super.onReady();
     checkAgain();
+  }
+
+  // ✅ ADDED: Socket listener for real-time notification count updates
+  Future<void> _initSocketListener() async {
+    final userId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
+    if (userId.isEmpty) return;
+
+    _eventName = "notification::$userId";
+    socketApi.on(_eventName!, (data) {
+      debugPrint(
+          "🔔 ProviderHomeController received notification update via socket.");
+      fetchUnreadNotificationCount();
+    });
   }
 
   void checkAgain() {
@@ -37,7 +54,8 @@ class ProviderHomeController extends GetxController {
 
   Future<void> fetchUnreadNotificationCount() async {
     try {
-      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final token =
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
       if (token == null || token.isEmpty) return;
 
       final response = await http.get(
@@ -69,7 +87,7 @@ class ProviderHomeController extends GetxController {
 
     try {
       final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
       if (token == null || token.isEmpty) return;
 
@@ -107,25 +125,31 @@ class ProviderHomeController extends GetxController {
     if (_alreadyRedirected) return;
 
     final userRole =
-    await SharePrefsHelper.getString(SharePrefsHelper.userRole);
+        await SharePrefsHelper.getString(SharePrefsHelper.userRole);
 
-    final needReview =
-        status == "review_pending" ||
-            (status == "provider_review_pending" &&
-                userRole == "PROVIDER") ||
-            (status == "customer_review_pending" &&
-                userRole == "CUSTOMER");
+    final needReview = status == "review_pending" ||
+        (status == "provider_review_pending" && userRole == "PROVIDER") ||
+        (status == "customer_review_pending" && userRole == "CUSTOMER");
 
     if (!needReview) return;
 
     _alreadyRedirected = true;
 
     final appointment =
-    AppointmentModel2.fromJson(appointmentData, userRole: userRole);
+        AppointmentModel2.fromJson(appointmentData, userRole: userRole);
 
     Get.offAll(
-          () => Providerpaymentsuccessful(),
+      () => Providerpaymentsuccessful(),
       arguments: appointment,
     );
+  }
+
+  // ✅ ADDED: Dispose the socket listener
+  @override
+  void onClose() {
+    if (_eventName != null) {
+      socketApi.off(_eventName!);
+    }
+    super.onClose();
   }
 }

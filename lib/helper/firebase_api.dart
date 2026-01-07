@@ -7,13 +7,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:txme_app/helper/Shared_prefe/shared_prefe.dart';
 import 'package:txme_app/service/api_url.dart';
-import '../View/Screen/User Role/Home_Page/NotificationPage/notification_controller.dart'; // ✅ ADDED
+import '../View/Screen/User Role/Home_Page/NotificationPage/notification_controller.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  
-  // ✅ ADDED: Refresh notification list on background message
+
   if (Get.isRegistered<NotificationController>()) {
     await Get.find<NotificationController>().refreshNotifications();
   }
@@ -62,12 +61,16 @@ class FirebaseApi {
     _handleIncomingMessages();
   }
 
+  // ✅ UPDATED: Added better logging for success and failure
   Future<void> _saveFcmToken(String token) async {
-    try {
-      final bearerToken = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
-      if (bearerToken.isEmpty) return;
+    final bearerToken = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+    if (bearerToken.isEmpty) {
+      debugPrint("Auth token not found, skipping FCM token save.");
+      return;
+    }
 
-      await http.post(
+    try {
+      final response = await http.patch(
         Uri.parse("${ApiConstant.baseUrl}${ApiConstant.userFcmToken}"),
         headers: {
           'Authorization': 'Bearer $bearerToken',
@@ -75,15 +78,23 @@ class FirebaseApi {
         },
         body: jsonEncode({'token': token}),
       );
+
+      if (response.statusCode == 200) {
+        debugPrint("✅ FCM Token saved successfully.");
+      } else {
+        debugPrint("❌ Failed to save FCM token. Status: ${response.statusCode}");
+        debugPrint("   Response: ${response.body}");
+      }
     } catch (e) {
-      debugPrint("❌ Failed to save FCM token: $e");
+      debugPrint("❌ Exception while saving FCM token: $e");
     }
   }
 
   Future<void> _initLocalNotifications() async {
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
     const settings = InitializationSettings(android: android);
-    await _localNotifications.initialize(settings, 
+    await _localNotifications.initialize(
+      settings,
       onDidReceiveNotificationResponse: (response) {
         // TODO: Handle notification tap and navigate to the correct screen
       },
@@ -92,7 +103,6 @@ class FirebaseApi {
 
   void _handleIncomingMessages() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-       // ✅ ADDED: Refresh notification list on foreground message
       if (Get.isRegistered<NotificationController>()) {
         Get.find<NotificationController>().refreshNotifications();
       }

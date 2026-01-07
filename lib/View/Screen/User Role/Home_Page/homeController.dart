@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../helper/Shared_prefe/shared_prefe.dart';
 import '../../../../service/api_url.dart';
+import '../../../../service/socket_service.dart'; // ✅ ADDED
 import '../../Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
 import 'AppoinmentScreen/AppointmentModel/AppointmentModel2.dart';
 
@@ -12,16 +13,31 @@ class HomeController extends GetxController {
   bool _alreadyRedirected = false;
   var notificationCount = 0.obs;
 
+  final SocketApi socketApi = Get.find<SocketApi>(); // ✅ ADDED
+  String? _eventName;
+
   @override
   void onInit() {
     super.onInit();
     fetchUnreadNotificationCount();
+    _initSocketListener(); // ✅ ADDED
   }
 
   @override
   void onReady() {
     super.onReady();
     checkAgain();
+  }
+
+  Future<void> _initSocketListener() async {
+    final userId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
+    if (userId.isEmpty) return;
+
+    _eventName = "notification::$userId";
+    socketApi.on(_eventName!, (data) {
+      debugPrint("🔔 HomeController received notification update via socket.");
+      fetchUnreadNotificationCount();
+    });
   }
 
   Future<void> fetchUnreadNotificationCount() async {
@@ -121,5 +137,13 @@ class HomeController extends GetxController {
           () => Providerpaymentsuccessful(),
       arguments: appointment,
     );
+  }
+
+  @override
+  void onClose() {
+    if (_eventName != null) {
+      socketApi.off(_eventName!);
+    }
+    super.onClose();
   }
 }
