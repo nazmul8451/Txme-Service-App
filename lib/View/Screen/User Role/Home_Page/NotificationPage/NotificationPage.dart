@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../Utils/AppColors/app_colors.dart';
 import 'NotificationCard.dart';
 import 'notification_controller.dart';
 

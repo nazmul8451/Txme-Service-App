@@ -13,11 +13,10 @@
     <application
         android:label="txme_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/NormalTheme"
+            android:theme="@style/LaunchTheme"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -33,15 +32,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- ✅ ADDED: Deep Link Intent Filter -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="txme" android:host="kyc-complete" />
+                <data android:scheme="txme" android:host="kyc" />
             </intent-filter>
 
         </activity>
+
+        <!--  ADDED: FCM Default Channel -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
 
         <service
             android:name="com.google.firebase.messaging.FirebaseMessagingService"
