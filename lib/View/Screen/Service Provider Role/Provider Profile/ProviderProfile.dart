@@ -220,8 +220,8 @@ class ProviderProfilePage extends StatelessWidget {
               const SizedBox(height: 12),
 
               GestureDetector(
-                onTap: () => Get.to(() => NotificationSettings()),
-                child: menuItem(img: AppImg.notification, title: "Notification"),
+                onTap: () => Get.to(() => SettingsPage()),
+                child: menuItem(img: AppImg.setting, title: "Setting"),
               ),
 
               faqItem(),

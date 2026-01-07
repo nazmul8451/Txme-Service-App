@@ -49,6 +49,7 @@ class AppImg {
   static const String PayPal = "$basePath/PayPal.png";
   static const String stripePayment = "$basePath/Stripe Payment.png";
   static const String stripeImg = "$basePath/img.png";
+  static const String setting = "$basePath/img_2.png";
 
 
 

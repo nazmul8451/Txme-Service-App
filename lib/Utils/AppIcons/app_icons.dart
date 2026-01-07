@@ -33,6 +33,7 @@ class AppIcons {
   static const String adjustments = "$basePath/adjustments.svg";
   static const String switchVertical = "$basePath/switch-vertical.svg";
   static const String Stripe = "$basePath/Stripe.svg";
+  static const String setting = "$basePath/Setting.svg";
 
 
 

@@ -1,33 +1,37 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../../../helper/Shared_prefe/shared_prefe.dart';
-import '../../../service/api_url.dart';
+import 'package:intl/intl.dart';
+import 'package:txme_app/helper/Shared_prefe/shared_prefe.dart';
+import 'package:txme_app/service/api_url.dart';
 import 'modelTransactions.dart';
 
 class WalletController extends GetxController {
-  var selectedIndex = (-1).obs;
-
-  final isLoading = false.obs;
-
-  /// 🔥 Recent Transactions (Model list)
-  final transactions = <WalletTransactionModel>[].obs;
+  var isLoading = true.obs;
+  var transactions = <WalletTransactionModel>[].obs;
+  var selectedIndex = 0.obs; // ✅ ADDED
 
   @override
   void onInit() {
     super.onInit();
-    fetchWalletData();
+    fetchTransactions();
   }
 
-  Future<void> fetchWalletData() async {
-    try {
-      isLoading(true);
+  // ✅ ADDED
+  void selectButton(int index) {
+    selectedIndex.value = index;
+  }
 
-      final token =
-      await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+  // ✅ ADDED
+  Future<void> refreshWallet() async {
+    await fetchTransactions();
+  }
+
+  Future<void> fetchTransactions() async {
+    isLoading.value = true;
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      if (token.isEmpty) return;
 
       final res = await http.get(
         Uri.parse(ApiConstant.baseUrl + ApiConstant.myTransactions),
@@ -53,17 +57,17 @@ class WalletController extends GetxController {
       print("Wallet error => $e");
       transactions.clear();
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
   }
 
-  Future<void> refreshWallet() async {
-    await fetchWalletData();
-  }
-
-  void selectButton(int index) {
-    selectedIndex.value = index;
+  String format24h(String isoString) {
+    if (isoString.isEmpty) return "";
+    try {
+      final dateTime = DateTime.parse(isoString).toLocal();
+      return DateFormat('HH:mm').format(dateTime);
+    } catch (e) {
+      return "";
+    }
   }
 }
-
-

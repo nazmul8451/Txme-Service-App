@@ -8,6 +8,7 @@ import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'package:txme_app/View/Screen/User%20Role/Profile/profile_controller.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
+import 'package:txme_app/service/settings_service.dart'; // ✅ ADDED
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
 import 'EditProfile/EditProfile.dart';
@@ -18,6 +19,7 @@ class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   final controller = Get.put(ProfileController());
+  final settingsService = Get.find<SettingsService>(); // ✅ ADDED
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,6 @@ class ProfilePage extends StatelessWidget {
 
               Obx(() {
                 if (controller.isLoading.value) {
-
                   return const CircularProgressIndicator();
                 }
 
@@ -123,13 +124,19 @@ class ProfilePage extends StatelessWidget {
                 img: AppImg.verification,
                 title: "Verification",
               ),
-              profileMenu(
-                onTap: () {
-                  Get.toNamed(AppRoute.walletpage);
-                },
-                img: AppImg.wallet,
-                title: "Wallet",
-              ),
+              // ✅ UPDATED: Conditionally show Wallet button
+              Obx(() {
+                  if (!settingsService.walletPaymentEnabled.value) {
+                    return const SizedBox.shrink();
+                  }
+                  return profileMenu(
+                    onTap: () {
+                      Get.toNamed(AppRoute.walletpage);
+                    },
+                    img: AppImg.wallet,
+                    title: "Wallet",
+                  );
+                }),
 
 
               Obx(() {
@@ -137,12 +144,10 @@ class ProfilePage extends StatelessWidget {
                   return const CircularProgressIndicator();
                 }
 
-                //  ALL 4 TRUE → HIDE BUTTON
                 if (controller.isStripeFullyVerified) {
                   return const SizedBox();
                 }
 
-                //  ANY ONE FALSE → SHOW BUTTON
                 return profileMenu(
                   onTap: controller.createStripeAccountSession,
                   img: AppImg.stripeImg,
@@ -165,9 +170,9 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               profileMenu(
-                onTap: () => Get.to(() => NotificationSettings()),
-                img: AppImg.notification,
-                title: "Notification",
+                onTap: () => Get.to(() => SettingsPage()),
+                img: AppImg.setting,
+                title: "Setting",
               ),
               profileMenu(
                 onTap: () => Get.to(
@@ -180,45 +185,6 @@ class ProfilePage extends StatelessWidget {
               logoutItem(),
 
               SizedBox(height: 20.h),
-
-              /// ================= SWITCH TO PROVIDER MODE =================
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Image.asset(AppImg.Change, height: 40.h, width: 40.w),
-              //     SizedBox(width: 6.w),
-              //     Text(
-              //       "Change to Service Provider Mode",
-              //       style: TextStyle(
-              //         color: AppColors.gray,
-              //         fontWeight: FontWeight.w500,
-              //         fontSize: 16.sp,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              //
-              // SizedBox(height: 20.h),
-              //
-              // CustomButton(
-              //   height: 56.h,
-              //   width: 353.w,
-              //   BoxDecoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10.r),
-              //     border: Border.all(color: AppColors.red601),
-              //   ),
-              //   child: Center(
-              //     child: Text(
-              //       "Switch",
-              //       style: TextStyle(
-              //         color: AppColors.black700,
-              //         fontWeight: FontWeight.w700,
-              //         fontSize: 16.sp,
-              //       ),
-              //     ),
-              //   ),
-              //   onTap: () {},
-              // ),
 
               SizedBox(height: 30.h),
             ],
@@ -313,15 +279,13 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// ================= LOGOUT =================
-  /// ================= LOGOUT =================
   Widget logoutItem() {
     return GestureDetector(
       onTap: () {
-        // Show popup using Get.dialog
         Get.dialog(
           const CustomLogoutPopup(),
-          barrierDismissible: true, // tap outside to dismiss
-          barrierColor: Colors.black.withOpacity(0.5), // dim background
+          barrierDismissible: true, 
+          barrierColor: Colors.black.withOpacity(0.5), 
         );
       },
       child: Container(

@@ -51,7 +51,7 @@ class ChatController extends GetxController {
       final uri = Uri.parse("${ApiConstant.baseUrl}${ApiConstant.getChat}").replace(
         queryParameters: {
           if (searchTerm != null && searchTerm.isNotEmpty) 'searchTerm': searchTerm,
-          'limit': '100', // As per your Postman screenshot
+          'limit': '200', // As per your Postman screenshot
         },
       );
       

@@ -1,5 +1,8 @@
 class ApiConstant {
-  static const String baseUrl = "http://174.129.53.103:5000";
+  // static const String baseUrl = "http://174.129.53.103:5000";  // this Live ip address
+  //static const String baseUrl = "http://10.10.7.26:5002";  // this local ip address
+  static const String baseUrl = "http://10.10.7.26:5000";  // this local ip address
+  // static const String baseUrl = "https://fahim_hasan5000.binarybards.online";  // this local ip address
   static const String apiVersion = "/api/v1";
 
   static const String socketUrl = baseUrl;
@@ -54,5 +57,18 @@ class ApiConstant {
   static const String childServices = "$apiVersion/service/get-all-child-services";
   static const String userMe = "$apiVersion/user/me";
   static const String allProviderUser = "$apiVersion/user";
+  static const String setting = "$apiVersion/setting";
+
+
+
+
+
+
+
+
+
+
+
+
   static const String bearerToken = "bearerToken";
 }

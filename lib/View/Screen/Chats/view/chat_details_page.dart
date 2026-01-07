@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:txme_app/Utils/AppColors/app_colors.dart';
+import 'package:txme_app/service/settings_service.dart'; // ✅ ADDED
 import '../controller/message_controller.dart';
 import '../model/chat_model.dart';
 import '../../../Widgegt/MessageBubbleWidget/MessageBubble.dart';
@@ -17,6 +18,7 @@ class ChatDetailsPage extends StatefulWidget {
 
 class _ChatDetailsPageState extends State<ChatDetailsPage> {
   late final MessageController controller;
+  final SettingsService settingsService = Get.find<SettingsService>(); // ✅ ADDED
 
   @override
   void initState() {
@@ -105,20 +107,22 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
           onPressed: () => Get.back(),
         ),
         actions: [
-          // ✅ UPDATED: Conditionally hide the button
-          if (!widget.chat.isAdminSupport)
-            Padding(
+          // ✅ UPDATED: Conditionally hide based on both settings and admin support
+          Obx(() {
+            if (widget.chat.isAdminSupport || !settingsService.moneyRequestEnabled.value) {
+              return const SizedBox.shrink();
+            }
+            return Padding(
               padding: const EdgeInsets.only(right: 10),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.red601,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    )
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: _showMoneyRequestDialog,
-                  child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF),)),
-            )
+                  child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF))),
+            );
+          })
         ],
         title: Row(
           children: [

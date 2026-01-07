@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:txme_app/View/Screen/Wallet/Availablebalance/Availablebalance.dart';
-import '../../../Utils/AppColors/app_colors.dart';
+import 'package:txme_app/Utils/AppColors/app_colors.dart';
+import 'package:txme_app/core/App_Routes/app_routes.dart';
+import 'package:txme_app/service/settings_service.dart';
 import '../../../Utils/AppIcons/app_icons.dart';
-import '../../../core/App_Routes/app_routes.dart';
-import '../../../helper/Shared_prefe/shared_prefe.dart';
+import '../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
+import 'Availablebalance/Availablebalance.dart';
+import 'Request/RequestPage.dart';
+import 'Send/SendPage.dart';
 import 'WalletController.dart';
-import 'modelTransactions.dart';
+import 'modelTransactions.dart'; // ✅ ADDED
 
-
-class Walletpage extends StatelessWidget {
-  Walletpage({Key? key}) : super(key: key);
+class WalletPage extends StatelessWidget {
+  WalletPage({Key? key}) : super(key: key);
 
   final WalletController controller = Get.put(WalletController());
+  final SettingsService settingsService = Get.find<SettingsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +27,7 @@ class Walletpage extends StatelessWidget {
         backgroundColor: AppColors.FFFFFF,
         elevation: 0,
         leading: IconButton(
-          onPressed: () async {
-            final role = await SharePrefsHelper.getString(
-              SharePrefsHelper.userRole,
-            );
-
-            if (role == "PROVIDER") {
-              Get.offAllNamed(AppRoute.providerHomeScreen);
-            } else if (role == "CUSTOMER") {
-              Get.offAllNamed(AppRoute.homepage);
-            } else {
-              Get.back();
-            }
-          },
+          onPressed: () => Get.back(),
           icon: SvgPicture.asset(AppIcons.chevronleft),
         ),
         title: Text(
@@ -49,13 +40,12 @@ class Walletpage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-
       body: RefreshIndicator(
         color: AppColors.red601,
         backgroundColor: Colors.white,
-        onRefresh: () => controller.refreshWallet(), // ✅ CORRECT
+        onRefresh: () => controller.fetchTransactions(),
         child: Obx(
-              () => controller.isLoading.value
+              () => controller.isLoading.value && controller.transactions.isEmpty
               ? const Center(child: CircularProgressIndicator())
               : ListView(
             padding: const EdgeInsets.all(20),
@@ -64,22 +54,26 @@ class Walletpage extends StatelessWidget {
               SizedBox(height: 12.h),
 
               /// BALANCE
-              Availablebalance(),
+              const Availablebalance(),
 
               SizedBox(height: 34.5.h),
 
               /// BUTTONS
               Row(
                 children: [
-                  buildButton(1, "Top-up", () {
-                    controller.selectButton(1);
-                    Get.toNamed(AppRoute.topuppage);
-                  }),
+                  Obx(() => settingsService.topUpEnabled.value
+                      ? buildButton(1, "Top-up", () {
+                          controller.selectButton(1);
+                          Get.toNamed(AppRoute.topuppage);
+                        })
+                      : const Expanded(child: SizedBox())),
                   SizedBox(width: 16.w),
-                  buildButton(2, "Withdraw", () {
-                    controller.selectButton(2);
-                    Get.toNamed(AppRoute.withdrawpage);
-                  }),
+                  Obx(() => settingsService.withdrawEnabled.value
+                      ? buildButton(2, "Withdraw", () {
+                          controller.selectButton(2);
+                          Get.toNamed(AppRoute.withdrawpage);
+                        })
+                      : const Expanded(child: SizedBox())),
                 ],
               ),
 
@@ -87,15 +81,19 @@ class Walletpage extends StatelessWidget {
 
               Row(
                 children: [
-                  buildButton(3, "Send", () {
-                    controller.selectButton(3);
-                    Get.toNamed(AppRoute.sendpage);
-                  }),
+                  Obx(() => settingsService.moneySendEnabled.value
+                      ? buildButton(3, "Send", () {
+                          controller.selectButton(3);
+                          Get.to(() =>  Sendpage()); // ✅ CORRECTED
+                        })
+                      : const Expanded(child: SizedBox())),
                   SizedBox(width: 16.w),
-                  buildButton(4, "Request", () {
-                    controller.selectButton(4);
-                    Get.toNamed(AppRoute.requestpage);
-                  }),
+                  Obx(() => settingsService.moneyRequestEnabled.value
+                      ? buildButton(4, "Request", () {
+                          controller.selectButton(4);
+                          Get.to(() =>  Requestpage()); // ✅ CORRECTED
+                        })
+                      : const Expanded(child: SizedBox())),
                 ],
               ),
 
@@ -166,7 +164,7 @@ class Walletpage extends StatelessWidget {
                         ),
 
                         Text(
-                          format24h(tx.createdAt),
+                          controller.format24h(tx.createdAt), // CORRECTED
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.grey,
@@ -216,4 +214,3 @@ class Walletpage extends StatelessWidget {
     );
   }
 }
-
