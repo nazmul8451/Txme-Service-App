@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,7 +20,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool isUserSelected = true;
   final AccountController c = Get.put(AccountController());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +32,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
           onPressed: () => Get.back(),
         ),
-        title:  Text(
+        title: Text(
           AppString.CreateAccount,
           style: TextStyle(
             fontSize: 24.sp,
@@ -48,18 +46,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-             SizedBox(height: 20.h),
-
-
-
-
+            SizedBox(height: 20.h),
             GestureDetector(
               onTap: c.openCamera,
               child: Obx(
                 () => Stack(
                   alignment: Alignment.center,
                   children: [
-
                     Container(
                       width: 110.w,
                       height: 110.h,
@@ -73,19 +66,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             : null,
                       ),
                       child: c.profileImage.value == null
-                          ?  SvgPicture.asset(AppIcons.openYourCamera,
-                        height: 96.h,
-                        width: 96.w,
-                      )
+                          ? SvgPicture.asset(
+                              AppIcons.openYourCamera,
+                              height: 96.h,
+                              width: 96.w,
+                            )
                           : null,
                     ),
                   ],
                 ),
               ),
             ),
-
-             SizedBox(height: 12.h),
-             Text(
+            SizedBox(height: 12.h),
+            Text(
               AppString.openYourCamera.tr,
               style: TextStyle(
                 fontSize: 18.sp,
@@ -93,11 +86,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-
-             SizedBox(height: 50.h),
+            SizedBox(height: 50.h),
             CustomTextFieldC(
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
@@ -105,17 +96,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               color: Colors.grey.shade50,
               readOnly: false,
               hintText: AppString.name.tr,
-              onTap: () {
-
-              },
+              onTap: () {},
               label: AppString.fullName.tr,
             ),
-
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             CustomTextFieldC(
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
@@ -130,14 +116,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 color: AppColors.red601,
               ),
             ),
-
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             Obx(() {
               // Observing selectedGender and updating the hintText reactively
               return CustomTextFieldC(
-                border:
-                OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: BorderSide(color: AppColors.red601),
                 ),
@@ -147,8 +130,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 readOnly: true, // Make the Gender field read-only
                 onTap: () =>
                     c.selectGender(context), // Trigger gender selection dialog
-                hintText:
-                    c.selectedGender.value ??
+                hintText: c.selectedGender.value ??
                     AppString.SelectGender.tr, // Default hint text
                 label: AppString.Gender.tr,
                 suffixIcon: Icon(
@@ -157,95 +139,74 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ), // Optional down-arrow icon
               );
             }),
-             SizedBox(height: 20.h),
+            SizedBox(height: 20.h),
             CustomTextFieldC(
               controller: c.nationalityController,
               color: Colors.grey.shade50,
-
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
               readOnly: false,
               hintText: AppString.enterNationality.tr,
-              onTap: () {
-              },
-              label:  AppString.Nationality.tr,
+              onTap: () {},
+              label: AppString.Nationality.tr,
             ),
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             CustomTextFieldC(
               controller: c.residenceController,
               color: Colors.grey.shade50,
-
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
               readOnly: false,
               hintText: AppString.selectResidence.tr,
-              onTap: () {
-              },
-              label:  AppString.countryResidence.tr,
+              onTap: () {},
+              label: AppString.countryResidence.tr,
             ),
-
-
-
-
-
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             CustomTextFieldC(
               controller: c.addressController,
               color: Colors.grey.shade50,
-
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
               readOnly: false,
               hintText: AppString.fullAddress.tr,
-              onTap: () {
-              },
-              label:  AppString.residentialAddress.tr,
+              onTap: () {},
+              label: AppString.residentialAddress.tr,
             ),
-             SizedBox(height: 20.h),
+            SizedBox(height: 20.h),
             CustomTextFieldC(
               controller: c.postalController,
               color: Colors.grey.shade50,
-
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
               readOnly: false,
               hintText: AppString.postalAddress.tr,
-              onTap: () {
-              },
+              onTap: () {},
               label: AppString.postal.tr,
             ),
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             Obx(() {
               // Observing selectedGender and updating the hintText reactively
               return CustomTextFieldC(
                 controller: c.iDController,
                 color: Colors.grey.shade50,
 
-                border:
-                OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: BorderSide(color: AppColors.red601),
                 ),
                 readOnly: true, // Make the Gender field read-only
                 onTap: () =>
                     c.selectID(context), // Trigger gender selection dialog
-                hintText:
-                    c.selectedID.value ?? AppString.selectID.tr, // Default hint text
+                hintText: c.selectedID.value ??
+                    AppString.selectID.tr, // Default hint text
                 label: AppString.selectYourID.tr,
                 suffixIcon: Icon(
                   Icons.arrow_drop_down,
@@ -253,42 +214,34 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ), // Optional down-arrow icon
               );
             }),
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             CustomTextFieldC(
               controller: c.idNumberController,
               color: Colors.grey.shade50,
-
-              border:
-              OutlineInputBorder(
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: BorderSide(color: AppColors.red601),
               ),
               readOnly: false,
               hintText: AppString.inputIdNumber.tr,
-              onTap: () {
-
-              },
+              onTap: () {},
               label: AppString.iDNumber.tr,
             ),
-             SizedBox(height: 20.h),
-
+            SizedBox(height: 20.h),
             Obx(() {
               // Observing selectedGender and updating the hintText reactively
               return CustomTextFieldC(
                 controller: c.maritalController,
                 color: Colors.grey.shade50,
 
-                border:
-                OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: BorderSide(color: AppColors.red601),
                 ),
                 readOnly: true, // Make the Gender field read-only
                 onTap: () =>
                     c.selectMarital(context), // Trigger gender selection dialog
-                hintText:
-                    c.selectedMarital.value ??
+                hintText: c.selectedMarital.value ??
                     AppString.selectMarital.tr, // Default hint text
                 label: AppString.maritalStatus.tr,
                 suffixIcon: Icon(
@@ -297,87 +250,87 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ), // Optional down-arrow icon
               );
             }),
-             SizedBox(height: 40.h),
-        Row(
-          children: [
-            /// HELP BUTTON
-            CustomButton(
-              height: 56.h,
-              width: 160.w,
-              BoxDecoration: BoxDecoration(
-                color: isUserSelected
-                    ? AppColors.red601
-                    : Colors.transparent,
-                border: Border.all(color: AppColors.red601, width: 1.w),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Center(
-                child: Text(
-                  AppString.Help.tr,
-                  style: TextStyle(
-                    color: isUserSelected
-                        ? AppColors.FFFFFF
-                        : AppColors.black900,
+            SizedBox(height: 40.h),
+            Row(
+              children: [
+                /// HELP BUTTON
+                SafeArea(
+                  child: CustomButton(
+                    height: 56.h,
+                    width: 160.w,
+                    BoxDecoration: BoxDecoration(
+                      color:
+                          isUserSelected ? AppColors.red601 : Colors.transparent,
+                      border: Border.all(color: AppColors.red601, width: 1.w),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        AppString.Help.tr,
+                        style: TextStyle(
+                          color: isUserSelected
+                              ? AppColors.FFFFFF
+                              : AppColors.black900,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        isUserSelected = true;
+                      });
+                    },
                   ),
                 ),
-              ),
-              onTap: () {
-                setState(() {
-                  isUserSelected = true;
-                });
-              },
-            ),
 
-            SizedBox(width: 15.w),
+                SizedBox(width: 15.w),
 
-            /// NEXT BUTTON
-        Obx(
-              () => CustomButton(
-            height: 56.h,
-            width: 160.w,
-            BoxDecoration: BoxDecoration(
-              color: !isUserSelected
-                  ? AppColors.red601
-                  : Colors.transparent,
-              border: Border.all(color: AppColors.red601, width: 1.w),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Center(
-              child: c.isLoading.value
-                  ? SizedBox(
-                height: 22.h,
-                width: 22.w,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
+                /// NEXT BUTTON
+                Obx(
+                  () => SafeArea(
+                    child: CustomButton(
+                      height: 56.h,
+                      width: 160.w,
+                      BoxDecoration: BoxDecoration(
+                        color: !isUserSelected
+                            ? AppColors.red601
+                            : Colors.transparent,
+                        border: Border.all(color: AppColors.red601, width: 1.w),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Center(
+                        child: c.isLoading.value
+                            ? SizedBox(
+                                height: 22.h,
+                                width: 22.w,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                AppString.next.tr,
+                                style: TextStyle(
+                                  color: !isUserSelected
+                                      ? AppColors.FFFFFF
+                                      : AppColors.black900,
+                                ),
+                              ),
+                      ),
+                      onTap: c.isLoading.value
+                          ? null
+                          : () async {
+                              setState(() {
+                                isUserSelected = false;
+                              });
+
+                              await c.submitCompleteProfile();
+                            },
+                    ),
+                  ),
                 ),
-              )
-                  : Text(
-                AppString.next.tr,
-                style: TextStyle(
-                  color: !isUserSelected
-                      ? AppColors.FFFFFF
-                      : AppColors.black900,
-                ),
-              ),
-            ),
-            onTap: c.isLoading.value
-                ? null
-                : () async {
-              setState(() {
-                isUserSelected = false;
-              });
-
-              await c.submitCompleteProfile();
-            },
-          ),
-        ),
-
-        ],
-        )
-
-
-        ],
+              ],
+            )
+          ],
         ),
       ),
     );

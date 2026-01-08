@@ -11,7 +11,6 @@ import 'Availablebalance/Availablebalance.dart';
 import 'Request/RequestPage.dart';
 import 'Send/SendPage.dart';
 import 'WalletController.dart';
-import 'modelTransactions.dart'; // ✅ ADDED
 
 class WalletPage extends StatelessWidget {
   WalletPage({Key? key}) : super(key: key);

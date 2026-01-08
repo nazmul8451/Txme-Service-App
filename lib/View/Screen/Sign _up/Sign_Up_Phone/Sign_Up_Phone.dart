@@ -21,7 +21,9 @@ class _SignUpPhoneState extends State<SignUpPhone> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.FFFFFF,
       appBar: AppBar(
+        backgroundColor: AppColors.FFFFFF,
         title: Center(
           child: Text(
             AppString.signUn.tr,

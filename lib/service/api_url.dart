@@ -59,6 +59,7 @@ class ApiConstant {
   static const String userMe = "$apiVersion/user/me";
   static const String allProviderUser = "$apiVersion/user";
   static const String setting = "$apiVersion/setting";
+  static const String profilePromotion = "$apiVersion/promotion/packages";
 
 
 

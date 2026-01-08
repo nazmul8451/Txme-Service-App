@@ -51,9 +51,12 @@ void main() async {
     debugPrint("❌ Error initializing Firebase notifications: $e");
   }
 
-  Deeplinkservice2().init();
-
   DeepLinkService().init();
+
+
+  //Deeplinkservice2().init();
+
+
 
 
 

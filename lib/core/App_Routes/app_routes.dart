@@ -8,6 +8,7 @@ import '../../View/Screen/Service Provider Role/MyBooking/NewBookingRequest/NewB
 import '../../View/Screen/Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/EditProfileProfession/EditProfileProfession.dart';
+import '../../View/Screen/Service Provider Role/Provider Profile/ProfilePromotion/ProfilePromotionPage.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/ProviderProfile.dart';
 import '../../View/Screen/Sign _up/Create_Account/CreateAccount.dart';
 import '../../View/Screen/Sign _up/FaceIDSetupScreen/FaceIDSetupScreen.dart';
@@ -129,6 +130,7 @@ class AppRoute {
   static const String splashScreenView = "/splashScreenView";
   static const String verifyFailed = "/verifyFailed";
   static const String verifyfailedstripe = "/verifyfailedstripe";
+  static const String profilePromotionPage = "/profilePromotionPage";
 
 
 
@@ -198,6 +200,7 @@ class AppRoute {
     GetPage(name: paymentdoneT, page: () =>  PaymentdoneT()),
     GetPage(name: verifyFailed, page: () =>  VerifyFailed()),
     GetPage(name: verifyfailedstripe, page: () =>  Verifyfailedstripe()),
+    GetPage(name: profilePromotionPage, page: () =>  ProfilePromotionPage()),
     GetPage(
       name: requestBooking,
       page: () =>  RequestBookingPage(),

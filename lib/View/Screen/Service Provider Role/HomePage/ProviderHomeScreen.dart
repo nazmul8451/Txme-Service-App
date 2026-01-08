@@ -199,7 +199,9 @@ class ProviderHomeScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.0.r),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.toNamed(AppRoute.profilePromotionPage);
+                            },
                             child:  Text(
                               "Advertise your service Today",
                               style: TextStyle(

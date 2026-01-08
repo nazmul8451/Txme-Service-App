@@ -394,10 +394,10 @@ class Editprofileprofessioncontroller extends GetxController {
 
         Get.offAllNamed(AppRoute.providerHomeScreen);
       } else {
-        Get.snackbar("", decoded["message"] ?? "Failed");
+        Get.snackbar("Try Again", decoded["message"] ?? "Failed");
       }
     } catch (e) {
-      Get.snackbar("", e.toString());
+      Get.snackbar("$e", e.toString());
       debugPrint("EXCEPTION => $e");
     }
   }

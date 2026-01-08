@@ -89,7 +89,6 @@ class EditProfileController extends GetxController {
           phoneCode.value = "";
         }
       } else {
-        Get.snackbar("", "Failed to load profile");
       }
     } catch (e) {
       Get.snackbar("", "Failed to parse profile data.");

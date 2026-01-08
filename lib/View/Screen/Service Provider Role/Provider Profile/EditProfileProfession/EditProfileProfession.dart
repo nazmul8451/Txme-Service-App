@@ -52,7 +52,6 @@ class _EditprofileprofessionState extends State<Editprofileprofession> {
           child: SingleChildScrollView(
               child: Column(
             children: [
-
               /// ===== Duration =====
 
               CustomTextField(
@@ -95,9 +94,6 @@ class _EditprofileprofessionState extends State<Editprofileprofession> {
                 hint: "Enter You Skills",
                 errorText: c.skills,
               ),
-
-
-
 
               SizedBox(height: 16.h),
 
@@ -261,27 +257,27 @@ class _EditprofileprofessionState extends State<Editprofileprofession> {
 
                       SizedBox(height: 40.h),
 
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-
-                            c.submitProfile();
-
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF5A36),
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
+                      SafeArea(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              c.submitProfile();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF5A36),
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
+                            child: Text(
+                              "Save",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

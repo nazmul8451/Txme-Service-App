@@ -10,6 +10,7 @@ import '../../User Role/Profile/NotificationPage/NotificationSettingsPage.dart';
 import '../../User Role/Profile/VerificationPage/VerificationPage.dart';
 import '../../User Role/Profile/pastInvoice/InvoiceListPage.dart';
 import 'EditProfileProfession/EditProfileProfession.dart';
+import 'ProfilePromotion/ProfilePromotionPage.dart';
 import 'UserHeaderController.dart';
 
 class ProviderProfilePage extends StatelessWidget {
@@ -220,8 +221,8 @@ class ProviderProfilePage extends StatelessWidget {
               const SizedBox(height: 12),
 
               GestureDetector(
-                onTap: () => Get.to(() => SettingsPage()),
-                child: menuItem(img: AppImg.setting, title: "Setting"),
+                onTap: () => Get.to(() => ProfilePromotionPage()),
+                child: menuItem(img: AppImg.profilePromotion, title: "Profile Promotion"),
               ),
 
               faqItem(),

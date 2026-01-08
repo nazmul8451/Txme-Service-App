@@ -94,11 +94,11 @@ class AccountController extends GetxController {
         children: [
           SimpleDialogOption(
             child: const Text("Male"),
-            onPressed: () => Get.back(result: "male"),
+            onPressed: () => Navigator.pop(context, "male"),  // ✅ Changed
           ),
           SimpleDialogOption(
             child: const Text("Female"),
-            onPressed: () => Get.back(result: "female"),
+            onPressed: () => Navigator.pop(context, "female"),  // ✅ Changed
           ),
         ],
       ),
@@ -117,11 +117,11 @@ class AccountController extends GetxController {
         children: [
           SimpleDialogOption(
             child: const Text("NID"),
-            onPressed: () => Get.back(result: "nid"),
+            onPressed: () => Navigator.pop(context, "nid"),  // ✅ Changed
           ),
           SimpleDialogOption(
             child: const Text("Passport"),
-            onPressed: () => Get.back(result: "passport"),
+            onPressed: () => Navigator.pop(context, "passport"),  // ✅ Changed
           ),
         ],
       ),
@@ -140,11 +140,11 @@ class AccountController extends GetxController {
         children: [
           SimpleDialogOption(
             child: const Text("Married"),
-            onPressed: () => Get.back(result: "married"),
+            onPressed: () => Navigator.pop(context, "married"),  // ✅ Changed
           ),
           SimpleDialogOption(
             child: const Text("Unmarried"),
-            onPressed: () => Get.back(result: "unmarried"),
+            onPressed: () => Navigator.pop(context, "unmarried"),  // ✅ Changed
           ),
         ],
       ),
@@ -209,19 +209,55 @@ class AccountController extends GetxController {
       final body = await response.stream.bytesToString();
       if (response.statusCode == 200 || response.statusCode == 201) {
         final decoded = jsonDecode(body);
-
         debugPrint(body);
 
-        // ✅ FIXED: Correctly access tokens from the 'tokens' object
-        if (decoded['data']?['tokens']?['accessToken'] != null) {
-          final newAccessToken = decoded['data']['tokens']['accessToken'];
-          await SharePrefsHelper.setString(SharePrefsHelper.bearerToken, newAccessToken);
-          debugPrint("✅ New Access Token Saved: $newAccessToken");
+        // ✅ Save Access Token
+        if (decoded['data']?['accessToken'] != null) {
+          final newAccessToken = decoded['data']['accessToken'];
+          await SharePrefsHelper.setString(
+            SharePrefsHelper.bearerToken,
+            newAccessToken,
+          );
+          debugPrint("✅ Access Token Saved: $newAccessToken");
         }
-        if (decoded['data']?['tokens']?['refreshToken'] != null) {
-          final newRefreshToken = decoded['data']['tokens']['refreshToken'];
-          await SharePrefsHelper.setString(SharePrefsHelper.refreshToken, newRefreshToken);
-          debugPrint("✅ New Refresh Token Saved: $newRefreshToken");
+
+        // ✅ Save Refresh Token
+        if (decoded['data']?['refreshToken'] != null) {
+          final newRefreshToken = decoded['data']['refreshToken'];
+          await SharePrefsHelper.setString(
+            SharePrefsHelper.refreshToken,
+            newRefreshToken,
+          );
+          debugPrint("✅ Refresh Token Saved: $newRefreshToken");
+        }
+
+        // ✅ Save User Info (Optional কিন্তু useful)
+        if (decoded['data']?['userInfo'] != null) {
+          final userInfo = decoded['data']['userInfo'];
+
+          if (userInfo['userId'] != null) {
+            await SharePrefsHelper.setString(
+              SharePrefsHelper.userId,
+              userInfo['userId'],
+            );
+          }
+
+          if (userInfo['email'] != null) {
+            await SharePrefsHelper.setString(
+              SharePrefsHelper.userEmail,
+              userInfo['email'],
+            );
+          }
+
+          // Role already saved, but you can update if needed
+          if (userInfo['role'] != null) {
+            await SharePrefsHelper.setString(
+              SharePrefsHelper.userRole,
+              userInfo['role'],
+            );
+          }
+
+          debugPrint("✅ User Info Saved");
         }
 
         Get.snackbar("Success", "Profile completed successfully");

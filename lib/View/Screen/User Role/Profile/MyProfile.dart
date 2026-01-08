@@ -169,11 +169,11 @@ class ProfilePage extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
 
-              profileMenu(
-                onTap: () => Get.to(() => SettingsPage()),
-                img: AppImg.setting,
-                title: "Setting",
-              ),
+              // profileMenu(
+              //   onTap: () => Get.to(() => SettingsPage()),
+              //   img: AppImg.setting,
+              //   title: "Setting",
+              // ),
               profileMenu(
                 onTap: () => Get.to(
                     () => InvoiceListPage()), // pass the page, not the controller
