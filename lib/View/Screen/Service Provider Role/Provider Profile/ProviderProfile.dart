@@ -205,7 +205,7 @@ class ProviderProfilePage extends StatelessWidget {
 
 
               GestureDetector(
-                onTap: () => Get.to(() => InvoiceListPage()),
+                onTap: () => Get.to(() => TransactionHistoryPage()),
                 child: menuItem(img: AppImg.pastInvoices, title: "Past Invoices"),
               ),
 

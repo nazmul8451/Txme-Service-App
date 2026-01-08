@@ -176,7 +176,7 @@ class ProfilePage extends StatelessWidget {
               // ),
               profileMenu(
                 onTap: () => Get.to(
-                    () => InvoiceListPage()), // pass the page, not the controller
+                    () => TransactionHistoryPage()), // pass the page, not the controller
                 img: AppImg.pastInvoices,
                 title: "Past Invoices",
               ),
