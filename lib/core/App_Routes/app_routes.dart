@@ -18,6 +18,7 @@ import '../../View/Screen/Sign _up/Sign_Up_Phone/Sign_Up_Phone.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/UploadDocuments1/UploadDocuments1.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/UploadDocuments2/UploadDocuments2.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/VerifyYourIdentity.dart';
+import '../../View/Screen/Sign _up/Verifyotppage/Verify_failed.dart';
 import '../../View/Screen/Sign _up/Verifyotppage/Verifyotppage.dart';
 import '../../View/Screen/Sign-in/Done/SignInDone.dart';
 import '../../View/Screen/Sign-in/Sign-in-with-Biometrics/Enter_email/enter_email.dart';
@@ -47,6 +48,7 @@ import '../../View/Screen/User Role/Home_Page/Popularservices/Popularservices.da
 import '../../View/Screen/User Role/Home_Page/SearchFilter/SearchFilter.dart';
 import '../../View/Screen/User Role/Home_Page/homePage.dart';
 import '../../View/Screen/User Role/Profile/MyProfile.dart';
+import '../../View/Screen/User Role/Profile/VerifyFailedStripe.dart';
 import '../../View/Screen/Wallet/PaymentDone/PaymentDone.dart';
 import '../../View/Screen/Wallet/Request/RequestPage.dart';
 import '../../View/Screen/Wallet/Send/SendPage.dart';
@@ -125,6 +127,8 @@ class AppRoute {
   static const String bookingSchedule = "/bookingSchedule";
   static const String paymentdoneT = "/paymentdoneT";
   static const String splashScreenView = "/splashScreenView";
+  static const String verifyFailed = "/verifyFailed";
+  static const String verifyfailedstripe = "/verifyfailedstripe";
 
 
 
@@ -192,6 +196,8 @@ class AppRoute {
     GetPage(name: profession, page: () =>  Editprofileprofession()),
     GetPage(name: popularprovider, page: () =>  Popularprovider()),
     GetPage(name: paymentdoneT, page: () =>  PaymentdoneT()),
+    GetPage(name: verifyFailed, page: () =>  VerifyFailed()),
+    GetPage(name: verifyfailedstripe, page: () =>  Verifyfailedstripe()),
     GetPage(
       name: requestBooking,
       page: () =>  RequestBookingPage(),

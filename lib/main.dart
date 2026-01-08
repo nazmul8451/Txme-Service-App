@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:txme_app/service/api_client.dart';
+import 'package:txme_app/service/deep_link_service.dart';
 import 'package:txme_app/service/socket_service.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:txme_app/service/settings_service.dart';
 import 'Language/translator.dart';
+import 'View/Screen/User Role/Profile/DeepLinkService2.dart';
 import 'View/Screen/splashScreen/splash_screen_view.dart';
 import 'core/App_Routes/app_routes.dart';
 import 'core/dependency_injection/dependencies.dart';
@@ -48,6 +50,12 @@ void main() async {
   } catch (e) {
     debugPrint("❌ Error initializing Firebase notifications: $e");
   }
+
+  Deeplinkservice2().init();
+
+  DeepLinkService().init();
+
+
 
   runApp(const MyApp());
 }

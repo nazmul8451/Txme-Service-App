@@ -1,7 +1,8 @@
 class ApiConstant {
   // static const String baseUrl = "http://174.129.53.103:5000";  // this Live ip address
+  static const String baseUrl = "https://api.txme-exchange.com";  // this Live ip address
   //static const String baseUrl = "http://10.10.7.26:5002";  // this local ip address
-  static const String baseUrl = "http://10.10.7.26:5000";  // this local ip address
+  // static const String baseUrl = "http://10.10.7.26:5000";  // this local ip address
   // static const String baseUrl = "https://fahim_hasan5000.binarybards.online";  // this local ip address
   static const String apiVersion = "/api/v1";
 

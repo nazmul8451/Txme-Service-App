@@ -161,6 +161,8 @@ class UserHeaderController extends GetxController {
     }
   }
 
+
+
   Future<void> fetchProviderStats() async {
     try {
       final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);

@@ -14,13 +14,13 @@ class ProfileController extends GetxController {
 
   final isStripeLoading = false.obs;
 
-  // 🔥 Stripe raw states
+  //  Stripe raw states
   final isConnected = false.obs;
   final detailsSubmitted = false.obs;
   final payoutsEnabled = false.obs;
   final chargesEnabled = false.obs;
 
-  // 🔥 FINAL STATE (button hide / show)
+  //  FINAL STATE (button hide / show)
   bool get isStripeFullyVerified =>
       isConnected.value &&
           detailsSubmitted.value &&
@@ -63,7 +63,6 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ================= STRIPE STATUS =================
 
   // ================= STRIPE STATUS =================
   Future<void> fetchStripeAccountStatus() async {
@@ -164,5 +163,4 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ================= ONBOARDING (APP MODE) =================
 }

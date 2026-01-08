@@ -38,6 +38,8 @@ class EnterEmailController extends GetxController {
     /// 🔥 BACKEND LOGIN REQUEST BODY
     final body = {
       "email": email,
+      'channel': OtpChannel.email.value,
+      "purpose": OtpPurpose.loginOtp.value,
     };
 
     debugPrint("📤 LOGIN OTP REQUEST => $body");

@@ -29,7 +29,7 @@ class VerifyOtpController extends GetxController {
     // ✅ UPDATED: Set identifier dynamically
     identifier = args['email'] ?? args['phone'] ?? "";
     purpose = args['purpose'] ?? "";
-    channel = args['channel'] ?? "";
+    channel = args['channel'] ?? "email";
     biometricType = args['biometricType'] ?? "";
     debugPrint("📥 OTP PAGE ARGS => $args");
   }
@@ -132,7 +132,6 @@ class VerifyOtpController extends GetxController {
 
         if (url != null && await canLaunchUrl(Uri.parse(url))) {
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-          Get.offAllNamed(AppRoute.createaccount);
         } else {
           _error("Could not launch KYC page.");
         }
@@ -150,6 +149,7 @@ class VerifyOtpController extends GetxController {
     if (purpose == OtpPurpose.loginOtp.value) {
       Get.offAllNamed(AppRoute.signindone);
     } else if (purpose == OtpPurpose.emailVerify.value) {
+      // startKycProcess();
       Get.offAllNamed(AppRoute.signUpPhone);
     } else if (purpose == OtpPurpose.phoneVerify.value) {
       startKycProcess();

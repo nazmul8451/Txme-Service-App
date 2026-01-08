@@ -64,6 +64,7 @@ class WalletPage extends StatelessWidget {
                               })
                             : const Expanded(child: SizedBox())),
                         SizedBox(width: 16.w),
+
                         Obx(() => settingsService.withdrawEnabled.value
                             ? buildButton(2, "Withdraw", () {
                                 controller.selectButton(2);
