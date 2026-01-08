@@ -25,3 +25,20 @@ extension OtpPurposeX on OtpPurpose {
     }
   }
 }
+
+
+enum OtpChannel {
+  email,
+  phone
+}
+
+extension OtpChannelX on OtpChannel {
+  String get value {
+    switch (this) {
+      case OtpChannel.email:
+        return "email";
+      case OtpChannel.phone:
+        return "phone";
+    }
+  }
+}

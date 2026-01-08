@@ -91,7 +91,7 @@ class SignUpEmailController extends GetxController {
     if (response.statusCode == 200 || response.statusCode == 201) {
       Get.toNamed(AppRoute.verifyotppageS,    arguments: {
         "email": email,
-        "channel": "email",
+        'channel': OtpChannel.email.value,
         "purpose": OtpPurpose.emailVerify.value,
       },
 

@@ -13,10 +13,10 @@ import '../otp_purpose.dart';
 class VerifyOtpController extends GetxController {
   final ApiClient apiClient = Get.find<ApiClient>();
 
-  String email = "";
-  String channel = "email";
+  String identifier = ""; // ✅ UPDATED: To hold either email or phone
+  String channel = "";
   String purpose = "";
-  String biometricType = ""; //  NEW
+  String biometricType = "";
   String otpCode = "";
 
   bool isLoading = false;
@@ -25,8 +25,11 @@ class VerifyOtpController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments ?? {};
-    email = args['email'] ?? "";
+    
+    // ✅ UPDATED: Set identifier dynamically
+    identifier = args['email'] ?? args['phone'] ?? "";
     purpose = args['purpose'] ?? "";
+    channel = args['channel'] ?? "";
     biometricType = args['biometricType'] ?? "";
     debugPrint("📥 OTP PAGE ARGS => $args");
   }
@@ -47,9 +50,11 @@ class VerifyOtpController extends GetxController {
     final body = {
       "purpose": purpose,
       "channel": channel,
-      "identifier": email,
+      "identifier": identifier, // ✅ UPDATED
       "oneTimeCode": otpCode,
     };
+    
+    debugPrint("✅ Verifying OTP with body: $body");
 
     final response = await apiClient.postData(
       ApiConstant.signUpEmailVerifyOtp,
@@ -68,11 +73,9 @@ class VerifyOtpController extends GetxController {
     }
   }
 
-
-  /// ================= RESEND OTP =================
   Future<void> resendOtp() async {
-    if (email.isEmpty) {
-      _error("Email not found");
+    if (identifier.isEmpty) {
+      _error("Identifier not found");
       return;
     }
 
@@ -80,7 +83,8 @@ class VerifyOtpController extends GetxController {
     update();
 
     final body = {
-      "identifier": email,
+      "identifier": identifier, // ✅ UPDATED
+      "channel": channel,
     };
 
     debugPrint("🔁 RESEND OTP REQUEST => $body");
@@ -110,7 +114,6 @@ class VerifyOtpController extends GetxController {
     }
   }
 
-  // ADDED: KYC Process
   Future<void> startKycProcess() async {
     try {
       final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
@@ -129,7 +132,6 @@ class VerifyOtpController extends GetxController {
 
         if (url != null && await canLaunchUrl(Uri.parse(url))) {
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-          // After returning from KYC, navigate to the create account page
           Get.offAllNamed(AppRoute.createaccount);
         } else {
           _error("Could not launch KYC page.");
@@ -142,17 +144,14 @@ class VerifyOtpController extends GetxController {
     }
   }
 
-  /// ================= NAVIGATION =================
   void _handleNavigation() {
     debugPrint("➡ NAVIGATION PURPOSE => $purpose");
 
     if (purpose == OtpPurpose.loginOtp.value) {
       Get.offAllNamed(AppRoute.signindone);
     } else if (purpose == OtpPurpose.emailVerify.value) {
-      startKycProcess();
-      //Get.offAllNamed(AppRoute.signUpPhone);
+      Get.offAllNamed(AppRoute.signUpPhone);
     } else if (purpose == OtpPurpose.phoneVerify.value) {
-      //  UPDATED: Start KYC process instead of direct navigation
       startKycProcess();
     } else if (purpose == OtpPurpose.biometricEnable.value) {
       if (biometricType == "face") {
@@ -165,7 +164,6 @@ class VerifyOtpController extends GetxController {
     }
   }
 
-  /// ================= SAVE DATA =================
   Future<void> _saveUserData(dynamic data) async {
     if (data == null) return;
 
