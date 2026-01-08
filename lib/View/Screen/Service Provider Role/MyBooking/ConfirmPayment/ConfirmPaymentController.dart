@@ -36,13 +36,13 @@ class Confirmpaymentcontroller extends GetxController {
         return body['success'] == true;
       } else {
         final body = jsonDecode(res.body);
-        final message = body['message'] ?? "An unknown error occurred.";
+        final message = body['message'] ?? "An unknown  occurred.";
         Get.snackbar(message, "", snackPosition: SnackPosition.BOTTOM);
         return false;
       }
     } catch (e) {
       debugPrint("❌ ERROR => $e");
-      Get.snackbar("An unexpected error occurred.", "", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("An unexpected  occurred.", "", snackPosition: SnackPosition.BOTTOM);
       return false;
     } finally {
       isLoading.value = false;

@@ -8,9 +8,10 @@ import '../../../service/api_url.dart';
 class SplashController extends GetxController {
   static const String splashSeen = "splash_seen";
 
+  // ✅ MOVED logic from onInit to onReady
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     _checkSplash();
   }
 

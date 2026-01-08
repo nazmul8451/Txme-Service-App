@@ -26,10 +26,6 @@ class WalletPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.FFFFFF,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: SvgPicture.asset(AppIcons.chevronleft),
-        ),
         title: Text(
           "Wallet",
           style: TextStyle(
@@ -45,115 +41,124 @@ class WalletPage extends StatelessWidget {
         backgroundColor: Colors.white,
         onRefresh: () => controller.fetchTransactions(),
         child: Obx(
-              () => controller.isLoading.value && controller.transactions.isEmpty
+          () => controller.isLoading.value && controller.transactions.isEmpty
               ? const Center(child: CircularProgressIndicator())
               : ListView(
-            padding: const EdgeInsets.all(20),
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: [
-              SizedBox(height: 12.h),
+                  padding: const EdgeInsets.all(20),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    SizedBox(height: 12.h),
 
-              /// BALANCE
-              const Availablebalance(),
+                    /// BALANCE
+                    const Availablebalance(),
 
-              SizedBox(height: 34.5.h),
+                    SizedBox(height: 34.5.h),
 
-              /// BUTTONS
-              Row(
-                children: [
-                  Obx(() => settingsService.topUpEnabled.value
-                      ? buildButton(1, "Top-up", () {
-                          controller.selectButton(1);
-                          Get.toNamed(AppRoute.topuppage);
-                        })
-                      : const Expanded(child: SizedBox())),
-                  SizedBox(width: 16.w),
-                  Obx(() => settingsService.withdrawEnabled.value
-                      ? buildButton(2, "Withdraw", () {
-                          controller.selectButton(2);
-                          Get.toNamed(AppRoute.withdrawpage);
-                        })
-                      : const Expanded(child: SizedBox())),
-                ],
-              ),
+                    /// BUTTONS
+                    Row(
+                      children: [
+                        Obx(() => settingsService.topUpEnabled.value
+                            ? buildButton(1, "Top-up", () {
+                                controller.selectButton(1);
+                                Get.toNamed(AppRoute.topuppage);
+                              })
+                            : const Expanded(child: SizedBox())),
+                        SizedBox(width: 16.w),
+                        Obx(() => settingsService.withdrawEnabled.value
+                            ? buildButton(2, "Withdraw", () {
+                                controller.selectButton(2);
+                                Get.toNamed(AppRoute.withdrawpage);
+                              })
+                            : const Expanded(child: SizedBox())),
+                      ],
+                    ),
 
-              SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
 
-              Row(
-                children: [
-                  Obx(() => settingsService.moneySendEnabled.value
-                      ? buildButton(3, "Send", () {
-                          controller.selectButton(3);
-                          Get.to(() =>  Sendpage()); // ✅ CORRECTED
-                        })
-                      : const Expanded(child: SizedBox())),
-                  SizedBox(width: 16.w),
-                  Obx(() => settingsService.moneyRequestEnabled.value
-                      ? buildButton(4, "Request", () {
-                          controller.selectButton(4);
-                          Get.to(() =>  Requestpage()); // ✅ CORRECTED
-                        })
-                      : const Expanded(child: SizedBox())),
-                ],
-              ),
+                    Row(
+                      children: [
+                        Obx(() => settingsService.moneySendEnabled.value
+                            ? buildButton(3, "Send", () {
+                                controller.selectButton(3);
+                                Get.to(() => Sendpage()); // ✅ CORRECTED
+                              })
+                            : const Expanded(child: SizedBox())),
+                        SizedBox(width: 16.w),
+                        Obx(() => settingsService.moneyRequestEnabled.value
+                            ? buildButton(4, "Request", () {
+                                controller.selectButton(4);
+                                Get.to(() => Requestpage()); // ✅ CORRECTED
+                              })
+                            : const Expanded(child: SizedBox())),
+                      ],
+                    ),
 
-              SizedBox(height: 40.h),
+                    SizedBox(height: 40.h),
 
-              /// TRANSACTIONS
-              Text(
-                "Recent Transactions",
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xff1F2937),
-                ),
-              ),
-
-              SizedBox(height: 12.h),
-
-              if (controller.transactions.isEmpty)
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 40.h),
-                    child: Text(
-                      "No transactions found",
+                    /// TRANSACTIONS
+                    Text(
+                      "Recent Transactions",
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xff1F2937),
                       ),
                     ),
-                  ),
-                )
-              else
-                ...controller.transactions.map((tx) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SvgPicture.asset(
-                          AppIcons.transactions,
-                          height: 24.h,
-                          width: 24.w,
-                        ),
-                        SizedBox(width: 12.w),
 
-                        Expanded(
-                          child: Column(
+                    SizedBox(height: 12.h),
+
+                    if (controller.transactions.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 40.h),
+                          child: Text(
+                            "No transactions found",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      ...controller.transactions.map((tx) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${tx.type.toUpperCase()} €${tx.amount}",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
+                              SvgPicture.asset(
+                                AppIcons.transactions,
+                                height: 24.h,
+                                width: 24.w,
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${tx.type.toUpperCase()} €${tx.amount}",
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(height: 6.h),
+                                    Text(
+                                      tx.direction == "debit"
+                                          ? "To ${tx.toEmail}"
+                                          : "From ${tx.fromEmail}",
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(height: 6.h),
                               Text(
-                                tx.direction == "debit"
-                                    ? "To ${tx.toEmail}"
-                                    : "From ${tx.fromEmail}",
+                                controller.format24h(tx.createdAt), // CORRECTED
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   color: Colors.grey,
@@ -161,24 +166,13 @@ class WalletPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-
-                        Text(
-                          controller.format24h(tx.createdAt), // CORRECTED
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-
-            ],
-          ),
+                        );
+                      }).toList(),
+                  ],
+                ),
         ),
       ),
+      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 3),
     );
   }
 
@@ -187,7 +181,7 @@ class WalletPage extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Obx(
-              () => Container(
+          () => Container(
             padding: EdgeInsets.symmetric(vertical: 14.5.h),
             decoration: BoxDecoration(
               color: controller.selectedIndex.value == index

@@ -32,7 +32,7 @@ class ReviewController extends GetxController {
     await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
     if (token == null || token.isEmpty) {
-      Get.snackbar("Error", "Unauthorized user");
+      Get.snackbar("Unauthorized user", "Please login again");
       return false;
     }
 
@@ -81,7 +81,7 @@ class ReviewController extends GetxController {
       return false;
     } catch (e) {
       debugPrint("❌ REVIEW ERROR => $e");
-      Get.snackbar("Error", "Something went wrong");
+      Get.snackbar("Something went wrong", "Please try again");
       return false;
     } finally {
       isLoading.value = false;

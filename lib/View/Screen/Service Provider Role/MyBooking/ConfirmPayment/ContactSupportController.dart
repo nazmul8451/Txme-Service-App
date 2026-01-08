@@ -35,7 +35,7 @@ class ContactSupportController extends GetxController {
         Get.snackbar("Could not start chat", errorBody['message'] ?? "Please try again later.");
       }
     } catch (e) {
-      Get.snackbar("Error", "An unexpected error occurred.");
+      Get.snackbar("Could not start chat", "Please try again later.");
     } finally {
       isLoading.value = false;
     }

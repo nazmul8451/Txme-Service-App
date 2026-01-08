@@ -1,15 +1,11 @@
-import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:txme_app/View/Screen/Service%20Provider%20Role/MyBooking/MyBookingPage/ProviderBookingsPage.dart';
 import '../../View/Screen/Chats/view/chat_home_page.dart';
 import '../../View/Screen/Choose_Language/LanguagePage.dart';
-import '../../View/Screen/Service Provider Role/Contactsupport/Contactsupport.dart';
 import '../../View/Screen/Service Provider Role/HomePage/ProviderHomeScreen.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/CancelBooking/CancelBooking.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ConfirmPayment/ConfirmPayment.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/NewBookingRequest/NewBookingRequest.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/PaymentSuccessful/ProviderPaymentSuccessful.dart';
-import '../../View/Screen/Service Provider Role/MyBooking/ProviderJobProgressPage/ProviderJobProgressPage.dart';
 import '../../View/Screen/Service Provider Role/MyBooking/ProviderTotalDuration/ProviderTotalDuration.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/EditProfileProfession/EditProfileProfession.dart';
 import '../../View/Screen/Service Provider Role/Provider Profile/ProviderProfile.dart';
@@ -37,9 +33,7 @@ import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.d
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Onlinepayment/Onlinepayment.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PayWithCash/PayWithCash.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentPage.dart';
-import '../../View/Screen/User Role/BookingsViewClient/Payment/PaymentSuccessful/PaymentSuccessful.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWallet.dart';
-import '../../View/Screen/User Role/BookingsViewClient/TotalDuration/TotalDuration.dart';
 import '../../View/Screen/User Role/Home_Page/AllReviews/AllReviews.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/AppoinmentScreen.dart';
 import '../../View/Screen/User Role/Home_Page/AppoinmentScreen/BookingScheduleBinding.dart';
@@ -209,15 +203,5 @@ class AppRoute {
       binding: BookingScheduleBinding(),
 
     ),
-
-
-
-
-
-
-
-
-
-
   ];
 }

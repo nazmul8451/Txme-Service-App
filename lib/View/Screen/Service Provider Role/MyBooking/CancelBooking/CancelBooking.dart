@@ -151,13 +151,13 @@ class Cancelbooking extends StatelessWidget {
                 ),
                 onTap: () async {
                   if (controller.selectedReason.isEmpty) {
-                    Get.snackbar("Error", "Please select a reason");
+                    Get.snackbar("", "Please select a reason");
                     return;
                   }
 
                   if (controller.selectedReason.value == "Other" &&
                       controller.noteController.text.trim().isEmpty) {
-                    Get.snackbar("Error", "Please write a reason");
+                    Get.snackbar("", "Please write a reason");
                     return;
                   }
 
@@ -167,7 +167,7 @@ class Cancelbooking extends StatelessWidget {
                   if (success) {
                     Get.offAllNamed(AppRoute.appointmentsPage);
                   } else {
-                    Get.snackbar("Error", "Action failed");
+                    Get.snackbar("", "Action failed");
                   }
                 },
 

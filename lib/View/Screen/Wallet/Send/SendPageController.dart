@@ -29,7 +29,7 @@ class Sendpagecontroller extends GetxController {
       print("Bearer Token =======================>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<=========================== $token");
 
       if (token == null) {
-        Get.snackbar("Error", "User not authenticated");
+        Get.snackbar("", "User not authenticated");
         return null;
       }
 
@@ -37,13 +37,12 @@ class Sendpagecontroller extends GetxController {
       final amountText = ammountController.text.trim();
 
       if (receiver.isEmpty || amountText.isEmpty) {
-        Get.snackbar("Error", "Receiver & amount required");
         return null;
       }
 
       final amount = double.tryParse(amountText);
       if (amount == null || amount <= 0) {
-        Get.snackbar("Error", "Invalid amount");
+        Get.snackbar("", "Invalid amount");
         return null;
       }
 

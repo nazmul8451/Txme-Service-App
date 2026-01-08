@@ -195,6 +195,7 @@ class VerifyOtpController extends GetxController {
         SharePrefsHelper.bearerToken,
         data['accessToken'],
       );
+      print(data['accessToken']);
     }
 
     if (data['refreshToken'] != null && data['refreshToken'].toString().isNotEmpty) {
