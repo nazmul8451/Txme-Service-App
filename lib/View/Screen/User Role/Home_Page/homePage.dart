@@ -232,7 +232,7 @@ class _HomepageState extends State<Homepage> {
                       },
                       child: Customcontainer(
                         cText: service.name,
-                        img: "${ApiConstant.baseUrl}${service.image}",
+                        img: service.imageUrl, // ✅ Use imageUrl getter
                       ),
                     );
                   },

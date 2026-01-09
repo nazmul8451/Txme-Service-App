@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import '../../../../../Utils/AppImg/app_img.dart';
+import '../../../../../service/api_url.dart';
+
 class ServiceModel {
   final String id;
   final String name;
@@ -10,6 +14,25 @@ class ServiceModel {
     required this.image,
     this.parent,
   });
+
+  /// ================= IMAGE URL GUARD =================
+  String get imageUrl {
+    debugPrint("🖼️ Original image value: $image");
+
+    if (image.isEmpty) {
+      debugPrint("⚠️ Image is empty, using fallback");
+      return AppImg.editProfile;
+    }
+
+    if (image.startsWith('http')) {
+      debugPrint("✅ Image is full URL: $image");
+      return image;
+    }
+
+    final fullUrl = "${ApiConstant.baseUrl}$image";
+    debugPrint("🔗 Constructed URL: $fullUrl");
+    return fullUrl;
+  }
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(

@@ -188,7 +188,7 @@ class _ProviderpaymentsuccessfulState extends State<Providerpaymentsuccessful> {
                       ],
                     ),
                     onTap: () {
-                      Get.toNamed(AppRoute.invoicePListPage);
+                      Get.toNamed(AppRoute.transactionHistoryPage);
                     },
                   ),
                 ],

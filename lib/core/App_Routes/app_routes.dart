@@ -50,6 +50,7 @@ import '../../View/Screen/User Role/Home_Page/SearchFilter/SearchFilter.dart';
 import '../../View/Screen/User Role/Home_Page/homePage.dart';
 import '../../View/Screen/User Role/Profile/MyProfile.dart';
 import '../../View/Screen/User Role/Profile/VerifyFailedStripe.dart';
+import '../../View/Screen/User Role/Profile/pastInvoice/InvoiceListPage.dart';
 import '../../View/Screen/Wallet/PaymentDone/PaymentDone.dart';
 import '../../View/Screen/Wallet/Request/RequestPage.dart';
 import '../../View/Screen/Wallet/Send/SendPage.dart';
@@ -131,6 +132,7 @@ class AppRoute {
   static const String verifyFailed = "/verifyFailed";
   static const String verifyfailedstripe = "/verifyfailedstripe";
   static const String profilePromotionPage = "/profilePromotionPage";
+  static const String transactionHistoryPage = "/transactionHistoryPage";
 
 
 
@@ -174,7 +176,7 @@ class AppRoute {
     GetPage(name: paymentpage, page: () =>  Paymentpage()),
     GetPage(name: onlinepayment, page: () =>  Onlinepayment()),
     //GetPage(name: paymentsuccessful, page: () =>  Paymentsuccessful()),
-    GetPage(name: invoicePListPage, page: () =>  InvoicePListPage()),
+    GetPage(name: transactionHistoryPage, page: () =>  TransactionHistoryPage()),
     GetPage(name: paywithcash, page: () =>  Paywithcash()),
     GetPage(name: paywithwallet, page: () =>  Paywithwallet()),
    // GetPage(name: providerMyBookingsPage, page: () =>  ProviderMyBookingsPageUI()),

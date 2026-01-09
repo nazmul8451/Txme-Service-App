@@ -192,7 +192,7 @@ class _JobPageState extends State<JobPage> {
                             appointment.date,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                fontSize: 18.sp,
+                                fontSize: 15.sp,
                                 color: const Color(0xff1F2937)),
                           ),
                         ],
@@ -298,8 +298,6 @@ class _JobPageState extends State<JobPage> {
                 SizedBox(
                   height: 50.h,
                 ),
-
-
               ],
             ),
           ),

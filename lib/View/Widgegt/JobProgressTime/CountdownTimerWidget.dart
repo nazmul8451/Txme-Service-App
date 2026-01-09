@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -27,51 +28,77 @@ class JobTimerCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Text(
-            "Job In Progress",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff1F2937),
+          // Status indicator
+          Obx(() => Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: timer.isRunning.value
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-          ),
-          const SizedBox(height: 10),
-
-          /// 🔥 LIVE / API BASED TIMER
-          Obx(() => Text(
-            timer.formattedTime,
-            style: const TextStyle(
-              fontSize: 44,
-              fontWeight: FontWeight.w600,
-              color: Color(0xff2563EB),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(
+                    color: timer.isRunning.value ? Colors.green : Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  timer.isRunning.value ? "Job In Progress" : "Job Paused",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: timer.isRunning.value
+                        ? Colors.green.shade700
+                        : Colors.grey.shade700,
+                  ),
+                ),
+              ],
             ),
           )),
 
-          const SizedBox(height: 6),
-          const Text(
+          SizedBox(height: 16.h),
+
+          /// 🔥 LIVE TIMER
+          Obx(() => Text(
+            timer.formattedTime,
+            style: TextStyle(
+              fontSize: 44.sp,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xff2563EB),
+            ),
+          )),
+
+          SizedBox(height: 6.h),
+
+          Text(
             "Time Elapsed",
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w300,
-              color: Color(0xff6B7280),
+              color: const Color(0xff6B7280),
             ),
           ),
+
+          // Debug info (remove in production)
+          if (kDebugMode) ...[
+            SizedBox(height: 12.h),
+            Obx(() => Text(
+              "Seconds: ${timer.seconds.value}",
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: Colors.grey,
+              ),
+            )),
+          ],
         ],
       ),
     );
   }
 }
-
-
-
-//start bottom
-
-///timer.reset();
-// timer.start();
-
-//end bottom
-
-//final totalSeconds = timer.stop();
-// final payload = timer.timePayload;
-// // send payload to API
-

@@ -70,7 +70,8 @@ class Topupcontroller extends GetxController {
       if (response.statusCode == 200 && data["success"] == true) {
         final clientSecret = data["data"]["clientSecret"];
 
-        debugPrint("===================================>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<======================$clientSecret");
+        debugPrint(
+            "===================================>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<======================$clientSecret");
 
         await makeStripePayment(
           clientSecret: clientSecret,
@@ -97,12 +98,10 @@ class Topupcontroller extends GetxController {
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: clientSecret,
           merchantDisplayName: "TXME",
-
         ),
       );
 
       await Stripe.instance.presentPaymentSheet();
-
 
       ///  Payment success
       Get.snackbar(
@@ -119,7 +118,6 @@ class Topupcontroller extends GetxController {
           "currency": "EUR",
         },
       );
-
     }
 
     ///  Stripe failed / cancelled
@@ -148,7 +146,6 @@ class Topupcontroller extends GetxController {
       );
     }
   }
-
 
   @override
   void onClose() {
