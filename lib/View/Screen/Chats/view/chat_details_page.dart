@@ -18,7 +18,8 @@ class ChatDetailsPage extends StatefulWidget {
 
 class _ChatDetailsPageState extends State<ChatDetailsPage> {
   late final MessageController controller;
-  final SettingsService settingsService = Get.find<SettingsService>(); // ✅ ADDED
+  final SettingsService settingsService =
+      Get.find<SettingsService>(); // ✅ ADDED
 
   @override
   void initState() {
@@ -59,7 +60,8 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
                   labelText: "Amount",
                   prefixText: "€",
                 ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an amount';
@@ -103,24 +105,33 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
         shadowColor: Colors.black.withOpacity(0.1),
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 15),
           onPressed: () => Get.back(),
         ),
         actions: [
           // ✅ UPDATED: Conditionally hide based on both settings and admin support
           Obx(() {
-            if (widget.chat.isAdminSupport || !settingsService.moneyRequestEnabled.value) {
+            if (widget.chat.isAdminSupport ||
+                !settingsService.moneyRequestEnabled.value) {
               return const SizedBox.shrink();
             }
             return Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.red601,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: _showMoneyRequestDialog,
-                  child: const Text("Money Request", style: TextStyle(color: AppColors.FFFFFF))),
+              padding: const EdgeInsets.only(right: 5),
+              child: SizedBox(
+                height: 30.h,
+                width: 120.w,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.red601,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: _showMoneyRequestDialog,
+                    child: const Text("Money Request",
+                        maxLines: 1,
+                        style:
+                            TextStyle(fontSize: 10, color: AppColors.FFFFFF))),
+              ),
             );
           })
         ],
@@ -130,10 +141,10 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
               radius: 20,
               backgroundImage: NetworkImage(widget.chat.avatar),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 5),
             Text(
               widget.chat.name,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -200,16 +211,16 @@ class _ChatDetailsPageState extends State<ChatDetailsPage> {
             ),
             SizedBox(width: 10.w),
             Obx(() => IconButton(
-              icon: Icon(
-                Icons.send,
-                color: controller.canSend.value ? Colors.blue : Colors.grey,
-              ),
-              onPressed: () {
-                if (controller.canSend.value) {
-                  controller.sendMessage();
-                }
-              },
-            )),
+                  icon: Icon(
+                    Icons.send,
+                    color: controller.canSend.value ? Colors.blue : Colors.grey,
+                  ),
+                  onPressed: () {
+                    if (controller.canSend.value) {
+                      controller.sendMessage();
+                    }
+                  },
+                )),
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:txme_app/Utils/AppIcons/app_icons.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/MessageBubbleWidget/ChatTile.dart';
@@ -20,7 +21,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
     super.initState();
     Get.put(ChatController());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final ChatController controller = Get.find<ChatController>();
@@ -37,9 +38,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
               Text(
                 "Chats",
                 style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff000000)
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff000000)
                 ),
               ),
 
@@ -74,7 +75,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
               SizedBox(height: 20.h),
 
-              /// Chat List
+              /// Chat List with Swipe to Delete
               Expanded(
                 child: Obx(() {
                   final chats = controller.filteredChats;
@@ -88,11 +89,55 @@ class _ChatHomePageState extends State<ChatHomePage> {
                       itemBuilder: (context, index) {
                         final chat = chats[index];
 
-                        return InkWell(
-                          onTap: () {
-                            Get.to(() => ChatDetailsPage(chat: chat));
-                          },
-                          child: ChatTile(chat: chat),
+                        return Slidable(
+                          key: ValueKey(chat.id),
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  // Delete confirmation dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Delete Chat'),
+                                        content: Text('Are you sure you want to delete this chat?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              controller.deleteChat(chat.id);
+                                            },
+                                            child: Text(
+                                              'Delete',
+                                              style: TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete,
+                                label: 'Delete',
+                              ),
+                            ],
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              Get.to(() => ChatDetailsPage(chat: chat));
+                            },
+                            child: ChatTile(chat: chat),
+                          ),
                         );
                       },
                     ),

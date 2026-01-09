@@ -21,63 +21,53 @@ class ConfirmPaymentpage extends StatefulWidget {
 }
 
 class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
-  final Confirmpaymentcontroller controller = Get.put(Confirmpaymentcontroller());
-  final ContactSupportController supportController = Get.put(ContactSupportController());
+  final Confirmpaymentcontroller controller =
+      Get.put(Confirmpaymentcontroller());
+  final ContactSupportController supportController =
+      Get.put(ContactSupportController());
+
   final appController = Get.find<AppointmentsController>();
 
   late String appointmentId;
-  late SocketApi socketApi; // ✅ Socket instance as class variable
-  late String eventName; // ✅ Event name as class variable
-  Worker? appointmentWorker; // ✅ Worker reference for cleanup
+  late SocketApi socketApi;
+  late String eventName;
+  Worker? appointmentWorker;
 
   @override
   void initState() {
     super.initState();
 
-    final AppointmentModel2 initialAppointment = Get.arguments as AppointmentModel2;
-    appointmentId = initialAppointment.id;
+    final appointment = Get.arguments as AppointmentModel2;
+    appointmentId = appointment.id;
 
-    // ✅ Initialize socket
-    socketApi = SocketApi();
+    socketApi = Get.find<SocketApi>(); // ❗ NEW socket না
     eventName = "appointmentUpdate::${appController.userId.value}";
 
-    // ✅ Store worker reference
+    socketApi.on(eventName, (_) {
+      appController.loadData(silent: true);
+    });
+
     appointmentWorker = ever(
       appController.appointments,
-          (List<AppointmentModel2> list) {
+      (List<AppointmentModel2> list) {
         final updated = list.firstWhereOrNull((e) => e.id == appointmentId);
-        if (updated != null) {
-          final status = updated.status.toLowerCase();
-          if (status == "review_pending" ||
-              status == "customer_review_pending" ||
-              status == "provider_review_pending") {
-            Get.off(() => const Providerpaymentsuccessful(), arguments: updated);
-          }
+        if (updated == null) return;
+
+        final status = updated.status.toLowerCase();
+
+        if (status == "review_pending" ||
+            status == "customer_review_pending" ||
+            status == "provider_review_pending") {
+          Get.off(() => const Providerpaymentsuccessful(), arguments: updated);
         }
       },
     );
-
-    _listenSocket();
-  }
-
-  void _listenSocket() {
-    debugPrint("🔌 Socket listening to: $eventName");
-
-    socketApi.on(eventName, (data) {
-      debugPrint("📡 Socket event received: $data");
-      appController.loadData(silent: true);
-    });
   }
 
   @override
   void dispose() {
-    // ✅ CRITICAL: Remove socket listener
-    debugPrint("🔌 Removing socket listener: $eventName");
     socketApi.off(eventName);
-
-    // ✅ Dispose worker
     appointmentWorker?.dispose();
-
     super.dispose();
   }
 
@@ -112,7 +102,7 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
       ),
       body: Obx(() {
         final appointment = appController.appointments
-            .firstWhereOrNull((e) => e.id == appointmentId) ??
+                .firstWhereOrNull((e) => e.id == appointmentId) ??
             (Get.arguments as AppointmentModel2);
 
         return Padding(
@@ -155,13 +145,14 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                     color: const Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: const Color(0xffFF5A36), width: 1.w),
+                    border:
+                        Border.all(color: const Color(0xffFF5A36), width: 1.w),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,16 +235,15 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                     ],
                   ),
                 ),
-
                 SizedBox(height: 20.h),
-
                 Container(
                   width: 351.w,
                   height: 173.h,
                   decoration: BoxDecoration(
                     color: const Color(0xffF7F7F7),
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: const Color(0xffFF5A36), width: 1.w),
+                    border:
+                        Border.all(color: const Color(0xffFF5A36), width: 1.w),
                   ),
                   child: Column(
                     children: [
@@ -352,77 +342,58 @@ class _ConfirmPaymentpageState extends State<ConfirmPaymentpage> {
                     ],
                   ),
                 ),
-
                 SizedBox(height: 40.h),
-
                 // Button
                 if (appointment.status.toLowerCase() == "cashpayment")
                   Obx(() => CustomButton(
-                    height: 56.h,
-                    width: 353.w,
-                    BoxDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      color: controller.isLoading.value
-                          ? Colors.grey
-                          : const Color(0xffFF5A36),
-                    ),
-                    child: Center(
-                      child: controller.isLoading.value
-                          ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+                        height: 56.h,
+                        width: 353.w,
+                        BoxDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.r),
+                          color: controller.isLoading.value
+                              ? Colors.grey
+                              : const Color(0xffFF5A36),
                         ),
-                      )
-                          : const Text(
-                        "Yes, I received",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Color(0xffFFFFFF),
+                        child: Center(
+                          child: controller.isLoading.value
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  "Yes, I received",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: Color(0xffFFFFFF),
+                                  ),
+                                ),
                         ),
-                      ),
-                    ),
-                    onTap: controller.isLoading.value
-                        ? null
-                        : () async {
-                      final success = await controller.acceptBooking(appointment.id);
-
-                      if (success) {
-                        Get.off(
-                              () => const Providerpaymentsuccessful(),
-                          arguments: appointment,
-                        );
-                      } else {
-                        Get.snackbar(
-                          "Error",
-                          "Could not confirm payment. Please try again.",
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    },
-                  )),
-
+                        onTap: controller.isLoading.value
+                            ? null
+                            : () async {
+                                final success = await controller
+                                    .acceptBooking(appointment.id);
+                              },
+                      )),
                 SizedBox(height: 28.h),
-
                 GestureDetector(
                   onTap: () => supportController.createAdminChat(),
                   child: Obx(() => supportController.isLoading.value
                       ? const CircularProgressIndicator()
                       : Text(
-                    "Need help? Contact support",
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xff3A7DFF),
-                    ),
-                  )),
+                          "Need help? Contact support",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff3A7DFF),
+                          ),
+                        )),
                 ),
-
                 SizedBox(height: 118.h),
               ],
             ),

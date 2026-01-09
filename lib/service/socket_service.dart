@@ -20,8 +20,7 @@ class SocketApi {
   Future<void> init() async {
     if (_initialized) return;
 
-    final token =
-    await SharePrefsHelper.getString(ApiConstant.bearerToken);
+    final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
 
     debugPrint("🔌 CONNECTING SOCKET... $token");
 
@@ -59,44 +58,72 @@ class SocketApi {
     }
   }
 
-  /// NO LONGER NEEDED manually
-  // void onMessage(Function(dynamic) callback) {
-  //   _messageCallbacks.add(callback);
-  // }
-
+  // ✅ Listen to events
   void on(String event, Function(dynamic) callback) {
     socket?.on(event, callback);
+    debugPrint("🎧 Listening to: $event");
   }
 
+  // ✅ Remove event listener
   void off(String event) {
     socket?.off(event);
+    debugPrint("🔇 Stopped listening to: $event");
   }
 
+  // ✅ NEW: Emit events - THIS WAS MISSING
+  void emit(String event, [dynamic data]) {
+    if (socket != null && socket!.connected) {
+      socket!.emit(event, data);
+      debugPrint("📡 Emitted: $event with data: $data");
+    } else {
+      debugPrint("⚠️ Cannot emit: Socket not connected");
+      debugPrint("Socket exists: ${socket != null}, Connected: ${socket?.connected ?? false}");
+    }
+  }
+
+  // Join chat room
   void joinChat(String chatId) {
     if (socket != null) {
       debugPrint("👉 JOINING CHAT: $chatId");
-      socket?.emit("joinChat", {"chatId": chatId});
+      emit("joinChat", {"chatId": chatId});
     }
   }
 
+  // Leave chat room
   void leaveChat(String chatId) {
-     if (socket != null) {
+    if (socket != null) {
       debugPrint("👋 LEAVING CHAT: $chatId");
-      socket?.emit("leaveChat", {"chatId": chatId});
+      emit("leaveChat", {"chatId": chatId});
     }
   }
 
+  // Send message
   void sendMessage({
     required String chatId,
     required String text,
   }) {
-     if (socket != null) {
-      socket?.emit("sendMessage", {
+    if (socket != null) {
+      emit("sendMessage", {
         "chatId": chatId,
         "text": text,
         "type": "TEXT",
       });
     }
   }
-}
 
+  // ✅ Get connection status
+  bool get isConnected => socket?.connected ?? false;
+
+  // ✅ Disconnect socket
+  void disconnect() {
+    socket?.disconnect();
+    _initialized = false;
+    debugPrint("🔌 Socket manually disconnected");
+  }
+
+  // ✅ Dispose resources
+  void dispose() {
+    _messageController.close();
+    socket?.dispose();
+  }
+}

@@ -85,12 +85,55 @@ class MessageController extends GetxController {
         debugPrint("❌ Message Parse Error: $e");
       }
     });
+
+    // ✅ Listen for edit message events - using getMessage pattern
+    socketApi.on(eventName, (data) {
+      if (data == null) return;
+
+      // Check if this is an edit event
+      if (data['action'] == 'edit' || data['type'] == 'edit') {
+        debugPrint("✏️ EDIT EVENT RECEIVED: $data");
+        try {
+          final raw = data['message'] ?? data;
+          final messageId = raw['_id'] ?? raw['messageId'];
+
+          if (messageId != null) {
+            final index = messages.indexWhere((m) => m.id == messageId);
+            if (index != -1) {
+              final updatedMsg = MessageModel.fromJson(raw, myUserId);
+              messages[index] = updatedMsg;
+              update();
+              debugPrint("✅ Message updated via socket: $messageId");
+            }
+          }
+        } catch (e) {
+          debugPrint("❌ Edit Message Parse Error: $e");
+        }
+      }
+
+      // Check if this is a delete event
+      if (data['action'] == 'delete' || data['type'] == 'delete') {
+        debugPrint("🗑️ DELETE EVENT RECEIVED: $data");
+        try {
+          final messageId = data['messageId'] ?? data['_id'];
+
+          if (messageId != null) {
+            messages.removeWhere((m) => m.id == messageId);
+            update();
+            debugPrint("✅ Message deleted via socket: $messageId");
+          }
+        } catch (e) {
+          debugPrint("❌ Delete Message Parse Error: $e");
+        }
+      }
+    });
   }
 
   Future<void> getMessages() async {
     final token = await SharePrefsHelper.getString(ApiConstant.bearerToken);
+    print(token);
     final response = await http.get(
-      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.apiVersion}/message/$chatId?page=1&limit=50"),
+      Uri.parse("${ApiConstant.baseUrl}${ApiConstant.apiVersion}/message/$chatId?page=1&limit=10000"),
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -178,6 +221,127 @@ class MessageController extends GetxController {
     }
   }
 
+  // ✅ UPDATED: Edit Message - Socket will handle via backend
+  Future<void> editMessage(String messageId, String newText) async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url = "${ApiConstant.baseUrl}${ApiConstant.message}/$messageId";
+
+      debugPrint("✏️ Editing message: $url");
+
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'text': newText}),
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+
+        // Update local message immediately
+        final index = messages.indexWhere((m) => m.id == messageId);
+        if (index != -1) {
+          messages[index] = MessageModel.fromJson(decoded['data'], myUserId);
+          update();
+        }
+
+        // Backend should emit socket event to other users
+        // If your backend doesn't do this, uncomment below:
+        /*
+        try {
+          socketApi.socket?.emit('editMessage', {
+            'chatId': chatId,
+            'messageId': messageId,
+            'text': newText,
+            'message': decoded['data'],
+          });
+          debugPrint("📡 Socket emitted: editMessage");
+        } catch (e) {
+          debugPrint("⚠️ Socket emit failed: $e");
+        }
+        */
+
+      } else {
+        final errorBody = jsonDecode(response.body);
+        Get.snackbar(
+          "Error",
+          errorBody['message'] ?? "Failed to edit message",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      debugPrint("❌ Edit error: $e");
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // ✅ UPDATED: Delete Message - Socket will handle via backend
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url = "${ApiConstant.baseUrl}${ApiConstant.message}/$messageId";
+
+      debugPrint("🗑️ Deleting message: $url");
+
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Remove from local list immediately
+        messages.removeWhere((m) => m.id == messageId);
+        update();
+
+        // Backend should emit socket event to other users
+        // If your backend doesn't do this, uncomment below:
+        /*
+        try {
+          socketApi.socket?.emit('deleteMessage', {
+            'chatId': chatId,
+            'messageId': messageId,
+          });
+          debugPrint("📡 Socket emitted: deleteMessage");
+        } catch (e) {
+          debugPrint("⚠️ Socket emit failed: $e");
+        }
+        */
+
+      } else {
+        final errorBody = jsonDecode(response.body);
+        Get.snackbar(
+          "",
+          errorBody['message'] ?? "Failed to delete message",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      debugPrint("❌ Delete error: $e");
+      Get.snackbar(
+        "",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   Future<void> sendMoneyRequest({
     required String text,
     required double amount,
@@ -214,7 +378,7 @@ class MessageController extends GetxController {
     try {
       final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
       final url = "${ApiConstant.baseUrl}${ApiConstant.message}/$messageId/money-request";
-      
+
       final response = await http.patch(
         Uri.parse(url),
         headers: {

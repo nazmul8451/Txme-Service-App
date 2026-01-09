@@ -19,8 +19,6 @@ class ChatController extends GetxController {
   Timer? _debounce;
 
   List<ChatModel> get filteredChats {
-    // This getter is no longer needed for filtering, as the API handles it.
-    // However, it can be kept for consistency if other parts of the app use it.
     return chats;
   }
 
@@ -30,7 +28,6 @@ class ChatController extends GetxController {
     myUserId = await SharePrefsHelper.getString(SharePrefsHelper.userId);
     getChats();
 
-    // ✅ ADDED: Debouncer for search query
     debounce(searchQuery, (_) => getChats(searchTerm: searchQuery.value), time: const Duration(milliseconds: 500));
 
     socketApi.on('getChat', (data) {
@@ -47,14 +44,13 @@ class ChatController extends GetxController {
     try {
       final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
 
-      // ✅ UPDATED: Build URI with search term
       final uri = Uri.parse("${ApiConstant.baseUrl}${ApiConstant.getChat}").replace(
         queryParameters: {
           if (searchTerm != null && searchTerm.isNotEmpty) 'searchTerm': searchTerm,
-          'limit': '200', // As per your Postman screenshot
+          'limit': '200',
         },
       );
-      
+
       debugPrint("🚀 Fetching chats with URL: $uri");
 
       final response = await http.get(
@@ -81,7 +77,55 @@ class ChatController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
+  // ✅ NEW: Delete Chat Method
+  Future<void> deleteChat(String chatId) async {
+    try {
+      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+
+      // API URL with chat ID
+      final url = "${ApiConstant.baseUrl}${ApiConstant.getChat}/$chatId";
+
+      debugPrint("🗑️ Deleting chat: $url");
+
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Remove from local list
+        chats.removeWhere((chat) => chat.id == chatId);
+        Get.snackbar(
+          "Success",
+          "Chat deleted successfully",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to delete chat",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      debugPrint("❌ Delete error: $e");
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   void updateLastMessage(String chatId, String message) {
     final index = chats.indexWhere((c) => c.id == chatId);
     if (index != -1) {

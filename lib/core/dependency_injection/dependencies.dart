@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../View/Screen/Service Provider Role/MyBooking/ConfirmPayment/ConfirmPaymentController.dart';
 import '../../View/Screen/Sign _up/VerifyYourIdentity/verify_identity_controller.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/Invoice/Invoice.dart';
 import '../../View/Screen/User Role/BookingsViewClient/Payment/PaywithWallet/PaywithWalletController.dart';
@@ -45,5 +46,6 @@ class Dependencies {
 
     /// ================= ⏱️ GLOBAL ELAPSED TIMER =================
     Get.put(JobTimerController(), permanent: true);
+    Get.put(Confirmpaymentcontroller(), permanent: true);
   }
 }
