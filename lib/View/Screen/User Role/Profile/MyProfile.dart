@@ -9,6 +9,7 @@ import 'package:txme_app/View/Screen/User%20Role/Profile/pastInvoice/InvoiceList
 import 'package:txme_app/View/Screen/User%20Role/Profile/profile_controller.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
 import 'package:txme_app/service/settings_service.dart'; // ✅ ADDED
+import 'package:url_launcher/url_launcher.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
 import 'EditProfile/EditProfile.dart';
@@ -252,31 +253,49 @@ class ProfilePage extends StatelessWidget {
 
   /// ================= FAQ =================
   Widget faqItem() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.h),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-      decoration: BoxDecoration(
-        color: const Color(0xffF5F9FB),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        children: [
-          Image.asset(AppImg.FAQ, height: 44.h, width: 44.w),
-          SizedBox(width: 14.w),
-          Expanded(
-            child: Text(
-              "FAQ (THIS IS LINKED WITH TXME FAQ)",
-              style: TextStyle(
-                color: AppColors.red601,
-                fontWeight: FontWeight.w500,
-                fontSize: 14.sp,
+    return InkWell(
+      borderRadius: BorderRadius.circular(12.r),
+      onTap: () async {
+        final Uri url = Uri.parse('https://txme.nl/faq');
+
+        if (!await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        )) {
+          Get.snackbar(
+            "Error",
+            "Could not open FAQ page",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: const Color(0xffF5F9FB),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Image.asset(AppImg.FAQ, height: 44.h, width: 44.w),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Text(
+                "FAQ (THIS IS LINKED WITH TXME FAQ)",
+                style: TextStyle(
+                  color: AppColors.red601,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 
   /// ================= LOGOUT =================
   Widget logoutItem() {

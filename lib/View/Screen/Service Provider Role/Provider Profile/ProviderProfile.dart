@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:txme_app/Utils/AppImg/app_img.dart';
 import 'package:txme_app/core/App_Routes/app_routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../Utils/AppColors/app_colors.dart';
 import '../../../Widgegt/CustomBottomNavBar/CustomBottomNavBar.dart';
 import '../../../Widgegt/Logout/Logout.dart';
@@ -282,30 +284,49 @@ class ProviderProfilePage extends StatelessWidget {
   }
 
   Widget faqItem() {
-    return Container(
-      margin: const EdgeInsets.only(top: 12, bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      decoration: BoxDecoration(
-          color: const Color(0xffF5F9FB), borderRadius: BorderRadius.circular(12)),
-      child: Row(
-        children: [
-          Image.asset(
-            AppImg.FAQ,
-            height: 40,
-            width: 40,
-          ),
-          const SizedBox(width: 14),
-          const Expanded(
-            child: Text(
-              "FAQ (THIS IS LINKED WITH TXME FAQ)",
-              style: TextStyle(
-                  color: Color(0xFFFF5A36), fontWeight: FontWeight.w600),
+    return InkWell(
+      borderRadius: BorderRadius.circular(12.r),
+      onTap: () async {
+        final Uri url = Uri.parse('https://txme.nl/faq');
+
+        if (!await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        )) {
+          Get.snackbar(
+            "Error",
+            "Could not open FAQ page",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: const Color(0xffF5F9FB),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Image.asset(AppImg.FAQ, height: 44.h, width: 44.w),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Text(
+                "FAQ (THIS IS LINKED WITH TXME FAQ)",
+                style: TextStyle(
+                  color: AppColors.red601,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 
   Widget logoutItem() {
     return Container(
