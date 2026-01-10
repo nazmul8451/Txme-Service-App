@@ -435,11 +435,10 @@ class MessageController extends GetxController {
       } else {
         final responseBody = await response.stream.bytesToString();
         print("Failed to send image: ${response.statusCode} - $responseBody");
-        Get.snackbar("Failed to send image", "");
       }
     } catch (e) {
       print("Error sending image: $e");
-      Get.snackbar("An error occurred while sending the image", "");
+      Get.snackbar("An occurred while sending the image", "");
     }
   }
 
