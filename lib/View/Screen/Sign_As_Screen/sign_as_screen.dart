@@ -40,6 +40,7 @@ class _SignAsScreenState extends State<SignAsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.FFFFFF,
       body: SingleChildScrollView(
         child: Column(
           children: [

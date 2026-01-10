@@ -59,7 +59,7 @@ class AppString{
   static const String openYourCamera = "Open Your Camera" ;
   static const String CreateAccount = "Create Account" ;
   static const String phone = "Phone Number" ;
-  static const String Conditions = "& Conditions" ;
+  static const String Conditions = " Terms & Conditions" ;
   static const String  PrivacyPolicy = " Privacy Policy" ;
   static const String  VerifyEmail  = " Verify Email " ;
   static const String  verifyNumber  = " Verify Number " ;

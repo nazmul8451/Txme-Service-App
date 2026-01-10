@@ -19,6 +19,7 @@ class Verifyfingerprint extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: AppColors.gray,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: true, //  back enabled
         title: Text(

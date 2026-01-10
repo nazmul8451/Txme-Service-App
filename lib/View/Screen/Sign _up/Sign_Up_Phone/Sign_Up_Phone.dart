@@ -24,6 +24,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
       backgroundColor: AppColors.FFFFFF,
       appBar: AppBar(
         backgroundColor: AppColors.FFFFFF,
+        surfaceTintColor: Colors.transparent,
         title: Center(
           child: Text(
             AppString.signUn.tr,

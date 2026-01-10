@@ -263,7 +263,7 @@ class ProfilePage extends StatelessWidget {
           mode: LaunchMode.externalApplication,
         )) {
           Get.snackbar(
-            "Error",
+            "",
             "Could not open FAQ page",
             snackPosition: SnackPosition.BOTTOM,
           );

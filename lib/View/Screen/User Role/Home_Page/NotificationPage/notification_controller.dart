@@ -9,13 +9,13 @@ import 'notification_model.dart';
 
 class NotificationController extends GetxController {
   var isLoading = true.obs;
-  var isMoreLoading = false.obs; // ✅ ADDED: For pagination loading
+  var isMoreLoading = false.obs; //  ADDED: For pagination loading
   var notificationList = <NotificationModel>[].obs;
 
   var currentPage = 1.obs;
   var totalPages = 1.obs;
-  final int limit = 10;
-  
+  final int limit = 10000;
+
   final SocketApi socketApi = Get.find<SocketApi>();
   String? _eventName;
 
@@ -50,9 +50,11 @@ class NotificationController extends GetxController {
     }
 
     try {
-      final token = await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
-      final url = "${ApiConstant.baseUrl}${ApiConstant.notification}?page=$page&limit=$limit";
-      
+      final token =
+          await SharePrefsHelper.getString(SharePrefsHelper.bearerToken);
+      final url =
+          "${ApiConstant.baseUrl}${ApiConstant.notification}?page=$page&limit=$limit";
+
       final response = await http.get(
         Uri.parse(url),
         headers: {'Authorization': 'Bearer $token'},
@@ -61,7 +63,9 @@ class NotificationController extends GetxController {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> notificationsJson = data['data']['notifications'];
-        final newNotifications = notificationsJson.map((json) => NotificationModel.fromJson(json)).toList();
+        final newNotifications = notificationsJson
+            .map((json) => NotificationModel.fromJson(json))
+            .toList();
 
         if (page == 1) {
           notificationList.assignAll(newNotifications);
@@ -73,13 +77,12 @@ class NotificationController extends GetxController {
           totalPages.value = data['data']['pagination']['totalPage'] ?? 1;
           currentPage.value = data['data']['pagination']['page'] ?? 1;
         }
-
       } else {
         // Handle error if needed
       }
     } catch (e) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar('An error occurred', e.toString());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar('An error occurred', e.toString());
       });
     } finally {
       isLoading.value = false;
@@ -98,7 +101,7 @@ class NotificationController extends GetxController {
       fetchNotifications(page: currentPage.value - 1);
     }
   }
-  
+
   @override
   void onClose() {
     if (_eventName != null) {

@@ -37,6 +37,7 @@ class Signindone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.FFFFFF,
       body: Column(
         children: [
           Padding(
